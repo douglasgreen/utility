@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Exceptions\FileSystem;
 
-namespace DouglasGreen\Utility\Exceptions\BaseException;
+use DouglasGreen\Utility\Exceptions\BaseException;
 
 /**
  * Thrown for issues related to file operations, such as:
