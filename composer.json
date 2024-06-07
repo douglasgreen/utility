@@ -1,0 +1,53 @@
+{
+    "name": "douglasgreen/utility",
+    "description": "A PHP utility project for exception classes and wrapper functions",
+    "license": "MIT",
+    "type": "library",
+    "homepage": "https://github.com/douglasgreen/utility",
+    "authors": [
+        {
+            "name": "Douglas Green",
+            "email": "douglas@nurd.site",
+            "homepage": "https://nurd.site/",
+            "role": "Developer"
+        }
+    ],
+    "keywords": [
+        "directory",
+        "exceptions",
+        "file",
+        "php",
+        "regex",
+        "utility",
+        "wrapper"
+    ],
+    "autoload": {
+        "psr-4": {
+            "DouglasGreen\\Utility\\": "src/",
+            "DouglasGreen\\Utility\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "phpmd/phpmd": "^2.15",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^10.5",
+        "rector/rector": "^1.0",
+        "symplify/easy-coding-standard": "^12.2"
+    },
+    "scripts": {
+        "lint": [
+            "ecs",
+            "rector --dry-run",
+            "./run_phpmd.sh",
+            "./run_phpstan.sh"
+        ],
+        "lint:fix": [
+            "ecs --fix",
+            "rector"
+        ],
+        "test": "phpunit"
+    }
+}
