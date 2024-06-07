@@ -18,13 +18,17 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
 class Regex
 {
     /**
-     * Substitute for counting result of preg_match_all.
+     * Substitute for counting the matches of preg_match_all.
      *
      * @throws RegexException
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public static function countMatches(string $pattern, string $subject, int $flags = 0, int $offset = 0): int
-    {
+    public static function countMatches(
+        string $pattern,
+        string $subject,
+        int $flags = 0,
+        int $offset = 0,
+    ): int {
         $result = preg_match_all($pattern, $subject, $matches, $flags, $offset);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $pattern);
@@ -42,7 +46,7 @@ class Regex
         string $replacement,
         string $subject,
         int $limit = -1,
-        int &$count = null
+        int &$count = null,
     ): string {
         $result = preg_filter($pattern, $replacement, $subject, $limit, $count);
         if ($result === null) {
@@ -58,8 +62,12 @@ class Regex
      * @return array<array<int, string>>
      * @throws RegexException
      */
-    public static function getAllMatches(string $pattern, string $subject, int $flags = 0, int $offset = 0): array
-    {
+    public static function getAllMatches(
+        string $pattern,
+        string $subject,
+        int $flags = 0,
+        int $offset = 0,
+    ): array {
         $result = preg_match_all($pattern, $subject, $matches, $flags, $offset);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $pattern);
@@ -93,8 +101,12 @@ class Regex
      * @return array<array<string, string>>
      * @throws RegexException
      */
-    public static function getAllNamedMatches(string $pattern, string $subject, int $flags = 0, int $offset = 0): array
-    {
+    public static function getAllNamedMatches(
+        string $pattern,
+        string $subject,
+        int $flags = 0,
+        int $offset = 0,
+    ): array {
         $result = preg_match_all($pattern, $subject, $matches, $flags, $offset);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $pattern);
@@ -129,8 +141,12 @@ class Regex
      * @return array<int, string>
      * @throws RegexException
      */
-    public static function getMatch(string $pattern, string $subject, int $flags = 0, int $offset = 0): array
-    {
+    public static function getMatch(
+        string $pattern,
+        string $subject,
+        int $flags = 0,
+        int $offset = 0,
+    ): array {
         $result = preg_match($pattern, $subject, $matches, $flags, $offset);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $pattern);
@@ -159,8 +175,12 @@ class Regex
      * @return array<string, string>
      * @throws RegexException
      */
-    public static function getNamedMatches(string $pattern, string $subject, int $flags = 0, int $offset = 0): array
-    {
+    public static function getNamedMatches(
+        string $pattern,
+        string $subject,
+        int $flags = 0,
+        int $offset = 0,
+    ): array {
         $result = preg_match($pattern, $subject, $matches, $flags, $offset);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $pattern);
@@ -189,8 +209,11 @@ class Regex
      * @return list<string>
      * @throws RegexException
      */
-    public static function grep(string $pattern, array $array, int $flags = 0): array
-    {
+    public static function grep(
+        string $pattern,
+        array $array,
+        int $flags = 0,
+    ): array {
         $result = preg_grep($pattern, $array, $flags);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $pattern);
@@ -206,8 +229,12 @@ class Regex
      * @throws RegexException
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public static function hasMatch(string $pattern, string $subject, int $flags = 0, int $offset = 0): bool
-    {
+    public static function hasMatch(
+        string $pattern,
+        string $subject,
+        int $flags = 0,
+        int $offset = 0,
+    ): bool {
         $result = preg_match($pattern, $subject, $match, $flags, $offset);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $pattern);
@@ -226,9 +253,15 @@ class Regex
         string $replacement,
         string $subject,
         int $limit = -1,
-        int &$count = null
+        int &$count = null,
     ): string {
-        $result = preg_replace($pattern, $replacement, $subject, $limit, $count);
+        $result = preg_replace(
+            $pattern,
+            $replacement,
+            $subject,
+            $limit,
+            $count,
+        );
         if ($result === null) {
             throw new RegexException('Regex failed: ' . $pattern);
         }
@@ -250,11 +283,19 @@ class Regex
         array $replacement,
         array $subject,
         int $limit = -1,
-        int &$count = null
+        int &$count = null,
     ): array {
-        $result = preg_replace($pattern, $replacement, $subject, $limit, $count);
+        $result = preg_replace(
+            $pattern,
+            $replacement,
+            $subject,
+            $limit,
+            $count,
+        );
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . implode('; ', $pattern));
+            throw new RegexException(
+                'Regex failed: ' . implode('; ', $pattern),
+            );
         }
 
         return $result;
@@ -266,8 +307,12 @@ class Regex
      * @return list<string>
      * @throws RegexException
      */
-    public static function split(string $pattern, string $subject, int $limit = -1, int $flags = 0): array
-    {
+    public static function split(
+        string $pattern,
+        string $subject,
+        int $limit = -1,
+        int $flags = 0,
+    ): array {
         $result = preg_split($pattern, $subject, $limit, $flags);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $pattern);

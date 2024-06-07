@@ -52,6 +52,8 @@ use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
 class File
 {
     /**
+     * Substitute for fclose.
+     *
      * @param resource $stream
      * @throws FileException
      */
@@ -63,6 +65,8 @@ class File
     }
 
     /**
+     * Substitute for fgetcsv.
+     *
      * @param ?int<0, max> $length
      * @param resource $stream
      * @return ?list<string>
@@ -73,7 +77,7 @@ class File
         ?int $length = null,
         string $separator = ',',
         string $enclosure = '"',
-        string $escape = '\\'
+        string $escape = '\\',
     ): ?array {
         $fields = fgetcsv($stream, $length, $separator, $enclosure, $escape);
 
@@ -90,6 +94,8 @@ class File
     }
 
     /**
+     * Substitute for fgets.
+     *
      * @param ?int<0, max> $length
      * @param resource $stream
      * @throws FileException
@@ -111,6 +117,28 @@ class File
     }
 
     /**
+     * Substitute for file.
+     *
+     * @param ?resource $context
+     * @return list<string>
+     */
+    public static function loadLines(
+        string $filename,
+        int $flags = 0,
+        $context = null,
+    ): array {
+        $result = file($filename, $flags, $context);
+
+        if ($result === false) {
+            throw new FileException('Unable to load file to array');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for file_get_contents.
+     *
      * @param resource $context
      * @param ?int<0, max> $length
      * @throws FileException
@@ -120,9 +148,15 @@ class File
         bool $useIncludePath = false,
         $context = null,
         int $offset = 0,
-        ?int $length = null
+        ?int $length = null,
     ): string {
-        $result = file_get_contents($filename, $useIncludePath, $context, $offset, $length);
+        $result = file_get_contents(
+            $filename,
+            $useIncludePath,
+            $context,
+            $offset,
+            $length,
+        );
 
         if ($result === false) {
             throw new FileException('Unable to load file to string');
@@ -132,12 +166,18 @@ class File
     }
 
     /**
+     * Substitute for fopen.
+     *
      * @param resource $context
      * @return resource
      * @throws FileException
      */
-    public static function open(string $filename, string $mode, bool $useIncludePath = false, $context = null)
-    {
+    public static function open(
+        string $filename,
+        string $mode,
+        bool $useIncludePath = false,
+        $context = null,
+    ) {
         $handle = fopen($filename, $mode, $useIncludePath, $context);
         if ($handle === false) {
             throw new FileException(sprintf('Unable to open "%s"', $filename));
@@ -147,24 +187,34 @@ class File
     }
 
     /**
+     * Substitute for realpath.
+     *
      * @throws FileException
      */
     public static function path(string $path): string
     {
         $result = realpath($path);
         if ($result === false) {
-            throw new FileException(sprintf('Unable to get real path on "%s"', $path));
+            throw new FileException(
+                sprintf('Unable to get real path on "%s"', $path),
+            );
         }
 
         return $result;
     }
 
     /**
+     * Substitute for file_put_contents.
+     *
      * @param resource $context
      * @throws FileException
      */
-    public static function saveString(string $filename, mixed $data, int $flags = 0, $context = null): int
-    {
+    public static function saveString(
+        string $filename,
+        mixed $data,
+        int $flags = 0,
+        $context = null,
+    ): int {
         $result = file_put_contents($filename, $data, $flags, $context);
         if ($result === false) {
             throw new FileException('Unable to save string to file');
