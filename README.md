@@ -5,8 +5,9 @@ A PHP utility project for exception classes and wrapper functions
 These utility classes exist because basic PHP functions return a mix of false or
 null on failure rather than throwing exceptions which is tedious to deal with.
 
-Only functions that represent program errors are included here. Some functions
-return false for data error, like `parse_url()`, but they are not included.
+Other classes represent array shapes like the value returned by `parse_url`.
+That makes it easier to validate URLs, pass them around as a unit, manipulate
+them, and convert them back to strings.
 
 ## Function signatures
 
