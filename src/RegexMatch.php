@@ -23,11 +23,22 @@ class RegexMatch
     }
 
     /**
+     * Get one or all matches.
+     *
+     * Pass an int to get just that numbered match.
+     * Pass a string to get just that named match.
+     * Pass no argument to get the whole match or all matches.
+     * If match is requested but not set, return null.
+     *
      * @return array<int, mixed>|string|null
      */
-    public function get(): array|string|null
+    public function get(string|int|null $key = null): array|string|null
     {
-        return $this->matches;
+        if ($key === null) {
+            return $this->matches;
+        }
+
+        return $this->matches[$key] ?? null;
     }
 
     public function has(): bool
