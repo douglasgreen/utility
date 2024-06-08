@@ -40,7 +40,7 @@ class File
      */
     public function __construct(
         protected string $filename,
-        protected string $mode,
+        protected string $mode = 'r',
         protected bool $useIncludePath = false,
         protected $context = null
     ) {
