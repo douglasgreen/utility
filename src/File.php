@@ -120,16 +120,17 @@ class File
     }
 
     /**
-     * Substitute for filesize.
+     * Substitute for glob.
      *
+     * @return list<string>
      * @throws FileException
      */
-    public static function size(string $filename): int
+    public static function findAll(string $pattern, int $flags = 0): array
     {
-        $result = filesize($filename);
+        $result = glob($pattern, $flags);
         if ($result === false) {
             throw new FileException(
-                sprintf('Unable to get size of file "%s"', $filename),
+                sprintf('Unable to search files for pattern "%s"', $pattern),
             );
         }
 
@@ -339,24 +340,6 @@ class File
     }
 
     /**
-     * Substitute for glob.
-     *
-     * @return list<string>
-     * @throws FileException
-     */
-    public static function findAll(string $pattern, int $flags = 0): array
-    {
-        $result = glob($pattern, $flags);
-        if ($result === false) {
-            throw new FileException(
-                sprintf('Unable to search files for pattern "%s"', $pattern),
-            );
-        }
-
-        return $result;
-    }
-
-    /**
      * Substitute for fopen.
      *
      * @param resource $context
@@ -499,6 +482,23 @@ class File
         if (fseek($stream, $offset, $whence) === -1) {
             throw new FileException('Unable to seek on file');
         }
+    }
+
+    /**
+     * Substitute for filesize.
+     *
+     * @throws FileException
+     */
+    public static function size(string $filename): int
+    {
+        $result = filesize($filename);
+        if ($result === false) {
+            throw new FileException(
+                sprintf('Unable to get size of file "%s"', $filename),
+            );
+        }
+
+        return $result;
     }
 
     /**

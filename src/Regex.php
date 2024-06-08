@@ -9,11 +9,11 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
 /**
  * Regex utility class to throw exceptions when basic operations fail.
  *
- * No replacement is provided for preg_filter with array argumnts because it
+ * No replacement is provided for preg_filter with array arguments because it
  * returns array on regex failure or no matches and so no distinction can be
  * made.
  *
- * @todo Add preg_replace_callback and preg_replace_callback_array.
+ * @todo Add preg_replace_callback_array.
  */
 class Regex
 {
@@ -306,7 +306,7 @@ class Regex
      *
      * @throws RegexException
      */
-    public function replaceCall(
+    public static function replaceCall(
         string $pattern,
         callable $callback,
         string $subject,
@@ -337,7 +337,7 @@ class Regex
      * @return list<string>
      * @throws RegexException
      */
-    public function replaceCallArray(
+    public static function replaceCallArray(
         array $patterns,
         callable $callback,
         array $subjects,
