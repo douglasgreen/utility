@@ -103,11 +103,6 @@ class Url implements \Stringable
         return $this->getUrl();
     }
 
-    public function getParam(string $key): mixed
-    {
-        return $this->params[$key] ?? null;
-    }
-
     public function getFragment(): ?string
     {
         return $this->fragment;
@@ -116,6 +111,11 @@ class Url implements \Stringable
     public function getHost(): ?string
     {
         return $this->host;
+    }
+
+    public function getParam(string $key): mixed
+    {
+        return $this->params[$key] ?? null;
     }
 
     public function getPass(): ?string
