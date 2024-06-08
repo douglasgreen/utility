@@ -45,9 +45,4 @@ class RegexMatch
     {
         return $this->count > 0;
     }
-
-    public function not(): bool
-    {
-        return $this->count === 0 || $this->count === null;
-    }
 }
