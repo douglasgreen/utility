@@ -59,6 +59,26 @@ class Dir
     }
 
     /**
+     * Substitute for tempnam.
+     *
+     * @throws DirectoryException
+     */
+    public function makeTemp(string $prefix): string
+    {
+        $result = tempnam($this->directory, $prefix);
+        if ($result === false) {
+            throw new DirectoryException(
+                sprintf(
+                    'Unable to create temp file in directory "%s"',
+                    $this->directory,
+                ),
+            );
+        }
+
+        return $result;
+    }
+
+    /**
      * Substitute for rmdir.
      *
      * @throws DirectoryException
