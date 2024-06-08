@@ -37,13 +37,12 @@ class File
      */
     public static function changeGroup(
         string $filename,
-        string|int $group
+        string|int $group,
     ): void {
         if (chgrp($filename, $group) === false) {
-            throw new FileException(sprintf(
-                'Unable to change group of file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf('Unable to change group of file "%s"', $filename),
+            );
         }
     }
 
@@ -55,10 +54,9 @@ class File
     public static function changeMode(string $filename, int $permissions): void
     {
         if (chmod($filename, $permissions) === false) {
-            throw new FileException(sprintf(
-                'Unable to change mode of file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf('Unable to change mode of file "%s"', $filename),
+            );
         }
     }
 
@@ -70,10 +68,9 @@ class File
     public static function changeOwner(string $filename, string|int $user): void
     {
         if (chown($filename, $user) === false) {
-            throw new FileException(sprintf(
-                'Unable to change owner of file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf('Unable to change owner of file "%s"', $filename),
+            );
         }
     }
 
@@ -99,11 +96,13 @@ class File
     public static function copy(string $source, string $target, $context): void
     {
         if (copy($source, $target, $context) === false) {
-            throw new FileException(sprintf(
-                'Unable to copy file from "%s" to "%s"',
-                $source,
-                $target
-            ));
+            throw new FileException(
+                sprintf(
+                    'Unable to copy file from "%s" to "%s"',
+                    $source,
+                    $target,
+                ),
+            );
         }
     }
 
@@ -129,10 +128,9 @@ class File
     {
         $result = filesize($filename);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to get size of file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf('Unable to get size of file "%s"', $filename),
+            );
         }
 
         return $result;
@@ -147,10 +145,12 @@ class File
     {
         $result = fileatime($filename);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to get last access time of file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf(
+                    'Unable to get last access time of file "%s"',
+                    $filename,
+                ),
+            );
         }
 
         return $result;
@@ -217,10 +217,12 @@ class File
     {
         $result = filectime($filename);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to get last metadata change time of file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf(
+                    'Unable to get last metadata change time of file "%s"',
+                    $filename,
+                ),
+            );
         }
 
         return $result;
@@ -235,10 +237,12 @@ class File
     {
         $result = filemtime($filename);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to get last modification time of file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf(
+                    'Unable to get last modification time of file "%s"',
+                    $filename,
+                ),
+            );
         }
 
         return $result;
@@ -253,14 +257,13 @@ class File
     public static function loadAndPrint(
         string $filename,
         bool $useIncludePath = false,
-        $context = null
+        $context = null,
     ): int {
         $result = readfile($filename, $useIncludePath, $context);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to load and print file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf('Unable to load and print file "%s"', $filename),
+            );
         }
 
         return $result;
@@ -324,10 +327,12 @@ class File
     {
         $result = tempnam($directory, $prefix);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to create temp file in directory "%s"',
-                $directory
-            ));
+            throw new FileException(
+                sprintf(
+                    'Unable to create temp file in directory "%s"',
+                    $directory,
+                ),
+            );
         }
 
         return $result;
@@ -343,10 +348,9 @@ class File
     {
         $result = glob($pattern, $flags);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to search files for pattern "%s"',
-                $pattern
-            ));
+            throw new FileException(
+                sprintf('Unable to search files for pattern "%s"', $pattern),
+            );
         }
 
         return $result;
@@ -367,10 +371,9 @@ class File
     ) {
         $handle = fopen($filename, $mode, $useIncludePath, $context);
         if ($handle === false) {
-            throw new FileException(sprintf(
-                'Unable to open file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf('Unable to open file "%s"', $filename),
+            );
         }
 
         return $handle;
@@ -435,14 +438,16 @@ class File
     public static function rename(
         string $source,
         string $target,
-        $context = null
+        $context = null,
     ): void {
         if (rename($source, $target, $context) === false) {
-            throw new FileException(sprintf(
-                'Unable to rename file from "%s" to "%s"',
-                $source,
-                $target
-            ));
+            throw new FileException(
+                sprintf(
+                    'Unable to rename file from "%s" to "%s"',
+                    $source,
+                    $target,
+                ),
+            );
         }
     }
 
@@ -489,7 +494,7 @@ class File
     public static function seek(
         $stream,
         int $offset,
-        int $whence = SEEK_SET
+        int $whence = SEEK_SET,
     ): void {
         if (fseek($stream, $offset, $whence) === -1) {
             throw new FileException('Unable to seek on file');
@@ -521,11 +526,9 @@ class File
     public static function symlink(string $target, string $link): void
     {
         if (symlink($target, $link) === false) {
-            throw new FileException(sprintf(
-                'Unable to link "%s" to file "%s"',
-                $link,
-                $target
-            ));
+            throw new FileException(
+                sprintf('Unable to link "%s" to file "%s"', $link, $target),
+            );
         }
     }
 
@@ -553,14 +556,16 @@ class File
     public static function touch(
         string $filename,
         ?int $mtime = null,
-        ?int $atime = null
+        ?int $atime = null,
     ): void {
         $result = touch($filename, $mtime, $atime);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable set file access and modification times on file "%s"',
-                $filename
-            ));
+            throw new FileException(
+                sprintf(
+                    'Unable set file access and modification times on file "%s"',
+                    $filename,
+                ),
+            );
         }
     }
 

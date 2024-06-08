@@ -270,31 +270,92 @@ class Regex
     }
 
     /**
-     * Substitute for preg_replace_array with string arguments.
+     * Substitute for preg_replace with array arguments.
      *
-     * @param list<string> $pattern
+     * @param list<string> $patterns
      * @param list<string> $replacement
-     * @param list<string> $subject
+     * @param list<string> $subjects
      * @return list<string>
      * @throws RegexException
      */
     public static function replaceArray(
-        array $pattern,
+        array $patterns,
         array $replacement,
-        array $subject,
+        array $subjects,
         int $limit = -1,
         int &$count = null,
     ): array {
         $result = preg_replace(
-            $pattern,
+            $patterns,
             $replacement,
-            $subject,
+            $subjects,
             $limit,
             $count,
         );
         if ($result === null) {
             throw new RegexException(
-                'Regex failed: ' . implode('; ', $pattern),
+                'Regex failed: ' . implode('; ', $patterns),
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for preg_replace_callback with string arguments.
+     *
+     * @throws RegexException
+     */
+    public function replaceCall(
+        string $pattern,
+        callable $callback,
+        string $subject,
+        int $limit = -1,
+        int &$count = null,
+        int $flags = 0,
+    ): string {
+        $result = preg_replace_callback(
+            $pattern,
+            $callback,
+            $subject,
+            $limit,
+            $count,
+            $flags,
+        );
+        if ($result === null) {
+            throw new RegexException('Regex failed: ' . $pattern);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for preg_replace_callback with array arguments.
+     *
+     * @param list<string> $patterns
+     * @param list<string> $subjects
+     * @return list<string>
+     * @throws RegexException
+     */
+    public function replaceCallArray(
+        array $patterns,
+        callable $callback,
+        array $subjects,
+        int $limit = -1,
+        int &$count = null,
+        int $flags = 0,
+    ): array {
+        $result = preg_replace_callback(
+            $patterns,
+            $callback,
+            $subjects,
+            $limit,
+            $count,
+            $flags,
+        );
+        if ($result === null) {
+            throw new RegexException(
+                'Regex failed: ' . implode(';', $patterns),
             );
         }
 

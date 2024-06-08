@@ -38,7 +38,7 @@ class Dir
         string $directory,
         int $permissions = 0o777,
         bool $recursive = false,
-        $context = null
+        $context = null,
     ): void {
         if (mkdir($directory, $permissions, $recursive, $context) === false) {
             throw new DirectoryException('Unable to make directory');
