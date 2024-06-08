@@ -9,13 +9,34 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
 
 /**
  * Regex utility class to throw exceptions when basic operations fail.
- *
- * No replacement is provided for preg_filter with array arguments because it
- * returns array on regex failure or no matches and so no distinction can be
- * made.
  */
 class Regex
 {
+    /**
+     * @param list<string>|string $pattern
+     * @param 0|256|512|768 $flags
+     * @throws RegexException
+     * @throws TypeException
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    public static function hasMatch(
+        array|string $pattern,
+        string $subject,
+        int $flags = 0,
+        int $offset = 0,
+    ): bool {
+        if (! is_string($pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_match($pattern, $subject, $match, $flags, $offset);
+        if ($result === false) {
+            throw new RegexException('Regex failed: ' . $pattern);
+        }
+
+        return (bool) $result;
+    }
+
     /**
      * @param list<string>|string $pattern
      */
@@ -41,7 +62,7 @@ class Regex
 
         $result = preg_grep($this->pattern, $array, $flags);
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
         return new RegexMatch($result, count($result));
@@ -96,7 +117,7 @@ class Regex
 
         $result = preg_match($this->pattern, $subject, $match, $flags, $offset);
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
         return new RegexMatch($match, $result);
@@ -126,7 +147,7 @@ class Regex
         );
 
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
         return new RegexMatch($matches, $result);
@@ -206,7 +227,7 @@ class Regex
 
         $result = preg_split($this->pattern, $subject, $limit, $flags);
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
         return new RegexMatch($result, count($result));
