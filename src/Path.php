@@ -237,23 +237,6 @@ class Path
     }
 
     /**
-     * Substitute for realpath.
-     *
-     * @throws FileException
-     */
-    public function path(string $path): string
-    {
-        $result = realpath($path);
-        if ($result === false) {
-            throw new FileException(
-                sprintf('Unable to get real path on "%s"', $path),
-            );
-        }
-
-        return $result;
-    }
-
-    /**
      * Substitute for rename.
      *
      * @throws FileException
@@ -269,6 +252,23 @@ class Path
                 ),
             );
         }
+    }
+
+    /**
+     * Substitute for realpath.
+     *
+     * @throws FileException
+     */
+    public function resolve(string $path): string
+    {
+        $result = realpath($path);
+        if ($result === false) {
+            throw new FileException(
+                sprintf('Unable to get real path on "%s"', $path),
+            );
+        }
+
+        return $result;
     }
 
     /**

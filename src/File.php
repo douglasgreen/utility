@@ -66,7 +66,7 @@ class File
      * @return ?list<string>
      * @throws FileException
      */
-    public function getCsv(
+    public function getFields(
         ?int $length = null,
         string $separator = ',',
         string $enclosure = '"',

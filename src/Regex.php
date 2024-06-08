@@ -31,6 +31,7 @@ class Regex
      *
      * @param list<string> $array
      * @throws RegexException
+     * @throws TypeException
      */
     public function filterArray(array $array, int $flags = 0): RegexMatch
     {
@@ -192,6 +193,7 @@ class Regex
      * Substitute for preg_split.
      *
      * @throws RegexException
+     * @throws TypeException
      */
     public function split(
         string $subject,
