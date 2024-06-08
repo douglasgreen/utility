@@ -13,6 +13,26 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
 class Regex
 {
     /**
+     * Substitute for preg_replace that only returns a string.
+     *
+     * Subject is limited to a string so it only returns a string.
+     *
+     * @param list<string>|string $pattern
+     * @param list<string>|string $replacement
+     */
+    public function change(
+        array|string $pattern,
+        array|string $replacement,
+        string $subject,
+        int $limit = -1,
+        int &$count = null,
+    ): string {
+        $regex = new self($pattern);
+        $match = $regex->replace($replacement, $subject, $limit, $count);
+        return $match->getString();
+    }
+
+    /**
      * A simple static matcher with no flags or offset.
      *
      * @return array<int, mixed>|string|null
@@ -173,8 +193,8 @@ class Regex
     /**
      * Substitute for preg_replace.
      *
-     * @param list<string> $replacement
-     * @param list<string> $subject
+     * @param list<string>|string $replacement
+     * @param list<string>|string $subject
      * @throws RegexException
      */
     public function replace(
@@ -201,7 +221,7 @@ class Regex
     /**
      * Substitute for preg_replace_callback.
      *
-     * @param list<string> $subject
+     * @param list<string>|string $subject
      * @throws RegexException
      */
     public function replaceCall(
