@@ -13,28 +13,45 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
 class Regex
 {
     /**
-     * @param list<string>|string $pattern
-     * @param 0|256|512|768 $flags
-     * @throws RegexException
-     * @throws TypeException
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * A simple static matcher with no flags or offset.
+     *
+     * @return array<int, mixed>|string|null
+     */
+    public static function getAllMatches(
+        string $pattern,
+        string $subject,
+        string|int|null $key = null
+    ): array|string|null {
+        $regex = new self($pattern);
+        return $regex->matchAll($subject)
+            ->get($key);
+    }
+
+    /**
+     * A simple static matcher with no flags or offset.
+     *
+     * @return array<int, mixed>|string|null
+     */
+    public static function getMatch(
+        string $pattern,
+        string $subject,
+        string|int|null $key = null
+    ): array|string|null {
+        $regex = new self($pattern);
+        return $regex->match($subject)
+            ->get($key);
+    }
+
+    /**
+     * A simple static matcher with no flags or offset.
      */
     public static function hasMatch(
-        array|string $pattern,
+        string $pattern,
         string $subject,
-        int $flags = 0,
-        int $offset = 0,
     ): bool {
-        if (! is_string($pattern)) {
-            throw new TypeException('String pattern expected');
-        }
-
-        $result = preg_match($pattern, $subject, $match, $flags, $offset);
-        if ($result === false) {
-            throw new RegexException('Regex failed: ' . $pattern);
-        }
-
-        return (bool) $result;
+        $regex = new self($pattern);
+        return $regex->match($subject)
+            ->has();
     }
 
     /**
