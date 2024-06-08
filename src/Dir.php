@@ -29,32 +29,47 @@ class Dir
     }
 
     /**
+     * @param ?resource $context
+     */
+    public function __construct(
+        protected string $directory,
+        protected $context = null
+    ) {}
+
+    /**
      * Substitute for mkdir.
      *
-     * @param ?resource $context
      * @throws DirectoryException
      */
-    public static function make(
-        string $directory,
+    public function make(
         int $permissions = 0o777,
         bool $recursive = false,
-        $context = null,
     ): void {
-        if (mkdir($directory, $permissions, $recursive, $context) === false) {
-            throw new DirectoryException('Unable to make directory');
+        if (mkdir(
+            $this->directory,
+            $permissions,
+            $recursive,
+            $this->context
+        ) === false) {
+            throw new DirectoryException(sprintf(
+                'Unable to make directory: "%s"',
+                $this->directory
+            ));
         }
     }
 
     /**
      * Substitute for rmdir.
      *
-     * @param ?resource $context
      * @throws DirectoryException
      */
-    public static function remove(string $directory, $context = null): void
+    public function remove(): void
     {
-        if (rmdir($directory, $context) === false) {
-            throw new DirectoryException('Unable to make directory');
+        if (rmdir($this->directory, $this->context) === false) {
+            throw new DirectoryException(sprintf(
+                'Unable to remove directory "%s"',
+                $this->directory
+            ));
         }
     }
 }

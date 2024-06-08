@@ -14,9 +14,25 @@ class UrlTest extends TestCase
 {
     protected Url $url;
 
-    protected function setUp(): void
+    public function testInvalidHostThrowsException(): void
     {
-        $this->url = new Url('http://username:password@hostname:9090/path?arg=value#anchor');
+        $this->expectException(ValueException::class);
+        $this->expectExceptionMessage('Invalid host: ');
+        $this->url->setHost('.abc');
+    }
+
+    public function testInvalidPortThrowsException(): void
+    {
+        $this->expectException(ValueException::class);
+        $this->expectExceptionMessage('Invalid port: -1');
+        $this->url->setPort(-1);
+    }
+
+    public function testInvalidSchemeThrowsException(): void
+    {
+        $this->expectException(ValueException::class);
+        $this->expectExceptionMessage('Invalid scheme: "invalid-scheme"');
+        $this->url->setScheme('invalid-scheme');
     }
 
     public function testSetFragment(): void
@@ -116,24 +132,8 @@ class UrlTest extends TestCase
         self::assertSame($expected, $property->getValue($this->url));
     }
 
-    public function testInvalidSchemeThrowsException(): void
+    protected function setUp(): void
     {
-        $this->expectException(ValueException::class);
-        $this->expectExceptionMessage('Invalid scheme: "invalid-scheme"');
-        $this->url->setScheme('invalid-scheme');
-    }
-
-    public function testInvalidPortThrowsException(): void
-    {
-        $this->expectException(ValueException::class);
-        $this->expectExceptionMessage('Invalid port: -1');
-        $this->url->setPort(-1);
-    }
-
-    public function testInvalidHostThrowsException(): void
-    {
-        $this->expectException(ValueException::class);
-        $this->expectExceptionMessage('Invalid host: ');
-        $this->url->setHost('.abc');
+        $this->url = new Url('http://username:password@hostname:9090/path?arg=value#anchor');
     }
 }
