@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Image;
 
-use DouglasGreen\Utility\Exceptions\FileSystem\ImageFileException;
+use DouglasGreen\Utility\Exceptions\Data\ImageException;
 
 /**
- * Image file utility class to throw exceptions when basic operations fail.
+ * Image string utility class to throw exceptions when basic operations fail.
  */
-class ImageFile
+class ImageString
 {
     public function __construct(
-        protected string $filename,
+        protected string $data,
     ) {}
 
     /**
@@ -22,12 +22,9 @@ class ImageFile
      */
     public function getSize(): ImageSize
     {
-        $result = getimagesize($this->filename);
+        $result = getimagesize($this->data);
         if ($result === false) {
-            throw new ImageFileException(sprintf(
-                'Unable to get size of image: "%s"',
-                $this->filename
-            ));
+            throw new ImageException('Unable to get size of image');
         }
 
         [$width, $height, $type, $attribute] = $result;
