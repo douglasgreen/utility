@@ -44,7 +44,7 @@ class Dir
     public function make(
         int $permissions = 0o777,
         bool $recursive = false,
-    ): void {
+    ): self {
         if (mkdir(
             $this->directory,
             $permissions,
@@ -56,6 +56,8 @@ class Dir
                 $this->directory
             ));
         }
+
+        return $this;
     }
 
     /**

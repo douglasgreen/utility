@@ -103,9 +103,11 @@ class Url implements \Stringable
         return $this->getUrl();
     }
 
-    public function deleteParam(string $key): void
+    public function deleteParam(string $key): self
     {
         unset($this->params[$key]);
+
+        return $this;
     }
 
     public function getFragment(): ?string
@@ -204,15 +206,17 @@ class Url implements \Stringable
         return isset($this->params[$key]);
     }
 
-    public function setFragment(?string $fragment): void
+    public function setFragment(?string $fragment): self
     {
         $this->fragment = $this->strip($fragment);
+
+        return $this;
     }
 
     /**
      * @throws ValueException
      */
-    public function setHost(?string $host): void
+    public function setHost(?string $host): self
     {
         $host = $this->strip($host);
         if (
@@ -223,62 +227,68 @@ class Url implements \Stringable
         }
 
         $this->host = $host;
+
+        return $this;
     }
 
-    public function setParam(string $key, mixed $value): void
+    public function setParam(string $key, mixed $value): self
     {
-        if (! is_string($key)) {
-            return;
-        }
-
         $key = $this->strip($key);
         if ($key === '') {
-            return;
+            return $this;
         }
 
         if (is_string($value)) {
             $value = $this->strip($value);
             if ($value === '') {
-                return;
+                return $this;
             }
         } elseif (is_array($value)) {
             if ($value === []) {
-                return;
+                return $this;
             }
         } else {
-            return;
+            return $this;
         }
 
         $this->params[$key] = $value;
+
+        return $this;
     }
 
-    public function setPass(?string $pass): void
+    public function setPass(?string $pass): self
     {
         $this->pass = $this->strip($pass);
+
+        return $this;
     }
 
-    public function setPath(?string $path): void
+    public function setPath(?string $path): self
     {
         $this->path = $this->strip($path);
+
+        return $this;
     }
 
     /**
      * @throws ValueException
      */
-    public function setPort(?int $port): void
+    public function setPort(?int $port): self
     {
         if ($port !== null && ($port < 1 || $port > 65535)) {
             throw new ValueException(sprintf('Invalid port: %d', $port));
         }
 
         $this->port = $port;
+
+        return $this;
     }
 
-    public function setQuery(?string $query): void
+    public function setQuery(?string $query): self
     {
         $query = $this->strip($query);
         if ($query === null) {
-            return;
+            return $this;
         }
 
         parse_str($query, $params);
@@ -290,12 +300,14 @@ class Url implements \Stringable
 
             $this->setParam($key, $value);
         }
+
+        return $this;
     }
 
     /**
      * @throws ValueException
      */
-    public function setScheme(?string $scheme): void
+    public function setScheme(?string $scheme): self
     {
         if ($scheme !== null && ! in_array(
             $scheme,
@@ -306,11 +318,15 @@ class Url implements \Stringable
         }
 
         $this->scheme = $this->strip($scheme);
+
+        return $this;
     }
 
-    public function setUser(?string $user): void
+    public function setUser(?string $user): self
     {
         $this->user = $this->strip($user);
+
+        return $this;
     }
 
     /**
