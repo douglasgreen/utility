@@ -10,6 +10,10 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
 /**
  * Regex utility class to throw exceptions when basic operations fail.
  *
+ * @phpstan-import-type Match from MatchArray
+ * @phpstan-import-type MatchOffset from MatchOffsetArray
+ * @phpstan-import-type MatchAll from MatchAllArray
+ *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Regex
@@ -17,7 +21,7 @@ class Regex
     /**
      * A simple static matcher that uses preg_match_all and returns the match.
      *
-     * @return array<string|int, mixed>
+     * @return array<string|int, MatchAll>
      */
     public static function getAllMatches(
         string $pattern,
@@ -33,17 +37,15 @@ class Regex
     /**
      * A simple static matcher that uses preg_match and returns the match.
      *
-     * @param 0|256|512|768 $flags
-     * @return array<string|int, mixed>
+     * @return array<string|int, Match>
      */
     public static function getMatch(
         string $pattern,
         string $subject,
-        int $flags = 0,
         int $offset = 0,
     ): array {
         $regex = new self($pattern);
-        return $regex->match($subject, $flags, $offset)
+        return $regex->match($subject, $offset)
             ->getAll();
     }
 
@@ -67,17 +69,14 @@ class Regex
 
     /**
      * A simple static matcher that uses preg_match and checks that a match exists.
-     *
-     * @param 0|256|512|768 $flags
      */
     public static function hasMatch(
         string $pattern,
         string $subject,
-        int $flags = 0,
         int $offset = 0,
     ): bool {
         $regex = new self($pattern);
-        return $regex->match($subject, $flags, $offset)
+        return $regex->match($subject, $offset)
             ->has();
     }
 
@@ -175,25 +174,49 @@ class Regex
     /**
      * Do a preg_match and store the results.
      *
-     * @param 0|256|512|768 $flags
      * @throws RegexException
      * @throws TypeException
      */
-    public function match(
-        string $subject,
-        int $flags = 0,
-        int $offset = 0,
-    ): MatchArray {
+    public function match(string $subject, int $offset = 0): MatchArray
+    {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
         }
 
-        $result = preg_match($this->pattern, $subject, $match, $flags, $offset);
+        $result = preg_match($this->pattern, $subject, $match, 0, $offset);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
         return new MatchArray($match, $result);
+    }
+
+    /**
+     * Do a preg_match and store the results.
+     *
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function matchOffset(
+        string $subject,
+        int $offset = 0,
+    ): MatchOffsetArray {
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_match(
+            $this->pattern,
+            $subject,
+            $match,
+            PREG_OFFSET_CAPTURE,
+            $offset
+        );
+        if ($result === false) {
+            throw new RegexException('Regex failed: ' . $this->pattern);
+        }
+
+        return new MatchOffsetArray($match, $result);
     }
 
     /**

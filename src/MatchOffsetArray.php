@@ -7,12 +7,12 @@ namespace DouglasGreen\Utility;
 /**
  * Regex utility class to store information about preg_match matches.
  *
- * @phpstan-type Match string
+ * @phpstan-type MatchOffset array<int, int|string>
  */
-class MatchArray extends RegexMatch
+class MatchOffsetArray extends RegexMatch
 {
     /**
-     * @param array<string|int, Match> $matches
+     * @param array<string|int, MatchOffset> $matches
      */
     public function __construct(
         protected array $matches,
@@ -20,15 +20,15 @@ class MatchArray extends RegexMatch
     ) {}
 
     /**
-     * @return Match
+     * @return ?MatchOffset
      */
-    public function get(string|int $key): string|null
+    public function get(string|int $key): ?array
     {
         return $this->matches[$key] ?? null;
     }
 
     /**
-     * @return array<string|int, Match>
+     * @return array<string|int, MatchOffset>
      */
     public function getAll(): array
     {
