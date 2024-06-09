@@ -32,13 +32,15 @@ class Path
      *
      * @throws FileException
      */
-    public function changeGroup(string|int $group): void
+    public function changeGroup(string|int $group): self
     {
         if (chgrp($this->filename, $group) === false) {
             throw new FileException(
                 sprintf('Unable to change group of file "%s"', $this->filename),
             );
         }
+
+        return $this;
     }
 
     /**
@@ -46,13 +48,15 @@ class Path
      *
      * @throws FileException
      */
-    public function changeMode(int $permissions): void
+    public function changeMode(int $permissions): self
     {
         if (chmod($this->filename, $permissions) === false) {
             throw new FileException(
                 sprintf('Unable to change mode of file "%s"', $this->filename),
             );
         }
+
+        return $this;
     }
 
     /**
@@ -60,13 +64,15 @@ class Path
      *
      * @throws FileException
      */
-    public function changeOwner(string|int $user): void
+    public function changeOwner(string|int $user): self
     {
         if (chown($this->filename, $user) === false) {
             throw new FileException(
                 sprintf('Unable to change owner of file "%s"', $this->filename),
             );
         }
+
+        return $this;
     }
 
     /**
@@ -74,7 +80,7 @@ class Path
      *
      * @throws FileException
      */
-    public function copy(string $source, string $target): void
+    public function copy(string $source, string $target): self
     {
         if (copy($source, $target, $this->context) === false) {
             throw new FileException(
@@ -85,6 +91,8 @@ class Path
                 ),
             );
         }
+
+        return $this;
     }
 
     /**
@@ -92,11 +100,13 @@ class Path
      *
      * @throws FileException
      */
-    public function delete(): void
+    public function delete(): self
     {
         if (unlink($this->filename, $this->context) === false) {
             throw new FileException('Unable to delete file');
         }
+
+        return $this;
     }
 
     /**
@@ -241,7 +251,7 @@ class Path
      *
      * @throws FileException
      */
-    public function rename(string $source, string $target): void
+    public function rename(string $source, string $target): self
     {
         if (rename($source, $target, $this->context) === false) {
             throw new FileException(
@@ -252,6 +262,8 @@ class Path
                 ),
             );
         }
+
+        return $this;
     }
 
     /**
@@ -313,13 +325,15 @@ class Path
      *
      * @throws FileException
      */
-    public function symlink(string $target, string $link): void
+    public function symlink(string $target, string $link): self
     {
         if (symlink($target, $link) === false) {
             throw new FileException(
                 sprintf('Unable to link "%s" to file "%s"', $link, $target),
             );
         }
+
+        return $this;
     }
 
     /**
@@ -327,7 +341,7 @@ class Path
      *
      * @throws FileException
      */
-    public function touch(?int $mtime = null, ?int $atime = null): void
+    public function touch(?int $mtime = null, ?int $atime = null): self
     {
         $result = touch($this->filename, $mtime, $atime);
         if ($result === false) {
@@ -338,5 +352,7 @@ class Path
                 ),
             );
         }
+
+        return $this;
     }
 }
