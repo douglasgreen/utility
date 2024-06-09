@@ -120,12 +120,33 @@ class Url implements \Stringable
         return $this->host;
     }
 
-    /**
-     * @return array<string|int, mixed>|string|float|int|null
-     */
-    public function getParam(string $key): array|string|float|int|null
+    public function getParam(string $key): string|float|int|null
     {
-        return $this->params[$key] ?? null;
+        if (! isset($this->params[$key])) {
+            return null;
+        }
+
+        if (is_array($this->params[$key])) {
+            return null;
+        }
+
+        return $this->params[$key];
+    }
+
+    /**
+     * @return array<string|int, mixed>|null
+     */
+    public function getParamArray(string $key): ?array
+    {
+        if (! isset($this->params[$key])) {
+            return null;
+        }
+
+        if (! is_array($this->params[$key])) {
+            return null;
+        }
+
+        return $this->params[$key];
     }
 
     public function getPass(): ?string
@@ -264,7 +285,7 @@ class Url implements \Stringable
         return $this;
     }
 
-    public function setParam(string $key, mixed $value): self
+    public function setParam(string $key, string|float|int $value): self
     {
         $key = $this->strip($key);
         if ($key === '') {
@@ -276,11 +297,24 @@ class Url implements \Stringable
             if ($value === '') {
                 return $this;
             }
-        } elseif (is_array($value)) {
-            if ($value === []) {
-                return $this;
-            }
-        } else {
+        }
+
+        $this->params[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param array<string|int, mixed> $value
+     */
+    public function setParamArray(string $key, array $value): self
+    {
+        $key = $this->strip($key);
+        if ($key === '') {
+            return $this;
+        }
+
+        if ($value === []) {
             return $this;
         }
 
@@ -331,7 +365,11 @@ class Url implements \Stringable
                 continue;
             }
 
-            $this->setParam($key, $value);
+            if (is_array($value)) {
+                $this->setParamArray($key, $value);
+            } else {
+                $this->setParam($key, $value);
+            }
         }
 
         return $this;
