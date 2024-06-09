@@ -26,11 +26,10 @@ class Regex
     public static function getAllMatches(
         string $pattern,
         string $subject,
-        int $flags = 0,
         int $offset = 0,
     ): array {
         $regex = new self($pattern);
-        return $regex->matchAll($subject, $flags, $offset)
+        return $regex->matchAll($subject, $offset)
             ->getAll();
     }
 
@@ -192,7 +191,65 @@ class Regex
     }
 
     /**
-     * Do a preg_match and store the results.
+     * Do a preg_match_all and store the results.
+     *
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function matchAll(
+        string $subject,
+        int $offset = 0,
+    ): MatchAllArray {
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_match_all(
+            $this->pattern,
+            $subject,
+            $matches,
+            0,
+            $offset
+        );
+
+        if ($result === false) {
+            throw new RegexException('Regex failed: ' . $this->pattern);
+        }
+
+        return new MatchAllArray($matches, $result);
+    }
+
+    /**
+     * Do a preg_match_all with offset capture and store the results.
+     *
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function matchAllOffset(
+        string $subject,
+        int $offset = 0,
+    ): MatchAllOffsetArray {
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_match_all(
+            $this->pattern,
+            $subject,
+            $matches,
+            PREG_OFFSET_CAPTURE,
+            $offset
+        );
+
+        if ($result === false) {
+            throw new RegexException('Regex failed: ' . $this->pattern);
+        }
+
+        return new MatchAllOffsetArray($matches, $result);
+    }
+
+    /**
+     * Do a preg_match with offset capture and store the results.
      *
      * @throws RegexException
      * @throws TypeException
@@ -217,36 +274,6 @@ class Regex
         }
 
         return new MatchOffsetArray($match, $result);
-    }
-
-    /**
-     * Do a preg_match_all and store the results.
-     *
-     * @throws RegexException
-     * @throws TypeException
-     */
-    public function matchAll(
-        string $subject,
-        int $flags = 0,
-        int $offset = 0,
-    ): MatchAllArray {
-        if (! is_string($this->pattern)) {
-            throw new TypeException('String pattern expected');
-        }
-
-        $result = preg_match_all(
-            $this->pattern,
-            $subject,
-            $matches,
-            $flags,
-            $offset
-        );
-
-        if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
-        }
-
-        return new MatchAllArray($matches, $result);
     }
 
     /**

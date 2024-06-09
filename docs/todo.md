@@ -5,3 +5,4 @@
 -   Finish utility dirs
 -   Write unit tests
 -   Add more wrappers for superglobals
+-   Support `PREG_SET_ORDER` for `preg_match_all`.

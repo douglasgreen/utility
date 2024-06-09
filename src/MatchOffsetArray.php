@@ -7,7 +7,7 @@ namespace DouglasGreen\Utility;
 /**
  * Regex utility class to store information about preg_match matches.
  *
- * @phpstan-type MatchOffset array<int, int|string>
+ * @phpstan-type MatchOffset array<int, string|int>
  */
 class MatchOffsetArray extends RegexMatch
 {
