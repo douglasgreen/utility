@@ -47,16 +47,9 @@ class File
         $this->open();
     }
 
-    /**
-     * Substitute for fclose.
-     *
-     * @throws FileException
-     */
-    public function close(): void
+    public function __destruct()
     {
-        if (fclose($this->stream) === false) {
-            throw new FileException('Unable to close file');
-        }
+        $this->close();
     }
 
     /**
@@ -115,28 +108,6 @@ class File
     }
 
     /**
-     * Substitute for fopen.
-     *
-     * @throws FileException
-     */
-    public function open(): void
-    {
-        $stream = fopen(
-            $this->filename,
-            $this->mode,
-            $this->useIncludePath,
-            $this->context
-        );
-        if ($stream === false) {
-            throw new FileException(
-                sprintf('Unable to open file "%s"', $this->filename),
-            );
-        }
-
-        $this->stream = $stream;
-    }
-
-    /**
      * Substitute for fread.
      *
      * @param int<1, max> $length
@@ -172,12 +143,14 @@ class File
      *
      * @throws FileException
      */
-    public function rewind(): void
+    public function rewind(): self
     {
         $result = rewind($this->stream);
         if ($result === false) {
             throw new FileException('Unable to rewind file');
         }
+
+        return $this;
     }
 
     /**
@@ -185,11 +158,13 @@ class File
      *
      * @throws FileException
      */
-    public function seek(int $offset, int $whence = SEEK_SET): void
+    public function seek(int $offset, int $whence = SEEK_SET): self
     {
         if (fseek($this->stream, $offset, $whence) === -1) {
             throw new FileException('Unable to seek on file');
         }
+
+        return $this;
     }
 
     /**
@@ -237,5 +212,39 @@ class File
         }
 
         return $result;
+    }
+
+    /**
+     * Substitute for fclose.
+     *
+     * @throws FileException
+     */
+    protected function close(): void
+    {
+        if (fclose($this->stream) === false) {
+            throw new FileException('Unable to close file');
+        }
+    }
+
+    /**
+     * Substitute for fopen.
+     *
+     * @throws FileException
+     */
+    protected function open(): void
+    {
+        $stream = fopen(
+            $this->filename,
+            $this->mode,
+            $this->useIncludePath,
+            $this->context
+        );
+        if ($stream === false) {
+            throw new FileException(
+                sprintf('Unable to open file "%s"', $this->filename),
+            );
+        }
+
+        $this->stream = $stream;
     }
 }
