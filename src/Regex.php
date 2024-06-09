@@ -96,13 +96,37 @@ class Regex
      * @throws RegexException
      * @throws TypeException
      */
-    public function filterList(array $array, int $flags = 0): MatchList
+    public function filterList(array $array): MatchList
     {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
         }
 
-        $result = preg_grep($this->pattern, $array, $flags);
+        $result = preg_grep($this->pattern, $array);
+        if ($result === false) {
+            throw new RegexException('Regex failed: ' . $this->pattern);
+        }
+
+        return new MatchList($result, count($result));
+    }
+
+    /**
+     * Substitute for preg_grep that inverts the match.
+     *
+     * The name indicates it is filtering the array and shouldn't be confused
+     * with preg_filter.
+     *
+     * @param list<string> $array
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function filterListInverted(array $array): MatchList
+    {
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_grep($this->pattern, $array, PREG_GREP_INVERT);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
@@ -343,14 +367,12 @@ class Regex
         callable $callback,
         string $subject,
         int $limit = -1,
-        int $flags = 0,
     ): string {
         $result = preg_replace_callback(
             $this->pattern,
             $callback,
             $subject,
             $limit,
-            $flags,
         );
 
         if ($result === null) {
@@ -372,7 +394,6 @@ class Regex
         callable $callback,
         array $subject,
         int $limit = -1,
-        int $flags = 0,
     ): MatchList {
         $result = preg_replace_callback(
             $this->pattern,
@@ -380,7 +401,6 @@ class Regex
             $subject,
             $limit,
             $count,
-            $flags,
         );
 
         if ($result === null) {
@@ -396,16 +416,13 @@ class Regex
      * @throws RegexException
      * @throws TypeException
      */
-    public function split(
-        string $subject,
-        int $limit = -1,
-        int $flags = 0,
-    ): MatchList {
+    public function split(string $subject, int $limit = -1): MatchList
+    {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
         }
 
-        $result = preg_split($this->pattern, $subject, $limit, $flags);
+        $result = preg_split($this->pattern, $subject, $limit);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
