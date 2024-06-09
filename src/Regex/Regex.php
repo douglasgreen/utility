@@ -19,6 +19,39 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
 class Regex
 {
     /**
+     * Substitute for preg_replace that only returns a string.
+     *
+     * Subject is limited to a string so it only returns a string.
+     *
+     * @param list<string>|string $replacement
+     * @param list<string>|string $pattern
+     */
+    public static function doReplace(
+        array|string $pattern,
+        array|string $replacement,
+        string $subject,
+        int $limit = -1,
+    ): string {
+        $regex = new self($pattern);
+        return $regex->replace($replacement, $subject, $limit);
+    }
+
+    /**
+     * Substitute for preg_split that returns the pieces.
+     *
+     * @return list<string>
+     */
+    public static function doSplit(
+        string $pattern,
+        string $subject,
+        int $limit = -1
+    ): array {
+        $regex = new self($pattern);
+        return $regex->split($subject, $limit)
+            ->getAll();
+    }
+
+    /**
      * A simple static matcher that uses preg_match_all and returns the match.
      *
      * @return array<string|int, MatchAll>
@@ -46,39 +79,6 @@ class Regex
         $regex = new self($pattern);
         return $regex->match($subject, $offset)
             ->getAll();
-    }
-
-    /**
-     * Substitute for preg_split that returns the pieces.
-     *
-     * @return list<string>
-     */
-    public static function getPieces(
-        string $pattern,
-        string $subject,
-        int $limit = -1
-    ): array {
-        $regex = new self($pattern);
-        return $regex->split($subject, $limit)
-            ->getAll();
-    }
-
-    /**
-     * Substitute for preg_replace that only returns a string.
-     *
-     * Subject is limited to a string so it only returns a string.
-     *
-     * @param list<string>|string $replacement
-     * @param list<string>|string $pattern
-     */
-    public static function getReplace(
-        array|string $pattern,
-        array|string $replacement,
-        string $subject,
-        int $limit = -1,
-    ): string {
-        $regex = new self($pattern);
-        return $regex->replace($replacement, $subject, $limit);
     }
 
     /**

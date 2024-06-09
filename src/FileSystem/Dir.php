@@ -8,6 +8,8 @@ use DouglasGreen\Utility\Exceptions\FileSystem\DirectoryException;
 
 /**
  * Directory utility class to throw exceptions when basic operations fail.
+ *
+ * Manages functions on a directory name.
  */
 class Dir
 {
@@ -81,6 +83,24 @@ class Dir
     }
 
     /**
+     * Substitute for dir.
+     *
+     * @throws DirectoryException
+     */
+    public function open(): \Directory
+    {
+        $result = dir($this->directory, $this->context);
+        if ($result === false) {
+            throw new DirectoryException(sprintf(
+                'Unable to open directory "%s"',
+                $this->directory
+            ));
+        }
+
+        return $result;
+    }
+
+    /**
      * Substitute for rmdir.
      *
      * @throws DirectoryException
@@ -93,5 +113,43 @@ class Dir
                 $this->directory
             ));
         }
+    }
+
+    /**
+     * Substitute for scandir.
+     *
+     * @return list<string>
+     * @throws DirectoryException
+     */
+    public function scan(
+        int $sortingOrder = SCANDIR_SORT_ASCENDING
+    ): array {
+        $result = scandir($this->directory, $sortingOrder, $this->context);
+        if ($result === false) {
+            throw new DirectoryException(sprintf(
+                'Unable to scan directory: "%s"',
+                $this->directory
+            ));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for chdir.
+     *
+     * @throws DirectoryException
+     */
+    public function setCurrent(): self
+    {
+        $result = chdir($this->directory);
+        if ($result === false) {
+            throw new DirectoryException(sprintf(
+                'Unable to change directory to: "%s"',
+                $this->directory
+            ));
+        }
+
+        return $this;
     }
 }

@@ -168,6 +168,26 @@ class Path
     }
 
     /**
+     * Substitute for fileperms.
+     *
+     * @throws FileException
+     */
+    public function getPermissions(): int
+    {
+        $result = fileperms($this->filename);
+        if ($result === false) {
+            throw new FileException(
+                sprintf(
+                    'Unable to get permissions of file "%s"',
+                    $this->filename,
+                ),
+            );
+        }
+
+        return $result;
+    }
+
+    /**
      * Substitute for filemtime.
      *
      * @throws FileException

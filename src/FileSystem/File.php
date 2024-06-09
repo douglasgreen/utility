@@ -16,7 +16,6 @@ use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
  * umask
  * fileperms
  * link
- * fputs
  * ftruncate
  * flock
  * readlink
@@ -105,6 +104,35 @@ class File
         }
 
         return $buffer;
+    }
+
+    /**
+     * Substitute for fputcsv.
+     *
+     * @param list<string> $fields
+     * @throws FileException
+     */
+    public function putFields(
+        array $fields,
+        string $separator = ',',
+        string $enclosure = '"',
+        string $escape = '\\',
+        string $eol = PHP_EOL
+    ): int {
+        $result = fputcsv(
+            $this->stream,
+            $fields,
+            $separator,
+            $enclosure,
+            $escape,
+            $eol
+        );
+
+        if ($result === false) {
+            throw new FileException('Unable to put CSV line into file');
+        }
+
+        return $result;
     }
 
     /**
@@ -199,7 +227,7 @@ class File
     }
 
     /**
-     * Substitute for fwrite.
+     * Substitute for fwrite and its alias fputs.
      *
      * @param ?int<0, max> $length
      * @throws FileException
