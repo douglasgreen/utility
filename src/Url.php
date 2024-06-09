@@ -54,9 +54,9 @@ class Url implements \Stringable
     ];
 
     /**
-     * @var ?array<string, mixed>
+     * @var array<string|int, mixed>
      */
-    protected ?array $params = null;
+    protected array $params = [];
 
     protected ?string $fragment;
 
@@ -103,6 +103,11 @@ class Url implements \Stringable
         return $this->getUrl();
     }
 
+    public function deleteParam(string $key): void
+    {
+        unset($this->params[$key]);
+    }
+
     public function getFragment(): ?string
     {
         return $this->fragment;
@@ -113,7 +118,10 @@ class Url implements \Stringable
         return $this->host;
     }
 
-    public function getParam(string $key): mixed
+    /**
+     * @return array<string|int, mixed>|string|float|int|null
+     */
+    public function getParam(string $key): array|string|float|int|null
     {
         return $this->params[$key] ?? null;
     }
@@ -135,7 +143,7 @@ class Url implements \Stringable
 
     public function getQuery(): ?string
     {
-        if ($this->params !== null) {
+        if ($this->params !== []) {
             return http_build_query($this->params);
         }
 
@@ -175,7 +183,7 @@ class Url implements \Stringable
             $url .= $this->path;
         }
 
-        if ($this->params !== null) {
+        if ($this->params !== []) {
             $url .= '?' . $this->getQuery();
         }
 
@@ -189,6 +197,11 @@ class Url implements \Stringable
     public function getUser(): ?string
     {
         return $this->user;
+    }
+
+    public function hasParam(string $key): bool
+    {
+        return isset($this->params[$key]);
     }
 
     public function setFragment(?string $fragment): void
@@ -234,10 +247,6 @@ class Url implements \Stringable
             }
         } else {
             return;
-        }
-
-        if ($this->params === null) {
-            $this->params = [];
         }
 
         $this->params[$key] = $value;
