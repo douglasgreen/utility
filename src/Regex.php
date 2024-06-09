@@ -9,68 +9,75 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
 
 /**
  * Regex utility class to throw exceptions when basic operations fail.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Regex
 {
+    /**
+     * A simple static matcher that uses preg_match_all and returns the match.
+     *
+     * @return array<string|int, mixed>
+     */
+    public static function getAllMatches(
+        string $pattern,
+        string $subject,
+        int $flags = 0,
+        int $offset = 0,
+    ): array {
+        $regex = new self($pattern);
+        return $regex->matchAll($subject, $flags, $offset)
+            ->getAll();
+    }
+
+    /**
+     * A simple static matcher that uses preg_match and returns the match.
+     *
+     * @param 0|256|512|768 $flags
+     * @return array<string|int, mixed>
+     */
+    public static function getMatch(
+        string $pattern,
+        string $subject,
+        int $flags = 0,
+        int $offset = 0,
+    ): array {
+        $regex = new self($pattern);
+        return $regex->match($subject, $flags, $offset)
+            ->getAll();
+    }
+
     /**
      * Substitute for preg_replace that only returns a string.
      *
      * Subject is limited to a string so it only returns a string.
      *
-     * @param list<string>|string $pattern
      * @param list<string>|string $replacement
+     * @param list<string>|string $pattern
      */
-    public function change(
+    public function getReplace(
         array|string $pattern,
         array|string $replacement,
         string $subject,
         int $limit = -1,
-        int &$count = null,
     ): string {
         $regex = new self($pattern);
-        $match = $regex->replace($replacement, $subject, $limit, $count);
-        return $match->getString();
+        return $regex->replace($replacement, $subject, $limit);
     }
 
     /**
-     * A simple static matcher with no flags or offset.
+     * A simple static matcher that uses preg_match and checks that a match exists.
      *
-     * @return array<int, mixed>|string|null
-     */
-    public static function getAllMatches(
-        string $pattern,
-        string $subject,
-        string|int|null $key = null
-    ): array|string|null {
-        $regex = new self($pattern);
-        return $regex->matchAll($subject)
-            ->get($key);
-    }
-
-    /**
-     * A simple static matcher with no flags or offset.
-     *
-     * @return array<int, mixed>|string|null
-     */
-    public static function getMatch(
-        string $pattern,
-        string $subject,
-        string|int|null $key = null
-    ): array|string|null {
-        $regex = new self($pattern);
-        return $regex->match($subject)
-            ->get($key);
-    }
-
-    /**
-     * A simple static matcher with no flags or offset.
+     * @param 0|256|512|768 $flags
      */
     public static function hasMatch(
         string $pattern,
         string $subject,
+        int $flags = 0,
+        int $offset = 0,
     ): bool {
         $regex = new self($pattern);
-        return $regex->match($subject)
+        return $regex->match($subject, $flags, $offset)
             ->has();
     }
 
@@ -91,7 +98,7 @@ class Regex
      * @throws RegexException
      * @throws TypeException
      */
-    public function filterArray(array $array, int $flags = 0): RegexMatch
+    public function filterList(array $array, int $flags = 0): MatchList
     {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
@@ -102,7 +109,7 @@ class Regex
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
-        return new RegexMatch($result, count($result));
+        return new MatchList($result, count($result));
     }
 
     /**
@@ -111,16 +118,49 @@ class Regex
      * The function name indicates that preg_filter is identical to preg_replace
      * except it only returns the subjects where there was a match.
      *
+     * Takes a string as $subject so it returns a string.
+     *
      * @param list<string>|string $replacement
-     * @param list<string>|string $subject
      * @throws RegexException
      */
     public function filteredReplace(
         array|string $replacement,
-        array|string $subject,
+        string $subject,
         int $limit = -1,
-        int &$count = null,
-    ): RegexMatch {
+    ): string {
+        $result = preg_filter(
+            $this->pattern,
+            $replacement,
+            $subject,
+            $limit
+        );
+
+        if ($result === null) {
+            throw new RegexException('Regex failed: ' . $this->getPattern());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for preg_filter.
+     *
+     * The function name indicates that preg_filter is identical to preg_replace
+     * except it only returns the subjects where there was a match.
+     *
+     * Takes an array as $subject so it returns a MatchList.
+     *
+     * preg_filter doesn't distinguish between no matches and error when using
+     * array as subject, so no exception can be thrown here.
+     *
+     * @param list<string>|string $replacement
+     * @param list<string> $subject
+     */
+    public function filteredReplaceList(
+        array|string $replacement,
+        array $subject,
+        int $limit = -1,
+    ): MatchList {
         $result = preg_filter(
             $this->pattern,
             $replacement,
@@ -129,11 +169,7 @@ class Regex
             $count
         );
 
-        if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
-        }
-
-        return new RegexMatch($result, $count);
+        return new MatchList($result, $count);
     }
 
     /**
@@ -147,7 +183,7 @@ class Regex
         string $subject,
         int $flags = 0,
         int $offset = 0,
-    ): RegexMatch {
+    ): MatchArray {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
         }
@@ -157,7 +193,7 @@ class Regex
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
-        return new RegexMatch($match, $result);
+        return new MatchArray($match, $result);
     }
 
     /**
@@ -170,7 +206,7 @@ class Regex
         string $subject,
         int $flags = 0,
         int $offset = 0,
-    ): RegexMatch {
+    ): MatchAllArray {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
         }
@@ -187,22 +223,50 @@ class Regex
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
-        return new RegexMatch($matches, $result);
+        return new MatchAllArray($matches, $result);
     }
 
     /**
      * Substitute for preg_replace.
      *
+     * Takes a string as $subject so it returns a string.
+     *
      * @param list<string>|string $replacement
-     * @param list<string>|string $subject
      * @throws RegexException
      */
     public function replace(
         array|string $replacement,
-        array|string $subject,
+        string $subject,
         int $limit = -1,
-        int &$count = null,
-    ): RegexMatch {
+    ): string {
+        $result = preg_replace(
+            $this->pattern,
+            $replacement,
+            $subject,
+            $limit,
+        );
+
+        if ($result === null) {
+            throw new RegexException('Regex failed: ' . $this->getPattern());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for preg_replace.
+     *
+     * Takes an array as $subject so it returns a MatchList.
+     *
+     * @param list<string>|string $replacement
+     * @param list<string> $subject
+     * @throws RegexException
+     */
+    public function replaceList(
+        array|string $replacement,
+        array $subject,
+        int $limit = -1,
+    ): MatchList {
         $result = preg_replace(
             $this->pattern,
             $replacement,
@@ -215,22 +279,51 @@ class Regex
             throw new RegexException('Regex failed: ' . $this->getPattern());
         }
 
-        return new RegexMatch($result, $count);
+        return new MatchList($result, $count);
     }
 
     /**
      * Substitute for preg_replace_callback.
      *
-     * @param list<string>|string $subject
+     * Takes a string as $subject so it returns a string.
+     *
      * @throws RegexException
      */
     public function replaceCall(
         callable $callback,
-        array|string $subject,
+        string $subject,
         int $limit = -1,
-        int &$count = null,
         int $flags = 0,
-    ): RegexMatch {
+    ): string {
+        $result = preg_replace_callback(
+            $this->pattern,
+            $callback,
+            $subject,
+            $limit,
+            $flags,
+        );
+
+        if ($result === null) {
+            throw new RegexException('Regex failed: ' . $this->getPattern());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for preg_replace_callback.
+     *
+     * Takes an array as $subject so it returns a MatchList.
+     *
+     * @param list<string> $subject
+     * @throws RegexException
+     */
+    public function replaceCallList(
+        callable $callback,
+        array $subject,
+        int $limit = -1,
+        int $flags = 0,
+    ): MatchList {
         $result = preg_replace_callback(
             $this->pattern,
             $callback,
@@ -244,7 +337,7 @@ class Regex
             throw new RegexException('Regex failed: ' . $this->getPattern());
         }
 
-        return new RegexMatch($result, $count);
+        return new MatchList($result, $count);
     }
 
     /**
@@ -257,7 +350,7 @@ class Regex
         string $subject,
         int $limit = -1,
         int $flags = 0,
-    ): RegexMatch {
+    ): MatchList {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
         }
@@ -267,7 +360,7 @@ class Regex
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
-        return new RegexMatch($result, count($result));
+        return new MatchList($result, count($result));
     }
 
     /**
