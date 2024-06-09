@@ -206,6 +206,39 @@ class Url implements \Stringable
         return isset($this->params[$key]);
     }
 
+    public function isEqual(self $otherUrl): bool
+    {
+        if (! ArrayUtils::equal($this->params, $otherUrl->params)) {
+            return false;
+        }
+
+        if ($this->fragment !== $otherUrl->fragment) {
+            return false;
+        }
+
+        if ($this->host !== $otherUrl->host) {
+            return false;
+        }
+
+        if ($this->pass !== $otherUrl->pass) {
+            return false;
+        }
+
+        if ($this->path !== $otherUrl->path) {
+            return false;
+        }
+
+        if ($this->scheme !== $otherUrl->scheme) {
+            return false;
+        }
+
+        if ($this->user !== $otherUrl->user) {
+            return false;
+        }
+
+        return $this->port === $otherUrl->port;
+    }
+
     public function setFragment(?string $fragment): self
     {
         $this->fragment = $this->strip($fragment);
