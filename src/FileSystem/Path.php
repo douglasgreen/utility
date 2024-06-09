@@ -271,12 +271,12 @@ class Path
      *
      * @throws FileException
      */
-    public function resolve(string $path): string
+    public function resolve(): string
     {
-        $result = realpath($path);
+        $result = realpath($this->filename);
         if ($result === false) {
             throw new FileException(
-                sprintf('Unable to get real path on "%s"', $path),
+                sprintf('Unable to get real path on "%s"', $this->filename),
             );
         }
 
