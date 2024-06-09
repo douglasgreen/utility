@@ -12,28 +12,30 @@ class ArrayUtils
      */
     public static function equal(array $array1, array $array2): bool
     {
-        self::sortRecursively($array1);
-        self::sortRecursively($array2);
+        $array1 = self::sortRecursively($array1);
+        $array2 = self::sortRecursively($array2);
         return $array1 === $array2;
     }
 
     /**
      * @param array<string|int, mixed> $array
+     * @return array<string|int, mixed>
      */
-    public static function sortRecursively(array &$array): void
+    public static function sortRecursively(array $array): array
     {
         foreach ($array as &$value) {
             if (is_array($value)) {
-                self::sortRecursively($value);
+                $value = self::sortRecursively($value);
             }
         }
 
         unset($value);
         ksort($array);
         if (array_keys($array) !== range(0, count($array) - 1)) {
-            return;
+            return $array;
         }
 
         sort($array);
+        return $array;
     }
 }
