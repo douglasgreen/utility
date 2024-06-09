@@ -31,11 +31,10 @@ class ArrayUtils
 
         unset($value);
         ksort($array);
-        if (array_keys($array) !== range(0, count($array) - 1)) {
-            return $array;
+        if (array_keys($array) === range(0, count($array) - 1)) {
+            sort($array);
         }
 
-        sort($array);
         return $array;
     }
 }
