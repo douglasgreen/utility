@@ -49,6 +49,21 @@ class Regex
     }
 
     /**
+     * Substitute for preg_split that returns the pieces.
+     *
+     * @return list<string>
+     */
+    public static function getPieces(
+        string $pattern,
+        string $subject,
+        int $limit = -1
+    ): array {
+        $regex = new self($pattern);
+        return $regex->split($subject, $limit)
+            ->getAll();
+    }
+
+    /**
      * Substitute for preg_replace that only returns a string.
      *
      * Subject is limited to a string so it only returns a string.
@@ -56,7 +71,7 @@ class Regex
      * @param list<string>|string $replacement
      * @param list<string>|string $pattern
      */
-    public function getReplace(
+    public static function getReplace(
         array|string $pattern,
         array|string $replacement,
         string $subject,
