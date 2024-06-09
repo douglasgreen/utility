@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\Utility;
+namespace DouglasGreen\Utility\Regex;
 
 /**
  * Regex utility class to store information about preg_match_all matches.
  *
- * @phpstan-type MatchAllOffset array<int, array<int, string|int>>
+ * @phpstan-type MatchAll array<int, string>
  */
-class MatchAllOffsetArray extends RegexMatch
+class MatchAllArray extends RegexMatch
 {
     /**
-     * @param array<string|int, MatchAllOffset> $matches
+     * @param array<string|int, MatchAll> $matches
      */
     public function __construct(
         protected array $matches,
@@ -20,7 +20,7 @@ class MatchAllOffsetArray extends RegexMatch
     ) {}
 
     /**
-     * @return ?MatchAllOffset
+     * @return ?MatchAll
      */
     public function get(string|int $key): ?array
     {
@@ -28,7 +28,7 @@ class MatchAllOffsetArray extends RegexMatch
     }
 
     /**
-     * @return array<string|int, MatchAllOffset>
+     * @return array<string|int, MatchAll>
      */
     public function getAll(): array
     {

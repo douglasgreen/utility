@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\Utility;
+namespace DouglasGreen\Utility\FileSystem;
 
 use DouglasGreen\Utility\Exceptions\FileSystem\DirectoryException;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\Utility;
+namespace DouglasGreen\Utility\Regex;
 
 use DouglasGreen\Utility\Exceptions\Data\TypeException;
 use DouglasGreen\Utility\Exceptions\Process\RegexException;
