@@ -16,6 +16,24 @@ abstract class RegexMatch
 
     protected int $count;
 
+    /**
+     * Get a value that is known to be an array.
+     *
+     * @return array<string|int, mixed>
+     */
+    public function getArray(string|int $key): ?array
+    {
+        if (! isset($this->matches[$key])) {
+            return null;
+        }
+
+        if (! is_array($this->matches[$key])) {
+            return null;
+        }
+
+        return $this->matches[$key];
+    }
+
     public function getCount(): int
     {
         return $this->count;
@@ -31,24 +49,6 @@ abstract class RegexMatch
         }
 
         if (! is_string($this->matches[$key])) {
-            return null;
-        }
-
-        return $this->matches[$key];
-    }
-
-    /**
-     * Get a value that is known to be an array.
-     *
-     * @return array<string|int, mixed>
-     */
-    public function getArray(string|int $key): ?array
-    {
-        if (! isset($this->matches[$key])) {
-            return null;
-        }
-
-        if (! is_array($this->matches[$key])) {
             return null;
         }
 

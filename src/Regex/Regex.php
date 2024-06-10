@@ -13,8 +13,6 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
  * @phpstan-import-type Match from MatchArray
  * @phpstan-import-type MatchOffset from MatchOffsetArray
  * @phpstan-import-type MatchAll from MatchAllArray
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Regex
 {
@@ -347,35 +345,6 @@ class Regex
     }
 
     /**
-     * Substitute for preg_replace.
-     *
-     * Takes an array as $subject so it returns a MatchList.
-     *
-     * @param list<string>|string $replacement
-     * @param list<string> $subject
-     * @throws RegexException
-     */
-    public function replaceList(
-        array|string $replacement,
-        array $subject,
-        int $limit = -1,
-    ): MatchList {
-        $result = preg_replace(
-            $this->pattern,
-            $replacement,
-            $subject,
-            $limit,
-            $count,
-        );
-
-        if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
-        }
-
-        return new MatchList($result, $count);
-    }
-
-    /**
      * Substitute for preg_replace_callback.
      *
      * Takes a string as $subject so it returns a string.
@@ -417,6 +386,35 @@ class Regex
         $result = preg_replace_callback(
             $this->pattern,
             $callback,
+            $subject,
+            $limit,
+            $count,
+        );
+
+        if ($result === null) {
+            throw new RegexException('Regex failed: ' . $this->getPattern());
+        }
+
+        return new MatchList($result, $count);
+    }
+
+    /**
+     * Substitute for preg_replace.
+     *
+     * Takes an array as $subject so it returns a MatchList.
+     *
+     * @param list<string>|string $replacement
+     * @param list<string> $subject
+     * @throws RegexException
+     */
+    public function replaceList(
+        array|string $replacement,
+        array $subject,
+        int $limit = -1,
+    ): MatchList {
+        $result = preg_replace(
+            $this->pattern,
+            $replacement,
             $subject,
             $limit,
             $count,

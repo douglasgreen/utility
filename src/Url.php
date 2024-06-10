@@ -32,8 +32,6 @@ use DouglasGreen\Utility\Exceptions\Process\ParseException;
  * } catch (ParseException $e) {
  *     echo 'Error: ' . $e->getMessage();
  * }
- *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Url implements \Stringable
 {

@@ -18,6 +18,7 @@ class ImageString
     /**
      * Wrapper for getimagesize.
      *
+     * @throws ImageException
      * @todo Support $image_info parameter.
      */
     public function getSize(): ImageSize

@@ -9,8 +9,6 @@ use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
 /**
  * The functions in this class depend on a filename not an open file. See File
  * for other file functions.
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Path
 {

@@ -18,6 +18,7 @@ class ImageFile
     /**
      * Wrapper for getimagesize.
      *
+     * @throws ImageFileException
      * @todo Support $image_info parameter.
      */
     public function getSize(): ImageSize
