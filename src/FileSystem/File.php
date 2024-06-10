@@ -29,6 +29,8 @@ use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
  */
 class File
 {
+    public const int USE_INCLUDE_PATH = 1;
+
     /**
      * @var resource
      */
@@ -40,7 +42,7 @@ class File
     public function __construct(
         protected string $filename,
         protected string $mode = 'r',
-        protected bool $useIncludePath = false,
+        protected int $flags = 0,
         protected $context = null
     ) {
         $this->open();
@@ -261,10 +263,11 @@ class File
      */
     protected function open(): void
     {
+        $useIncludePath = (bool) ($this->flags & self::USE_INCLUDE_PATH);
         $stream = fopen(
             $this->filename,
             $this->mode,
-            $this->useIncludePath,
+            $useIncludePath,
             $this->context
         );
         if ($stream === false) {

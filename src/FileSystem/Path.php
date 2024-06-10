@@ -14,6 +14,8 @@ use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
  */
 class Path
 {
+    public const int USE_INCLUDE_PATH = 1;
+
     /**
      * @var ?resource
      */
@@ -24,6 +26,7 @@ class Path
      */
     public function __construct(
         protected string $filename,
+        protected int $flags = 0,
         protected $context = null
     ) {}
 
@@ -212,8 +215,9 @@ class Path
      *
      * @throws FileException
      */
-    public function loadAndPrint(bool $useIncludePath = false): int
+    public function loadAndPrint(): int
     {
+        $useIncludePath = (bool) ($this->flags & self::USE_INCLUDE_PATH);
         $result = readfile($this->filename, $useIncludePath, $this->context);
         if ($result === false) {
             throw new FileException(
@@ -247,10 +251,10 @@ class Path
      * @throws FileException
      */
     public function loadString(
-        bool $useIncludePath = false,
         int $offset = 0,
         ?int $length = null,
     ): string {
+        $useIncludePath = (bool) ($this->flags & self::USE_INCLUDE_PATH);
         $result = file_get_contents(
             $this->filename,
             $useIncludePath,

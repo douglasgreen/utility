@@ -13,6 +13,8 @@ use DouglasGreen\Utility\Exceptions\FileSystem\DirectoryException;
  */
 class Dir
 {
+    public const int RECURSIVE = 1;
+
     /**
      * Substitute for getcwd.
      *
@@ -43,10 +45,9 @@ class Dir
      *
      * @throws DirectoryException
      */
-    public function make(
-        int $permissions = 0o777,
-        bool $recursive = false,
-    ): self {
+    public function make(int $permissions = 0o777, int $flags = 0): self
+    {
+        $recursive = (bool) ($flags & self::RECURSIVE);
         if (mkdir(
             $this->directory,
             $permissions,
