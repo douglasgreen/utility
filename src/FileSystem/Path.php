@@ -17,11 +17,6 @@ class Path
     public const int USE_INCLUDE_PATH = 1;
 
     /**
-     * @var ?resource
-     */
-    protected $stream;
-
-    /**
      * @param ?resource $context
      */
     public function __construct(
