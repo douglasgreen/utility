@@ -11,9 +11,9 @@
     @see https://phpmd.org/documentation/creating-a-ruleset.html
     -->
 
+    <exclude-pattern>tests/*</exclude-pattern>
+
     <rule ref="rulesets/cleancode.xml">
-        <!-- Boolean arguments are no worse than other arguments. -->
-        <exclude name="BooleanArgumentFlag" />
         <!-- Avoid else expresssions does not help -->
         <exclude name="ElseExpression" />
         <!-- This does not help since = is not ===. -->
@@ -26,6 +26,8 @@
     <rule ref="rulesets/codesize.xml">
         <!-- Redundant and not a good measurement. -->
         <exclude name="NPathComplexity" />
+        <!-- Customized below -->
+        <exclude name="CyclomaticComplexity" />
         <!-- Customized below -->
         <exclude name="TooManyMethods" />
         <!-- Customized below -->
@@ -43,17 +45,24 @@
         </properties>
     </rule>
 
-    <!-- Ignore getters, setters, and unit tests -->
-    <rule ref="rulesets/codesize.xml/TooManyMethods">
+    <!-- The default value was 10, which is too restrictive -->
+    <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
         <properties>
-            <property name="ignorepattern" value="/^(get|set|test)/" />
+            <property name="reportLevel" value="20" />
         </properties>
     </rule>
 
-    <!-- Ignore getters, setters, and unit tests -->
+    <!-- Ignore getters and setters -->
+    <rule ref="rulesets/codesize.xml/TooManyMethods">
+        <properties>
+            <property name="ignorepattern" value="/^(get|set)/" />
+        </properties>
+    </rule>
+
+    <!-- Ignore getters and setters` -->
     <rule ref="rulesets/codesize.xml/TooManyPublicMethods">
         <properties>
-            <property name="ignorepattern" value="/^(get|set|test)/" />
+            <property name="ignorepattern" value="/^(get|set)/" />
         </properties>
     </rule>
 </ruleset>
