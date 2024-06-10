@@ -6,6 +6,7 @@ namespace DouglasGreen\Utility;
 
 use DouglasGreen\Utility\Exceptions\Data\ValueException;
 use DouglasGreen\Utility\Exceptions\Process\ParseException;
+use Stringable;
 
 /**
  * A wrapper class for the PHP parse_url function that parses a URL into its components.
@@ -33,7 +34,7 @@ use DouglasGreen\Utility\Exceptions\Process\ParseException;
  *     echo 'Error: ' . $e->getMessage();
  * }
  */
-class Url implements \Stringable
+class Url implements Stringable
 {
     /**
      * @var list<string>

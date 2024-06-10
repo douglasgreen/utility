@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
+use Directory;
 use DouglasGreen\Utility\Exceptions\FileSystem\DirectoryException;
 
 /**
@@ -88,7 +89,7 @@ class Dir
      *
      * @throws DirectoryException
      */
-    public function open(): \Directory
+    public function open(): Directory
     {
         $result = dir($this->directory, $this->context);
         if ($result === false) {
