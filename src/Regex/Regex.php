@@ -187,17 +187,21 @@ class Regex
      *
      * Takes an array as $subject so it returns a MatchList.
      *
-     * preg_filter doesn't distinguish between no matches and error when using
-     * array as subject, so no exception can be thrown here.
-     *
      * @param list<string>|string $replacement
      * @param list<string> $subject
+     * @throws RegexException
      */
     public function filteredReplaceList(
         array|string $replacement,
         array $subject,
         int $limit = -1,
     ): MatchList {
+        // preg_filter doesn't distinguish between no matches and error when using
+        // array as subject, so I use a second preg_filter call to look for errors.
+        if (preg_filter($this->pattern, '', '') === null) {
+            throw new RegexException('Regex failed: ' . $this->getPattern());
+        }
+
         $result = preg_filter(
             $this->pattern,
             $replacement,
