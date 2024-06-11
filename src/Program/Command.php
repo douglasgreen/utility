@@ -61,16 +61,19 @@ class Command
      */
     public function exec(): array
     {
-        $result = exec($this->buildCommand(), $this->output, $this->resultCode);
+        $result = exec($this->buildCommand(), $output, $resultCode);
         if ($result === false) {
             throw new CommandException(
                 sprintf(
                     'Command "%s" failed with error code "%s"',
                     $this->command,
-                    $this->resultCode
+                    $resultCode
                 )
             );
         }
+
+        $this->output = $output;
+        $this->resultCode = $resultCode;
 
         return $this->output;
     }
