@@ -14,6 +14,8 @@ class Path
 {
     public const int USE_INCLUDE_PATH = 1;
 
+    public const int USE_BINARY = 2;
+
     /**
      * @param ?resource $context
      */
@@ -106,17 +108,20 @@ class Path
     }
 
     /**
-     * Substitute for glob.
+     * Substitute for glob. The "filename" property should be a file pattern.
      *
      * @return list<string>
      * @throws FileException
      */
-    public function findAll(string $pattern, int $flags = 0): array
+    public function findAll(): array
     {
-        $result = glob($pattern, $flags);
+        $result = glob($this->filename, $this->flags);
         if ($result === false) {
             throw new FileException(
-                sprintf('Unable to search files for pattern "%s"', $pattern),
+                sprintf(
+                    'Unable to search files for pattern "%s"',
+                    $this->filename
+                ),
             );
         }
 
@@ -226,9 +231,9 @@ class Path
      *
      * @return list<string>
      */
-    public function loadLines(int $flags = 0): array
+    public function loadLines(): array
     {
-        $result = file($this->filename, $flags, $this->context);
+        $result = file($this->filename, $this->flags, $this->context);
 
         if ($result === false) {
             throw new FileException('Unable to load file to array');
@@ -264,21 +269,45 @@ class Path
     }
 
     /**
+     * Substitute for md5_file.
+     *
+     * @throws FileException
+     */
+    public function md5(): string
+    {
+        $useBinary = (bool) ($this->flags & self::USE_BINARY);
+        $result = md5_file($this->filename, $useBinary);
+        if ($result === false) {
+            throw new FileException(
+                sprintf(
+                    'Unable to calculate MD5 hash of file "%s"',
+                    $this->filename,
+                ),
+            );
+        }
+
+        return $result;
+    }
+
+    /**
      * Substitute for rename.
      *
      * @throws FileException
      */
-    public function rename(string $source, string $target): self
+    public function rename(string $target): self
     {
-        if (rename($source, $target, $this->context) === false) {
+        if (rename($this->filename, $target, $this->context) === false) {
             throw new FileException(
                 sprintf(
                     'Unable to rename file from "%s" to "%s"',
-                    $source,
+                    $this->filename,
                     $target,
                 ),
             );
         }
+
+        // Update filename to new name.
+        $this->filename = $target;
 
         return $this;
     }
@@ -305,12 +334,12 @@ class Path
      *
      * @throws FileException
      */
-    public function saveString(mixed $data, int $flags = 0): int
+    public function saveString(mixed $data): int
     {
         $result = file_put_contents(
             $this->filename,
             $data,
-            $flags,
+            $this->flags,
             $this->context
         );
         if ($result === false) {
@@ -338,15 +367,19 @@ class Path
     }
 
     /**
-     * Substitute for symlink.
+     * Substitute for symlink. The "filename" property should be the target.
      *
      * @throws FileException
      */
-    public function symlink(string $target, string $link): self
+    public function symlink(string $link): self
     {
-        if (symlink($target, $link) === false) {
+        if (symlink($this->filename, $link) === false) {
             throw new FileException(
-                sprintf('Unable to link "%s" to file "%s"', $link, $target),
+                sprintf(
+                    'Unable to link "%s" to file "%s"',
+                    $link,
+                    $this->filename
+                ),
             );
         }
 
