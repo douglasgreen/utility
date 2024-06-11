@@ -76,21 +76,23 @@ class Path
     /**
      * Substitute for copy.
      *
+     * Returns target path, not self.
+     *
      * @throws FileException
      */
-    public function copy(string $source, string $target): self
+    public function copy(string $target): self
     {
-        if (copy($source, $target, $this->context) === false) {
+        if (copy($this->filename, $target, $this->context) === false) {
             throw new FileException(
                 sprintf(
                     'Unable to copy file from "%s" to "%s"',
-                    $source,
+                    $this->filename,
                     $target,
                 ),
             );
         }
 
-        return $this;
+        return new self($target);
     }
 
     /**
@@ -108,7 +110,9 @@ class Path
     }
 
     /**
-     * Substitute for glob. The "filename" property should be a file pattern.
+     * Substitute for glob.
+     *
+     * The "filename" property should be a file pattern.
      *
      * @return list<string>
      * @throws FileException
@@ -367,7 +371,9 @@ class Path
     }
 
     /**
-     * Substitute for symlink. The "filename" property should be the target.
+     * Substitute for symlink.
+     *
+     * The "filename" property should be the target.
      *
      * @throws FileException
      */
