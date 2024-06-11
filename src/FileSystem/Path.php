@@ -110,6 +110,14 @@ class Path
     }
 
     /**
+     * Substitute for file_exists.
+     */
+    public function exists(): bool
+    {
+        return file_exists($this->filename);
+    }
+
+    /**
      * Substitute for glob.
      *
      * The "filename" property should be a file pattern.
@@ -210,6 +218,54 @@ class Path
         }
 
         return $result;
+    }
+
+    /**
+     * Substitute for is_dir.
+     */
+    public function isDir(): bool
+    {
+        return is_dir($this->filename);
+    }
+
+    /**
+     * Substitute for is_executable.
+     */
+    public function isExecutable(): bool
+    {
+        return is_executable($this->filename);
+    }
+
+    /**
+     * Substitute for is_file.
+     */
+    public function isFile(): bool
+    {
+        return is_file($this->filename);
+    }
+
+    /**
+     * Substitute for is_readable.
+     */
+    public function isReadable(): bool
+    {
+        return is_readable($this->filename);
+    }
+
+    /**
+     * Substitute for is_uploaded_file.
+     */
+    public function isUpload(): bool
+    {
+        return is_uploaded_file($this->filename);
+    }
+
+    /**
+     * Substitute for is_writable.
+     */
+    public function isWritable(): bool
+    {
+        return is_writable($this->filename);
     }
 
     /**
