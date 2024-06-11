@@ -16,6 +16,10 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
  */
 class Regex
 {
+    public const int NO_EMPTY = 1;
+
+    public const int DELIM_CAPTURE = 2;
+
     /**
      * Substitute for preg_replace that only returns a string.
      *
@@ -42,10 +46,11 @@ class Regex
     public static function doSplit(
         string $pattern,
         string $subject,
-        int $limit = -1
+        int $limit = -1,
+        int $flags = 0
     ): array {
         $regex = new self($pattern);
-        return $regex->split($subject, $limit)
+        return $regex->split($subject, $limit, $flags)
             ->getAll();
     }
 
@@ -433,13 +438,23 @@ class Regex
      * @throws RegexException
      * @throws TypeException
      */
-    public function split(string $subject, int $limit = -1): MatchList
-    {
+    public function split(
+        string $subject,
+        int $limit = -1,
+        int $flags = 0
+    ): MatchList {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
         }
 
-        $result = preg_split($this->pattern, $subject, $limit);
+        $useFlags = 0;
+        if ((bool) ($flags & self::NO_EMPTY)) {
+            $useFlags |= PREG_SPLIT_NO_EMPTY;
+        } elseif ((bool) ($flags & self::DELIM_CAPTURE)) {
+            $useFlags |= PREG_SPLIT_DELIM_CAPTURE;
+        }
+
+        $result = preg_split($this->pattern, $subject, $limit, $useFlags);
         if ($result === false) {
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
