@@ -111,7 +111,7 @@ class File
     /**
      * Substitute for fputcsv.
      *
-     * @param list<string> $fields
+     * @param list<string|float|int|null> $fields
      * @throws FileException
      */
     public function putFields(
