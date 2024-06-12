@@ -9,18 +9,20 @@ use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
 /**
  * The functions in this class depend on a filename not an open file. See File
  * for other file functions.
- *
- * @todo Fix flags.
  */
 class Path
 {
-    public const IGNORE_NEW_LINES = 1;
+    public const APPEND = 1;
 
-    public const SKIP_EMPTY_LINES = 2;
+    public const IGNORE_NEW_LINES = 2;
 
-    public const USE_BINARY = 4;
+    public const LOCK = 4;
 
-    public const USE_INCLUDE_PATH = 8;
+    public const SKIP_EMPTY_LINES = 8;
+
+    public const USE_BINARY = 16;
+
+    public const USE_INCLUDE_PATH = 32;
 
     /**
      * @param ?resource $context
@@ -120,29 +122,6 @@ class Path
     public function exists(): bool
     {
         return file_exists($this->filename);
-    }
-
-    /**
-     * Substitute for glob.
-     *
-     * The "filename" property should be a file pattern.
-     *
-     * @return list<string>
-     * @throws FileException
-     */
-    public function findAll(int $flags = 0): array
-    {
-        $result = glob($this->filename, $flags);
-        if ($result === false) {
-            throw new FileException(
-                sprintf(
-                    'Unable to search files for pattern "%s"',
-                    $this->filename
-                ),
-            );
-        }
-
-        return $result;
     }
 
     /**
@@ -299,16 +278,16 @@ class Path
     public function loadLines(int $flags = 0): array
     {
         $phpFlags = 0;
-        if (($flags & self::USE_INCLUDE_PATH) !== 0) {
-            $phpFlags |= FILE_USE_INCLUDE_PATH;
-        }
-
         if (($flags & self::IGNORE_NEW_LINES) !== 0) {
             $phpFlags |= FILE_IGNORE_NEW_LINES;
         }
 
         if (($flags & self::SKIP_EMPTY_LINES) !== 0) {
             $phpFlags |= FILE_SKIP_EMPTY_LINES;
+        }
+
+        if (($flags & self::USE_INCLUDE_PATH) !== 0) {
+            $phpFlags |= FILE_USE_INCLUDE_PATH;
         }
 
         $result = file($this->filename, $phpFlags, $this->context);
@@ -415,10 +394,23 @@ class Path
      */
     public function saveString(mixed $data, int $flags = 0): int
     {
+        $phpFlags = 0;
+        if (($flags & self::APPEND) !== 0) {
+            $phpFlags |= FILE_APPEND;
+        }
+
+        if (($flags & self::LOCK) !== 0) {
+            $phpFlags |= LOCK_EX;
+        }
+
+        if (($flags & self::USE_INCLUDE_PATH) !== 0) {
+            $phpFlags |= FILE_USE_INCLUDE_PATH;
+        }
+
         $result = file_put_contents(
             $this->filename,
             $data,
-            $flags,
+            $phpFlags,
             $this->context
         );
         if ($result === false) {
