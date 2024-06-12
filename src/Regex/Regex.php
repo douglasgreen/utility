@@ -57,13 +57,19 @@ class Regex
     /**
      * A simple static matcher that uses preg_match_all and returns the match.
      *
+     * Returns [] as a convenience if there are no matches.
+     *
      * @return array<string|int, MatchAll>
      */
     public static function getAllMatches(string $pattern, string $subject, int $offset = 0): array
     {
         $regex = new self($pattern);
-        return $regex->matchAll($subject, $offset)
-            ->getAll();
+        $match = $regex->matchAll($subject, $offset);
+        if ($match->has()) {
+            return $match->getAll();
+        }
+
+        return [];
     }
 
     /**
