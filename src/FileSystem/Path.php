@@ -27,7 +27,6 @@ class Path
      */
     public function __construct(
         protected string $filename,
-        protected int $flags = 0,
         protected $context = null
     ) {}
 
@@ -131,9 +130,9 @@ class Path
      * @return list<string>
      * @throws FileException
      */
-    public function findAll(): array
+    public function findAll(int $flags = 0): array
     {
-        $result = glob($this->filename, $this->flags);
+        $result = glob($this->filename, $flags);
         if ($result === false) {
             throw new FileException(
                 sprintf(
@@ -279,9 +278,9 @@ class Path
      *
      * @throws FileException
      */
-    public function loadAndPrint(): int
+    public function loadAndPrint(int $flags = 0): int
     {
-        $useIncludePath = (bool) ($this->flags & self::USE_INCLUDE_PATH);
+        $useIncludePath = (bool) ($flags & self::USE_INCLUDE_PATH);
         $result = readfile($this->filename, $useIncludePath, $this->context);
         if ($result === false) {
             throw new FileException(
@@ -297,22 +296,22 @@ class Path
      *
      * @return list<string>
      */
-    public function loadLines(): array
+    public function loadLines(int $flags = 0): array
     {
-        $flags = 0;
-        if (($this->flags & self::USE_INCLUDE_PATH) !== 0) {
-            $flags |= FILE_USE_INCLUDE_PATH;
+        $phpFlags = 0;
+        if (($flags & self::USE_INCLUDE_PATH) !== 0) {
+            $phpFlags |= FILE_USE_INCLUDE_PATH;
         }
 
-        if (($this->flags & self::IGNORE_NEW_LINES) !== 0) {
-            $flags |= FILE_IGNORE_NEW_LINES;
+        if (($flags & self::IGNORE_NEW_LINES) !== 0) {
+            $phpFlags |= FILE_IGNORE_NEW_LINES;
         }
 
-        if (($this->flags & self::SKIP_EMPTY_LINES) !== 0) {
-            $flags |= FILE_SKIP_EMPTY_LINES;
+        if (($flags & self::SKIP_EMPTY_LINES) !== 0) {
+            $phpFlags |= FILE_SKIP_EMPTY_LINES;
         }
 
-        $result = file($this->filename, $flags, $this->context);
+        $result = file($this->filename, $phpFlags, $this->context);
 
         if ($result === false) {
             throw new FileException('Unable to load file to array');
@@ -329,9 +328,10 @@ class Path
      */
     public function loadString(
         int $offset = 0,
+        int $flags = 0,
         ?int $length = null,
     ): string {
-        $useIncludePath = (bool) ($this->flags & self::USE_INCLUDE_PATH);
+        $useIncludePath = (bool) ($flags & self::USE_INCLUDE_PATH);
         $result = file_get_contents(
             $this->filename,
             $useIncludePath,
@@ -352,9 +352,9 @@ class Path
      *
      * @throws FileException
      */
-    public function md5(): string
+    public function md5(int $flags = 0): string
     {
-        $useBinary = (bool) ($this->flags & self::USE_BINARY);
+        $useBinary = (bool) ($flags & self::USE_BINARY);
         $result = md5_file($this->filename, $useBinary);
         if ($result === false) {
             throw new FileException(
@@ -413,12 +413,12 @@ class Path
      *
      * @throws FileException
      */
-    public function saveString(mixed $data): int
+    public function saveString(mixed $data, int $flags = 0): int
     {
         $result = file_put_contents(
             $this->filename,
             $data,
-            $this->flags,
+            $flags,
             $this->context
         );
         if ($result === false) {
