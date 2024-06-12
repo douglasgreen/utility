@@ -25,9 +25,7 @@ class Dir
     {
         $result = getcwd();
         if ($result === false) {
-            throw new DirectoryException(
-                'Unable to get current working directory',
-            );
+            throw new DirectoryException('Unable to get current working directory');
         }
 
         return $result;
@@ -49,16 +47,10 @@ class Dir
     public function make(int $permissions = 0o777, int $flags = 0): self
     {
         $recursive = (bool) ($flags & self::RECURSIVE);
-        if (mkdir(
-            $this->directory,
-            $permissions,
-            $recursive,
-            $this->context
-        ) === false) {
-            throw new DirectoryException(sprintf(
-                'Unable to make directory: "%s"',
-                $this->directory
-            ));
+        if (mkdir($this->directory, $permissions, $recursive, $this->context) === false) {
+            throw new DirectoryException(
+                sprintf('Unable to make directory: "%s"', $this->directory),
+            );
         }
 
         return $this;
@@ -74,10 +66,7 @@ class Dir
         $result = tempnam($this->directory, $prefix);
         if ($result === false) {
             throw new DirectoryException(
-                sprintf(
-                    'Unable to create temp file in directory "%s"',
-                    $this->directory,
-                ),
+                sprintf('Unable to create temp file in directory "%s"', $this->directory),
             );
         }
 
@@ -93,10 +82,9 @@ class Dir
     {
         $result = dir($this->directory, $this->context);
         if ($result === false) {
-            throw new DirectoryException(sprintf(
-                'Unable to open directory "%s"',
-                $this->directory
-            ));
+            throw new DirectoryException(
+                sprintf('Unable to open directory "%s"', $this->directory),
+            );
         }
 
         return $result;
@@ -110,10 +98,9 @@ class Dir
     public function remove(): void
     {
         if (rmdir($this->directory, $this->context) === false) {
-            throw new DirectoryException(sprintf(
-                'Unable to remove directory "%s"',
-                $this->directory
-            ));
+            throw new DirectoryException(
+                sprintf('Unable to remove directory "%s"', $this->directory),
+            );
         }
     }
 
@@ -123,15 +110,13 @@ class Dir
      * @return list<string>
      * @throws DirectoryException
      */
-    public function scan(
-        int $sortingOrder = SCANDIR_SORT_ASCENDING
-    ): array {
+    public function scan(int $sortingOrder = SCANDIR_SORT_ASCENDING): array
+    {
         $result = scandir($this->directory, $sortingOrder, $this->context);
         if ($result === false) {
-            throw new DirectoryException(sprintf(
-                'Unable to scan directory: "%s"',
-                $this->directory
-            ));
+            throw new DirectoryException(
+                sprintf('Unable to scan directory: "%s"', $this->directory),
+            );
         }
 
         return $result;
@@ -146,10 +131,9 @@ class Dir
     {
         $result = chdir($this->directory);
         if ($result === false) {
-            throw new DirectoryException(sprintf(
-                'Unable to change directory to: "%s"',
-                $this->directory
-            ));
+            throw new DirectoryException(
+                sprintf('Unable to change directory to: "%s"', $this->directory),
+            );
         }
 
         return $this;

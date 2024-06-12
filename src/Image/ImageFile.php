@@ -12,7 +12,7 @@ use DouglasGreen\Utility\Exceptions\FileSystem\ImageFileException;
 class ImageFile
 {
     public function __construct(
-        protected string $filename,
+        protected string $filename
     ) {}
 
     /**
@@ -25,10 +25,9 @@ class ImageFile
     {
         $result = getimagesize($this->filename);
         if ($result === false) {
-            throw new ImageFileException(sprintf(
-                'Unable to get size of image: "%s"',
-                $this->filename
-            ));
+            throw new ImageFileException(
+                sprintf('Unable to get size of image: "%s"', $this->filename),
+            );
         }
 
         [$width, $height, $type, $attribute] = $result;
@@ -36,14 +35,6 @@ class ImageFile
         $channels = $result['channels'] ?? null;
         $bits = $result['bits'] ?? null;
 
-        return new ImageSize(
-            $width,
-            $height,
-            $type,
-            $attribute,
-            $mime,
-            $channels,
-            $bits
-        );
+        return new ImageSize($width, $height, $type, $attribute, $mime, $channels, $bits);
     }
 }

@@ -43,7 +43,7 @@ class File
         protected string $filename,
         protected string $mode = 'r',
         protected int $flags = 0,
-        protected $context = null
+        protected $context = null,
     ) {
         $this->open();
     }
@@ -66,13 +66,7 @@ class File
         string $enclosure = '"',
         string $escape = '\\',
     ): ?array {
-        $fields = fgetcsv(
-            $this->stream,
-            $length,
-            $separator,
-            $enclosure,
-            $escape
-        );
+        $fields = fgetcsv($this->stream, $length, $separator, $enclosure, $escape);
 
         // Distinguish between end-of-data false and error false.
         if ($fields === false) {
@@ -119,16 +113,9 @@ class File
         string $separator = ',',
         string $enclosure = '"',
         string $escape = '\\',
-        string $eol = PHP_EOL
+        string $eol = PHP_EOL,
     ): int {
-        $result = fputcsv(
-            $this->stream,
-            $fields,
-            $separator,
-            $enclosure,
-            $escape,
-            $eol
-        );
+        $result = fputcsv($this->stream, $fields, $separator, $enclosure, $escape, $eol);
 
         if ($result === false) {
             throw new FileException('Unable to put CSV line into file');
@@ -264,16 +251,9 @@ class File
     protected function open(): void
     {
         $useIncludePath = (bool) ($this->flags & self::USE_INCLUDE_PATH);
-        $stream = fopen(
-            $this->filename,
-            $this->mode,
-            $useIncludePath,
-            $this->context
-        );
+        $stream = fopen($this->filename, $this->mode, $useIncludePath, $this->context);
         if ($stream === false) {
-            throw new FileException(
-                sprintf('Unable to open file "%s"', $this->filename),
-            );
+            throw new FileException(sprintf('Unable to open file "%s"', $this->filename));
         }
 
         $this->stream = $stream;

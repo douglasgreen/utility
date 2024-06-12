@@ -56,9 +56,7 @@ class Path
     public function changeMode(int $permissions): self
     {
         if (chmod($this->filename, $permissions) === false) {
-            throw new FileException(
-                sprintf('Unable to change mode of file "%s"', $this->filename),
-            );
+            throw new FileException(sprintf('Unable to change mode of file "%s"', $this->filename));
         }
 
         return $this;
@@ -91,11 +89,7 @@ class Path
     {
         if (copy($this->filename, $target, $this->context) === false) {
             throw new FileException(
-                sprintf(
-                    'Unable to copy file from "%s" to "%s"',
-                    $this->filename,
-                    $target,
-                ),
+                sprintf('Unable to copy file from "%s" to "%s"', $this->filename, $target),
             );
         }
 
@@ -134,10 +128,7 @@ class Path
         $result = fileatime($this->filename);
         if ($result === false) {
             throw new FileException(
-                sprintf(
-                    'Unable to get last access time of file "%s"',
-                    $this->filename,
-                ),
+                sprintf('Unable to get last access time of file "%s"', $this->filename),
             );
         }
 
@@ -154,10 +145,7 @@ class Path
         $result = filectime($this->filename);
         if ($result === false) {
             throw new FileException(
-                sprintf(
-                    'Unable to get last metadata change time of file "%s"',
-                    $this->filename,
-                ),
+                sprintf('Unable to get last metadata change time of file "%s"', $this->filename),
             );
         }
 
@@ -174,10 +162,7 @@ class Path
         $result = fileperms($this->filename);
         if ($result === false) {
             throw new FileException(
-                sprintf(
-                    'Unable to get permissions of file "%s"',
-                    $this->filename,
-                ),
+                sprintf('Unable to get permissions of file "%s"', $this->filename),
             );
         }
 
@@ -194,10 +179,7 @@ class Path
         $result = filemtime($this->filename);
         if ($result === false) {
             throw new FileException(
-                sprintf(
-                    'Unable to get last modification time of file "%s"',
-                    $this->filename,
-                ),
+                sprintf('Unable to get last modification time of file "%s"', $this->filename),
             );
         }
 
@@ -262,9 +244,7 @@ class Path
         $useIncludePath = (bool) ($flags & self::USE_INCLUDE_PATH);
         $result = readfile($this->filename, $useIncludePath, $this->context);
         if ($result === false) {
-            throw new FileException(
-                sprintf('Unable to load and print file "%s"', $this->filename),
-            );
+            throw new FileException(sprintf('Unable to load and print file "%s"', $this->filename));
         }
 
         return $result;
@@ -305,11 +285,8 @@ class Path
      * @param ?int<0, max> $length
      * @throws FileException
      */
-    public function loadString(
-        int $offset = 0,
-        int $flags = 0,
-        ?int $length = null,
-    ): string {
+    public function loadString(int $offset = 0, int $flags = 0, ?int $length = null): string
+    {
         $useIncludePath = (bool) ($flags & self::USE_INCLUDE_PATH);
         $result = file_get_contents(
             $this->filename,
@@ -337,10 +314,7 @@ class Path
         $result = md5_file($this->filename, $useBinary);
         if ($result === false) {
             throw new FileException(
-                sprintf(
-                    'Unable to calculate MD5 hash of file "%s"',
-                    $this->filename,
-                ),
+                sprintf('Unable to calculate MD5 hash of file "%s"', $this->filename),
             );
         }
 
@@ -356,11 +330,7 @@ class Path
     {
         if (rename($this->filename, $target, $this->context) === false) {
             throw new FileException(
-                sprintf(
-                    'Unable to rename file from "%s" to "%s"',
-                    $this->filename,
-                    $target,
-                ),
+                sprintf('Unable to rename file from "%s" to "%s"', $this->filename, $target),
             );
         }
 
@@ -379,9 +349,7 @@ class Path
     {
         $result = realpath($this->filename);
         if ($result === false) {
-            throw new FileException(
-                sprintf('Unable to get real path on "%s"', $this->filename),
-            );
+            throw new FileException(sprintf('Unable to get real path on "%s"', $this->filename));
         }
 
         return $result;
@@ -407,12 +375,7 @@ class Path
             $phpFlags |= FILE_USE_INCLUDE_PATH;
         }
 
-        $result = file_put_contents(
-            $this->filename,
-            $data,
-            $phpFlags,
-            $this->context
-        );
+        $result = file_put_contents($this->filename, $data, $phpFlags, $this->context);
         if ($result === false) {
             throw new FileException('Unable to save string to file');
         }
@@ -429,9 +392,7 @@ class Path
     {
         $result = filesize($this->filename);
         if ($result === false) {
-            throw new FileException(
-                sprintf('Unable to get size of file "%s"', $this->filename),
-            );
+            throw new FileException(sprintf('Unable to get size of file "%s"', $this->filename));
         }
 
         return $result;
@@ -448,11 +409,7 @@ class Path
     {
         if (symlink($this->filename, $link) === false) {
             throw new FileException(
-                sprintf(
-                    'Unable to link "%s" to file "%s"',
-                    $link,
-                    $this->filename
-                ),
+                sprintf('Unable to link "%s" to file "%s"', $link, $this->filename),
             );
         }
 

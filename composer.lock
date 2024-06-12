@@ -197,12 +197,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/config-setup.git",
-                "reference": "384b3174a2debb04df4aa7ba6c98f09b454e2950"
+                "reference": "f1a53adf294b9213a7147687247d64323274c221"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/384b3174a2debb04df4aa7ba6c98f09b454e2950",
-                "reference": "384b3174a2debb04df4aa7ba6c98f09b454e2950",
+                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/f1a53adf294b9213a7147687247d64323274c221",
+                "reference": "f1a53adf294b9213a7147687247d64323274c221",
                 "shasum": ""
             },
             "require": {
@@ -267,7 +267,7 @@
                 "source": "https://github.com/douglasgreen/config-setup/tree/main",
                 "issues": "https://github.com/douglasgreen/config-setup/issues"
             },
-            "time": "2024-06-12T09:37:34+00:00"
+            "time": "2024-06-12T13:22:49+00:00"
         },
         {
             "name": "jetbrains/phpstorm-stubs",

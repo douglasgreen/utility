@@ -12,7 +12,7 @@ use DouglasGreen\Utility\Exceptions\Data\ImageException;
 class ImageString
 {
     public function __construct(
-        protected string $data,
+        protected string $data
     ) {}
 
     /**
@@ -33,14 +33,6 @@ class ImageString
         $channels = $result['channels'] ?? null;
         $bits = $result['bits'] ?? null;
 
-        return new ImageSize(
-            $width,
-            $height,
-            $type,
-            $attribute,
-            $mime,
-            $channels,
-            $bits
-        );
+        return new ImageSize($width, $height, $type, $attribute, $mime, $channels, $bits);
     }
 }

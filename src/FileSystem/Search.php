@@ -52,12 +52,7 @@ class Search
 
         $result = glob($pattern, $phpFlags);
         if ($result === false) {
-            throw new FileException(
-                sprintf(
-                    'Unable to search files for pattern "%s"',
-                    $pattern
-                ),
-            );
+            throw new FileException(sprintf('Unable to search files for pattern "%s"', $pattern));
         }
 
         return $result;

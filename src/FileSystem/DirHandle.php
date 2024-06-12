@@ -33,8 +33,8 @@ class Dir
     /**
      * Calls opendir.
      */
-    public function __destruct(
-    ) {
+    public function __destruct()
+    {
         closedir($this->handle);
     }
 
@@ -47,10 +47,9 @@ class Dir
     {
         $result = readdir($this->handle);
         if ($result === false) {
-            throw new DirectoryException(sprintf(
-                'Unable to read directory handle: "%s"',
-                $this->directory
-            ));
+            throw new DirectoryException(
+                sprintf('Unable to read directory handle: "%s"', $this->directory),
+            );
         }
 
         return $result;
@@ -76,10 +75,9 @@ class Dir
     {
         $result = opendir($this->directory, $this->context);
         if ($result === false) {
-            throw new DirectoryException(sprintf(
-                'Unable to open directory handle: "%s"',
-                $this->directory
-            ));
+            throw new DirectoryException(
+                sprintf('Unable to open directory handle: "%s"', $this->directory),
+            );
         }
 
         return $result;

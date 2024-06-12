@@ -78,10 +78,7 @@ class Url implements Stringable
     {
         $parsedUrl = parse_url($url);
         if ($parsedUrl === false) {
-            throw new ParseException(sprintf(
-                'Failed to parse URL: "%s"',
-                $url
-            ));
+            throw new ParseException(sprintf('Failed to parse URL: "%s"', $url));
         }
 
         $this->setScheme($parsedUrl['scheme'] ?? null);
@@ -272,10 +269,7 @@ class Url implements Stringable
     public function setHost(?string $host): self
     {
         $host = $this->strip($host);
-        if (
-            $host !== null &&
-            ! filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)
-        ) {
+        if ($host !== null && ! filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
             throw new ValueException(sprintf('Invalid host: "%s"', $host));
         }
 
@@ -379,11 +373,7 @@ class Url implements Stringable
      */
     public function setScheme(?string $scheme): self
     {
-        if ($scheme !== null && ! in_array(
-            $scheme,
-            self::ACCEPTED_SCHEMES,
-            true
-        )) {
+        if ($scheme !== null && ! in_array($scheme, self::ACCEPTED_SCHEMES, true)) {
             throw new ValueException(sprintf('Invalid scheme: "%s"', $scheme));
         }
 

@@ -13,7 +13,7 @@ class ImageSize
         protected string $attribute,
         protected string $mime,
         protected ?int $channels = null,
-        protected ?int $bits = null
+        protected ?int $bits = null,
     ) {}
 
     public function getAttribute(): string

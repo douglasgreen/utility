@@ -35,10 +35,7 @@ class Command
     ) {
         $sep = preg_quote(PATH_SEPARATOR, '/');
         if (Regex::hasMatch('/[^\w' . $sep . '.-]/', $this->command)) {
-            throw new CommandException(sprintf(
-                'Invalid command: "%s"',
-                $this->command
-            ));
+            throw new CommandException(sprintf('Invalid command: "%s"', $this->command));
         }
     }
 
@@ -64,11 +61,7 @@ class Command
         $result = exec($this->buildCommand(), $output, $resultCode);
         if ($result === false) {
             throw new CommandException(
-                sprintf(
-                    'Command "%s" failed with error code "%s"',
-                    $this->command,
-                    $resultCode
-                )
+                sprintf('Command "%s" failed with error code "%s"', $this->command, $resultCode),
             );
         }
 
@@ -91,8 +84,8 @@ class Command
                 sprintf(
                     'Command "%s" failed with error code "%s"',
                     $this->command,
-                    $this->resultCode
-                )
+                    $this->resultCode,
+                ),
             );
         }
 
@@ -112,8 +105,8 @@ class Command
                 sprintf(
                     'Command "%s" failed with error code "%s"',
                     $this->command,
-                    $this->resultCode
-                )
+                    $this->resultCode,
+                ),
             );
         }
     }
@@ -134,19 +127,13 @@ class Command
         $result = shell_exec($this->buildCommand());
         if ($result === false) {
             throw new CommandException(
-                sprintf(
-                    'Command "%s" unable to establish pipe',
-                    $this->command
-                )
+                sprintf('Command "%s" unable to establish pipe', $this->command),
             );
         }
 
         if ($result === null && ! $allowEmptyOutput) {
             throw new CommandException(
-                sprintf(
-                    'Command "%s" failed to produce output',
-                    $this->command
-                )
+                sprintf('Command "%s" failed to produce output', $this->command),
             );
         }
 

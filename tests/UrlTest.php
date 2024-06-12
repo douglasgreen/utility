@@ -36,8 +36,7 @@ class UrlTest extends TestCase
     public function testSetFragment(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(Url::class))
-            ->getProperty('fragment');
+        $property = (new \ReflectionClass(Url::class))->getProperty('fragment');
         $property->setAccessible(true);
 
         $this->url->setFragment($expected);
@@ -47,8 +46,7 @@ class UrlTest extends TestCase
     public function testSetHost(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(Url::class))
-            ->getProperty('host');
+        $property = (new \ReflectionClass(Url::class))->getProperty('host');
         $property->setAccessible(true);
 
         $this->url->setHost($expected);
@@ -59,8 +57,7 @@ class UrlTest extends TestCase
     {
         $key = 'newParam';
         $value = 'newValue';
-        $property = (new \ReflectionClass(Url::class))
-            ->getProperty('params');
+        $property = (new \ReflectionClass(Url::class))->getProperty('params');
         $property->setAccessible(true);
 
         $this->url->setParam($key, $value);
@@ -73,8 +70,7 @@ class UrlTest extends TestCase
     public function testSetPass(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(Url::class))
-            ->getProperty('pass');
+        $property = (new \ReflectionClass(Url::class))->getProperty('pass');
         $property->setAccessible(true);
 
         $this->url->setPass($expected);
@@ -84,8 +80,7 @@ class UrlTest extends TestCase
     public function testSetPath(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(Url::class))
-            ->getProperty('path');
+        $property = (new \ReflectionClass(Url::class))->getProperty('path');
         $property->setAccessible(true);
 
         $this->url->setPath($expected);
@@ -95,8 +90,7 @@ class UrlTest extends TestCase
     public function testSetPort(): void
     {
         $expected = 42;
-        $property = (new \ReflectionClass(Url::class))
-            ->getProperty('port');
+        $property = (new \ReflectionClass(Url::class))->getProperty('port');
         $property->setAccessible(true);
 
         $this->url->setPort($expected);
@@ -106,8 +100,7 @@ class UrlTest extends TestCase
     public function testSetQuery(): void
     {
         $query = 'newQuery=value';
-        $property = (new \ReflectionClass(Url::class))
-            ->getProperty('params');
+        $property = (new \ReflectionClass(Url::class))->getProperty('params');
         $property->setAccessible(true);
 
         $this->url->setQuery($query);
@@ -120,8 +113,7 @@ class UrlTest extends TestCase
     public function testSetScheme(): void
     {
         $expected = 'https';
-        $property = (new \ReflectionClass(Url::class))
-            ->getProperty('scheme');
+        $property = (new \ReflectionClass(Url::class))->getProperty('scheme');
         $property->setAccessible(true);
 
         $this->url->setScheme($expected);
@@ -131,8 +123,7 @@ class UrlTest extends TestCase
     public function testSetUser(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(Url::class))
-            ->getProperty('user');
+        $property = (new \ReflectionClass(Url::class))->getProperty('user');
         $property->setAccessible(true);
 
         $this->url->setUser($expected);
@@ -141,8 +132,6 @@ class UrlTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->url = new Url(
-            'http://username:password@hostname:9090/path?arg=value#anchor'
-        );
+        $this->url = new Url('http://username:password@hostname:9090/path?arg=value#anchor');
     }
 }
