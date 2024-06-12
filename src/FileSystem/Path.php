@@ -9,12 +9,18 @@ use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
 /**
  * The functions in this class depend on a filename not an open file. See File
  * for other file functions.
+ *
+ * @todo Fix flags.
  */
 class Path
 {
-    public const int USE_INCLUDE_PATH = 1;
+    public const IGNORE_NEW_LINES = 1;
 
-    public const int USE_BINARY = 2;
+    public const SKIP_EMPTY_LINES = 2;
+
+    public const USE_BINARY = 4;
+
+    public const USE_INCLUDE_PATH = 8;
 
     /**
      * @param ?resource $context
@@ -293,7 +299,20 @@ class Path
      */
     public function loadLines(): array
     {
-        $result = file($this->filename, $this->flags, $this->context);
+        $flags = 0;
+        if (($this->flags & self::USE_INCLUDE_PATH) !== 0) {
+            $flags |= FILE_USE_INCLUDE_PATH;
+        }
+
+        if (($this->flags & self::IGNORE_NEW_LINES) !== 0) {
+            $flags |= FILE_IGNORE_NEW_LINES;
+        }
+
+        if (($this->flags & self::SKIP_EMPTY_LINES) !== 0) {
+            $flags |= FILE_SKIP_EMPTY_LINES;
+        }
+
+        $result = file($this->filename, $flags, $this->context);
 
         if ($result === false) {
             throw new FileException('Unable to load file to array');

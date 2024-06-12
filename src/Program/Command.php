@@ -12,7 +12,7 @@ use DouglasGreen\Utility\Regex\Regex;
  */
 class Command
 {
-    public const int ALLOW_EMPTY_OUTPUT = 1;
+    public const ALLOW_EMPTY_OUTPUT = 1;
 
     /**
      * @var list<string>

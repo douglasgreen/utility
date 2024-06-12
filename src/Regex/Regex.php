@@ -16,9 +16,9 @@ use DouglasGreen\Utility\Exceptions\Process\RegexException;
  */
 class Regex
 {
-    public const int NO_EMPTY = 1;
+    public const NO_EMPTY = 1;
 
-    public const int DELIM_CAPTURE = 2;
+    public const DELIM_CAPTURE = 2;
 
     /**
      * Substitute for preg_replace that only returns a string.

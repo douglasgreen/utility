@@ -39,7 +39,7 @@ class Url implements Stringable
     /**
      * @var list<string>
      */
-    public const array ACCEPTED_SCHEMES = [
+    public const ACCEPTED_SCHEMES = [
         'http',
         'https',
         'ftp',

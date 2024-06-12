@@ -29,7 +29,7 @@ use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
  */
 class File
 {
-    public const int USE_INCLUDE_PATH = 1;
+    public const USE_INCLUDE_PATH = 1;
 
     /**
      * @var resource

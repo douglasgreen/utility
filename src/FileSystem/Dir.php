@@ -14,7 +14,7 @@ use DouglasGreen\Utility\Exceptions\FileSystem\DirectoryException;
  */
 class Dir
 {
-    public const int RECURSIVE = 1;
+    public const RECURSIVE = 1;
 
     /**
      * Substitute for getcwd.
