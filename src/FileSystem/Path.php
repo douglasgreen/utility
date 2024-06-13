@@ -414,6 +414,19 @@ class Path
     }
 
     /**
+     * Substitute for mkdir.
+     *
+     * @throws FileException
+     */
+    public function makeDir(int $permissions = 0o777, int $flags = 0): self
+    {
+        $dir = new Dir($this->filename);
+        $dir->make($permissions, $flags);
+
+        return $this;
+    }
+
+    /**
      * Substitute for link.
      *
      * @throws FileException
