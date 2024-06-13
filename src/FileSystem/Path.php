@@ -7,8 +7,8 @@ namespace DouglasGreen\Utility\FileSystem;
 use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
 
 /**
- * The functions in this class depend on a filename not an open file. See File
- * for other file functions.
+ * The functions in this class depend on a file path string, not an open file.
+ * See File for other file functions.
  */
 class Path
 {
@@ -43,7 +43,7 @@ class Path
      * @param ?resource $context
      */
     public function __construct(
-        protected string $filename,
+        protected string $path,
         protected $context = null
     ) {}
 
@@ -52,7 +52,7 @@ class Path
      */
     public function addSubpath(string $subpath): self
     {
-        $this->filename = self::add($this->filename, $subpath);
+        $this->path = self::add($this->path, $subpath);
 
         return $this;
     }
@@ -65,10 +65,10 @@ class Path
     public function calcMd5(int $flags = 0): string
     {
         $useBinary = (bool) ($flags & self::USE_BINARY);
-        $result = md5_file($this->filename, $useBinary);
+        $result = md5_file($this->path, $useBinary);
         if ($result === false) {
             throw new FileException(
-                sprintf('Unable to calculate MD5 hash of file "%s"', $this->filename),
+                sprintf('Unable to calculate MD5 hash of file "%s"', $this->path),
             );
         }
 
@@ -82,9 +82,9 @@ class Path
      */
     public function changeGroup(string|int $group): self
     {
-        if (chgrp($this->filename, $group) === false) {
+        if (chgrp($this->path, $group) === false) {
             throw new FileException(
-                sprintf('Unable to change group of file "%s"', $this->filename),
+                sprintf('Unable to change group of file "%s"', $this->path),
             );
         }
 
@@ -98,8 +98,8 @@ class Path
      */
     public function changeMode(int $permissions): self
     {
-        if (chmod($this->filename, $permissions) === false) {
-            throw new FileException(sprintf('Unable to change mode of file "%s"', $this->filename));
+        if (chmod($this->path, $permissions) === false) {
+            throw new FileException(sprintf('Unable to change mode of file "%s"', $this->path));
         }
 
         return $this;
@@ -112,9 +112,9 @@ class Path
      */
     public function changeOwner(string|int $user): self
     {
-        if (chown($this->filename, $user) === false) {
+        if (chown($this->path, $user) === false) {
             throw new FileException(
-                sprintf('Unable to change owner of file "%s"', $this->filename),
+                sprintf('Unable to change owner of file "%s"', $this->path),
             );
         }
 
@@ -130,9 +130,9 @@ class Path
      */
     public function copy(string $target): self
     {
-        if (copy($this->filename, $target, $this->context) === false) {
+        if (copy($this->path, $target, $this->context) === false) {
             throw new FileException(
-                sprintf('Unable to copy file from "%s" to "%s"', $this->filename, $target),
+                sprintf('Unable to copy file from "%s" to "%s"', $this->path, $target),
             );
         }
 
@@ -146,7 +146,7 @@ class Path
      */
     public function delete(): self
     {
-        if (unlink($this->filename, $this->context) === false) {
+        if (unlink($this->path, $this->context) === false) {
             throw new FileException('Unable to delete file');
         }
 
@@ -158,7 +158,7 @@ class Path
      */
     public function exists(): bool
     {
-        return file_exists($this->filename);
+        return file_exists($this->path);
     }
 
     /**
@@ -168,10 +168,10 @@ class Path
      */
     public function getAccessTime(): int
     {
-        $result = fileatime($this->filename);
+        $result = fileatime($this->path);
         if ($result === false) {
             throw new FileException(
-                sprintf('Unable to get last access time of file "%s"', $this->filename),
+                sprintf('Unable to get last access time of file "%s"', $this->path),
             );
         }
 
@@ -189,11 +189,9 @@ class Path
      */
     public function getLinkStats(): array
     {
-        $result = lstat($this->filename);
+        $result = lstat($this->path);
         if ($result === false) {
-            throw new FileException(
-                sprintf('Unable to get stats of link "%s"', $this->filename),
-            );
+            throw new FileException(sprintf('Unable to get stats of link "%s"', $this->path));
         }
 
         return array_filter(
@@ -210,10 +208,10 @@ class Path
      */
     public function getLinkTarget(): string
     {
-        $result = readlink($this->filename);
+        $result = readlink($this->path);
         if ($result === false) {
             throw new FileException(
-                sprintf('Unable to get target of symbolic link "%s"', $this->filename),
+                sprintf('Unable to get target of symbolic link "%s"', $this->path),
             );
         }
 
@@ -227,10 +225,10 @@ class Path
      */
     public function getMetaChangeTime(): int
     {
-        $result = filectime($this->filename);
+        $result = filectime($this->path);
         if ($result === false) {
             throw new FileException(
-                sprintf('Unable to get last metadata change time of file "%s"', $this->filename),
+                sprintf('Unable to get last metadata change time of file "%s"', $this->path),
             );
         }
 
@@ -244,10 +242,10 @@ class Path
      */
     public function getPermissions(): int
     {
-        $result = fileperms($this->filename);
+        $result = fileperms($this->path);
         if ($result === false) {
             throw new FileException(
-                sprintf('Unable to get permissions of file "%s"', $this->filename),
+                sprintf('Unable to get permissions of file "%s"', $this->path),
             );
         }
 
@@ -265,11 +263,9 @@ class Path
      */
     public function getStats(): array
     {
-        $result = stat($this->filename);
+        $result = stat($this->path);
         if ($result === false) {
-            throw new FileException(
-                sprintf('Unable to get stats of file "%s"', $this->filename),
-            );
+            throw new FileException(sprintf('Unable to get stats of file "%s"', $this->path));
         }
 
         return array_filter(
@@ -286,10 +282,10 @@ class Path
      */
     public function getWriteTime(): int
     {
-        $result = filemtime($this->filename);
+        $result = filemtime($this->path);
         if ($result === false) {
             throw new FileException(
-                sprintf('Unable to get last modification time of file "%s"', $this->filename),
+                sprintf('Unable to get last modification time of file "%s"', $this->path),
             );
         }
 
@@ -301,7 +297,7 @@ class Path
      */
     public function isDir(): bool
     {
-        return is_dir($this->filename);
+        return is_dir($this->path);
     }
 
     /**
@@ -309,7 +305,7 @@ class Path
      */
     public function isExecutable(): bool
     {
-        return is_executable($this->filename);
+        return is_executable($this->path);
     }
 
     /**
@@ -317,7 +313,7 @@ class Path
      */
     public function isFile(): bool
     {
-        return is_file($this->filename);
+        return is_file($this->path);
     }
 
     /**
@@ -325,7 +321,7 @@ class Path
      */
     public function isReadable(): bool
     {
-        return is_readable($this->filename);
+        return is_readable($this->path);
     }
 
     /**
@@ -333,7 +329,7 @@ class Path
      */
     public function isUpload(): bool
     {
-        return is_uploaded_file($this->filename);
+        return is_uploaded_file($this->path);
     }
 
     /**
@@ -341,7 +337,7 @@ class Path
      */
     public function isWritable(): bool
     {
-        return is_writable($this->filename);
+        return is_writable($this->path);
     }
 
     /**
@@ -352,9 +348,9 @@ class Path
     public function loadAndPrint(int $flags = 0): int
     {
         $useIncludePath = (bool) ($flags & self::USE_INCLUDE_PATH);
-        $result = readfile($this->filename, $useIncludePath, $this->context);
+        $result = readfile($this->path, $useIncludePath, $this->context);
         if ($result === false) {
-            throw new FileException(sprintf('Unable to load and print file "%s"', $this->filename));
+            throw new FileException(sprintf('Unable to load and print file "%s"', $this->path));
         }
 
         return $result;
@@ -380,7 +376,7 @@ class Path
             $phpFlags |= FILE_USE_INCLUDE_PATH;
         }
 
-        $result = file($this->filename, $phpFlags, $this->context);
+        $result = file($this->path, $phpFlags, $this->context);
 
         if ($result === false) {
             throw new FileException('Unable to load file to array');
@@ -399,7 +395,7 @@ class Path
     {
         $useIncludePath = (bool) ($flags & self::USE_INCLUDE_PATH);
         $result = file_get_contents(
-            $this->filename,
+            $this->path,
             $useIncludePath,
             $this->context,
             $offset,
@@ -420,7 +416,7 @@ class Path
      */
     public function makeDir(int $permissions = 0o777, int $flags = 0): self
     {
-        $dir = new Dir($this->filename);
+        $dir = new Dir($this->path);
         $dir->make($permissions, $flags);
 
         return $this;
@@ -433,9 +429,9 @@ class Path
      */
     public function makeHardLink(string $link): self
     {
-        if (! link($this->filename, $link)) {
+        if (! link($this->path, $link)) {
             throw new FileException(
-                sprintf('Unable to create hard link "%s" to file "%s"', $link, $this->filename),
+                sprintf('Unable to create hard link "%s" to file "%s"', $link, $this->path),
             );
         }
 
@@ -451,9 +447,9 @@ class Path
      */
     public function makeSymlink(string $link): self
     {
-        if (symlink($this->filename, $link) === false) {
+        if (symlink($this->path, $link) === false) {
             throw new FileException(
-                sprintf('Unable to link "%s" to file "%s"', $link, $this->filename),
+                sprintf('Unable to link "%s" to file "%s"', $link, $this->path),
             );
         }
 
@@ -467,13 +463,13 @@ class Path
      */
     public function moveUpload(string $target): self
     {
-        if (! move_uploaded_file($this->filename, $target)) {
+        if (! move_uploaded_file($this->path, $target)) {
             throw new FileException(
-                sprintf('Unable to move uploaded file "%s" to "%s"', $this->filename, $target),
+                sprintf('Unable to move uploaded file "%s" to "%s"', $this->path, $target),
             );
         }
 
-        $this->filename = $target;
+        $this->path = $target;
 
         return $this;
     }
@@ -483,8 +479,8 @@ class Path
      */
     public function mustExist(): self
     {
-        if (! file_exists($this->filename)) {
-            throw new FileException(sprintf('File does not exist: "%s"', $this->filename));
+        if (! file_exists($this->path)) {
+            throw new FileException(sprintf('File does not exist: "%s"', $this->path));
         }
 
         return $this;
@@ -497,14 +493,14 @@ class Path
      */
     public function rename(string $target): self
     {
-        if (rename($this->filename, $target, $this->context) === false) {
+        if (rename($this->path, $target, $this->context) === false) {
             throw new FileException(
-                sprintf('Unable to rename file from "%s" to "%s"', $this->filename, $target),
+                sprintf('Unable to rename file from "%s" to "%s"', $this->path, $target),
             );
         }
 
         // Update filename to new name.
-        $this->filename = $target;
+        $this->path = $target;
 
         return $this;
     }
@@ -518,12 +514,12 @@ class Path
      */
     public function resolve(): string
     {
-        $result = realpath($this->filename);
+        $result = realpath($this->path);
         if ($result === false) {
-            throw new FileException(sprintf('Unable to get real path on "%s"', $this->filename));
+            throw new FileException(sprintf('Unable to get real path on "%s"', $this->path));
         }
 
-        $this->filename = $result;
+        $this->path = $result;
 
         return $result;
     }
@@ -548,7 +544,7 @@ class Path
             $phpFlags |= FILE_USE_INCLUDE_PATH;
         }
 
-        $result = file_put_contents($this->filename, $data, $phpFlags, $this->context);
+        $result = file_put_contents($this->path, $data, $phpFlags, $this->context);
         if ($result === false) {
             throw new FileException('Unable to save string to file');
         }
@@ -563,9 +559,9 @@ class Path
      */
     public function size(): int
     {
-        $result = filesize($this->filename);
+        $result = filesize($this->path);
         if ($result === false) {
-            throw new FileException(sprintf('Unable to get size of file "%s"', $this->filename));
+            throw new FileException(sprintf('Unable to get size of file "%s"', $this->path));
         }
 
         return $result;
@@ -578,12 +574,12 @@ class Path
      */
     public function touch(?int $mtime = null, ?int $atime = null): self
     {
-        $result = touch($this->filename, $mtime, $atime);
+        $result = touch($this->path, $mtime, $atime);
         if ($result === false) {
             throw new FileException(
                 sprintf(
                     'Unable set file access and modification times on file "%s"',
-                    $this->filename,
+                    $this->path,
                 ),
             );
         }
