@@ -10,4 +10,4 @@ namespace DouglasGreen\Utility\Exceptions\FileSystem;
  * - Path is not a directory, but a directory was expected
  * - Unable to change the directory
  */
-class DirectoryException extends FileException {}
+class DirectoryException extends DiskException {}

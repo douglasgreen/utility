@@ -13,18 +13,9 @@ use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
  * file functions.
  *
  * @todo Add other file functions from this list.
- * umask
- * fileperms
- * link
- * ftruncate
- * flock
- * readlink
- * stat
- * move_uploaded_file
  * disk_free_space
  * popen
  * pclose
- * lstat
  * parse_ini_file
  */
 class File
@@ -71,7 +62,10 @@ class File
         // Distinguish between end-of-data false and error false.
         if ($fields === false) {
             if (! feof($this->stream)) {
-                throw new FileException('Unable to get CSV line from file');
+                throw new FileException(sprintf(
+                    'Unable to get CSV line from file "%s"',
+                    $this->filename
+                ));
             }
 
             return null;
@@ -93,13 +87,88 @@ class File
         // Distinguish between end-of-data false and error false.
         if ($buffer === false) {
             if (! feof($this->stream)) {
-                throw new FileException('Unable to get line from file');
+                throw new FileException(sprintf(
+                    'Unable to get line from file "%s"',
+                    $this->filename
+                ));
             }
 
             return null;
         }
 
         return $buffer;
+    }
+
+    /**
+     * Substitute for ftell.
+     *
+     * @throws FileException
+     */
+    public function getPosition(): int
+    {
+        $result = ftell($this->stream);
+        if ($result === false) {
+            throw new FileException(sprintf(
+                'Unable to return current pointer position of file "%s"',
+                $this->filename
+            ));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for flock.
+     *
+     * Returns true if the lock would block.
+     *
+     * @throws FileException
+     */
+    public function getExclusiveLock(): bool
+    {
+        if (! flock($this->stream, LOCK_EX, $wouldBlock)) {
+            throw new FileException(sprintf(
+                'Unable to get exclusive lock of file "%s"',
+                $this->filename
+            ));
+        }
+
+        return (bool) $wouldBlock;
+    }
+
+    /**
+     * Substitute for flock.
+     *
+     * Returns true if the lock would block.
+     *
+     * @throws FileException
+     */
+    public function getSharedLock(): bool
+    {
+        if (! flock($this->stream, LOCK_SH, $wouldBlock)) {
+            throw new FileException(sprintf(
+                'Unable to get shared lock of file "%s"',
+                $this->filename
+            ));
+        }
+
+        return (bool) $wouldBlock;
+    }
+
+    /**
+     * Substitute for fstat.
+     *
+     * @return array<string|int, int>
+     * @throws FileException
+     */
+    public function getStats(): array
+    {
+        $result = fstat($this->stream);
+        if ($result === false) {
+            throw new FileException(sprintf('Unable to get stats from file "%s"', $this->filename));
+        }
+
+        return $result;
     }
 
     /**
@@ -118,7 +187,10 @@ class File
         $result = fputcsv($this->stream, $fields, $separator, $enclosure, $escape, $eol);
 
         if ($result === false) {
-            throw new FileException('Unable to put CSV line into file');
+            throw new FileException(sprintf(
+                'Unable to put CSV line into file "%s"',
+                $this->filename
+            ));
         }
 
         return $result;
@@ -134,7 +206,10 @@ class File
     {
         $result = fread($this->stream, $length);
         if ($result === false) {
-            throw new FileException('Unable to read string from file');
+            throw new FileException(sprintf(
+                'Unable to read string from file "%s"',
+                $this->filename
+            ));
         }
 
         return $result;
@@ -149,10 +224,30 @@ class File
     {
         $result = fpassthru($this->stream);
         if ($result === 0) {
-            throw new FileException('Unable to read and print rest of file');
+            throw new FileException(sprintf(
+                'Unable to read and print rest of file "%s"',
+                $this->filename
+            ));
         }
 
         return $result;
+    }
+
+    /**
+     * Substitute for flock.
+     *
+     * @throws FileException
+     */
+    public function releaseLock(): self
+    {
+        if (! flock($this->stream, LOCK_UN)) {
+            throw new FileException(sprintf(
+                'Unable to release lock of file "%s"',
+                $this->filename
+            ));
+        }
+
+        return $this;
     }
 
     /**
@@ -164,7 +259,7 @@ class File
     {
         $result = rewind($this->stream);
         if ($result === false) {
-            throw new FileException('Unable to rewind file');
+            throw new FileException(sprintf('Unable to rewind file "%s"', $this->filename));
         }
 
         return $this;
@@ -175,44 +270,28 @@ class File
      *
      * @throws FileException
      */
-    public function seek(int $offset, int $whence = SEEK_SET): self
+    public function seekPosition(int $offset, int $whence = SEEK_SET): self
     {
         if (fseek($this->stream, $offset, $whence) === -1) {
-            throw new FileException('Unable to seek on file');
+            throw new FileException(sprintf('Unable to seek on file "%s"', $this->filename));
         }
 
         return $this;
     }
 
     /**
-     * Substitute for fstat.
+     * Substitute for ftruncate.
      *
-     * @return array<string|int, int>
+     * @param int<0, max> $size
      * @throws FileException
      */
-    public function stats(): array
+    public function truncate(int $size): self
     {
-        $result = fstat($this->stream);
-        if ($result === false) {
-            throw new FileException('Unable to get stats from file');
+        if (! ftruncate($this->stream, $size)) {
+            throw new FileException(sprintf('Unable to truncate file "%s"', $this->filename));
         }
 
-        return $result;
-    }
-
-    /**
-     * Substitute for ftell.
-     *
-     * @throws FileException
-     */
-    public function tell(): int
-    {
-        $result = ftell($this->stream);
-        if ($result === false) {
-            throw new FileException('Unable to tell file');
-        }
-
-        return $result;
+        return $this;
     }
 
     /**
@@ -225,7 +304,10 @@ class File
     {
         $result = fwrite($this->stream, $data, $length);
         if ($result === false) {
-            throw new FileException('Unable to write string to file');
+            throw new FileException(sprintf(
+                'Unable to write string to file "%s"',
+                $this->filename
+            ));
         }
 
         return $result;
@@ -239,7 +321,7 @@ class File
     protected function close(): void
     {
         if (fclose($this->stream) === false) {
-            throw new FileException('Unable to close file');
+            throw new FileException(sprintf('Unable to close file "%s"', $this->filename));
         }
     }
 

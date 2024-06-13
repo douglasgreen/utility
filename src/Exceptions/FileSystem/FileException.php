@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Exceptions\FileSystem;
 
-use DouglasGreen\Utility\Exceptions\BaseException;
-
 /**
  * Thrown for issues related to file operations, such as:
  * - File not found
@@ -14,4 +12,4 @@ use DouglasGreen\Utility\Exceptions\BaseException;
  *
  * @see https://www.php.net/manual/en/ref.filesystem.php
  */
-class FileException extends BaseException {}
+class FileException extends DiskException {}

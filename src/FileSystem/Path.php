@@ -33,6 +33,24 @@ class Path
     ) {}
 
     /**
+     * Substitute for md5_file.
+     *
+     * @throws FileException
+     */
+    public function calcMd5(int $flags = 0): string
+    {
+        $useBinary = (bool) ($flags & self::USE_BINARY);
+        $result = md5_file($this->filename, $useBinary);
+        if ($result === false) {
+            throw new FileException(
+                sprintf('Unable to calculate MD5 hash of file "%s"', $this->filename),
+            );
+        }
+
+        return $result;
+    }
+
+    /**
      * Substitute for chgrp.
      *
      * @throws FileException
@@ -136,6 +154,48 @@ class Path
     }
 
     /**
+     * Substitute for lstat.
+     *
+     * Returns named stats only.
+     *
+     * @return array<string, int>
+     * @throws FileException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function getLinkStats(): array
+    {
+        $result = lstat($this->filename);
+        if ($result === false) {
+            throw new FileException(
+                sprintf('Unable to get stats of link "%s"', $this->filename),
+            );
+        }
+
+        return array_filter(
+            $result,
+            static fn($value, $key): bool => is_string($key),
+            ARRAY_FILTER_USE_BOTH
+        );
+    }
+
+    /**
+     * Substitute for readlink.
+     *
+     * @throws FileException
+     */
+    public function getLinkTarget(): string
+    {
+        $result = readlink($this->filename);
+        if ($result === false) {
+            throw new FileException(
+                sprintf('Unable to get target of symbolic link "%s"', $this->filename),
+            );
+        }
+
+        return $result;
+    }
+
+    /**
      * Substitute for filectime.
      *
      * @throws FileException
@@ -167,6 +227,31 @@ class Path
         }
 
         return $result;
+    }
+
+    /**
+     * Substitute for stat.
+     *
+     * Returns named stats only.
+     *
+     * @return array<string, int>
+     * @throws FileException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function getStats(): array
+    {
+        $result = stat($this->filename);
+        if ($result === false) {
+            throw new FileException(
+                sprintf('Unable to get stats of file "%s"', $this->filename),
+            );
+        }
+
+        return array_filter(
+            $result,
+            static fn($value, $key): bool => is_string($key),
+            ARRAY_FILTER_USE_BOTH
+        );
     }
 
     /**
@@ -304,21 +389,37 @@ class Path
     }
 
     /**
-     * Substitute for md5_file.
+     * Substitute for link.
      *
      * @throws FileException
      */
-    public function md5(int $flags = 0): string
+    public function makeLink(string $link): self
     {
-        $useBinary = (bool) ($flags & self::USE_BINARY);
-        $result = md5_file($this->filename, $useBinary);
-        if ($result === false) {
+        if (! link($this->filename, $link)) {
             throw new FileException(
-                sprintf('Unable to calculate MD5 hash of file "%s"', $this->filename),
+                sprintf('Unable to create hard link "%s" to file "%s"', $link, $this->filename),
             );
         }
 
-        return $result;
+        return $this;
+    }
+
+    /**
+     * Substitute for move_uploaded_file.
+     *
+     * @throws FileException
+     */
+    public function moveUpload(string $target): self
+    {
+        if (! move_uploaded_file($this->filename, $target)) {
+            throw new FileException(
+                sprintf('Unable to move uploaded file "%s" to "%s"', $this->filename, $target),
+            );
+        }
+
+        $this->filename = $target;
+
+        return $this;
     }
 
     /**
