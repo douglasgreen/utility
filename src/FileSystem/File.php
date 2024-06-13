@@ -31,7 +31,7 @@ class File
      * @param ?resource $context
      */
     public function __construct(
-        protected string $filename,
+        protected string $path,
         protected string $mode = 'r',
         protected int $flags = 0,
         protected $context = null,
@@ -64,7 +64,7 @@ class File
             if (! feof($this->stream)) {
                 throw new FileException(sprintf(
                     'Unable to get CSV line from file "%s"',
-                    $this->filename
+                    $this->path
                 ));
             }
 
@@ -89,7 +89,7 @@ class File
             if (! feof($this->stream)) {
                 throw new FileException(sprintf(
                     'Unable to get line from file "%s"',
-                    $this->filename
+                    $this->path
                 ));
             }
 
@@ -110,7 +110,7 @@ class File
         if ($result === false) {
             throw new FileException(sprintf(
                 'Unable to return current pointer position of file "%s"',
-                $this->filename
+                $this->path
             ));
         }
 
@@ -129,7 +129,7 @@ class File
         if (! flock($this->stream, LOCK_EX, $wouldBlock)) {
             throw new FileException(sprintf(
                 'Unable to get exclusive lock of file "%s"',
-                $this->filename
+                $this->path
             ));
         }
 
@@ -148,7 +148,7 @@ class File
         if (! flock($this->stream, LOCK_SH, $wouldBlock)) {
             throw new FileException(sprintf(
                 'Unable to get shared lock of file "%s"',
-                $this->filename
+                $this->path
             ));
         }
 
@@ -165,7 +165,7 @@ class File
     {
         $result = fstat($this->stream);
         if ($result === false) {
-            throw new FileException(sprintf('Unable to get stats from file "%s"', $this->filename));
+            throw new FileException(sprintf('Unable to get stats from file "%s"', $this->path));
         }
 
         return $result;
@@ -189,7 +189,7 @@ class File
         if ($result === false) {
             throw new FileException(sprintf(
                 'Unable to put CSV line into file "%s"',
-                $this->filename
+                $this->path
             ));
         }
 
@@ -208,7 +208,7 @@ class File
         if ($result === false) {
             throw new FileException(sprintf(
                 'Unable to read string from file "%s"',
-                $this->filename
+                $this->path
             ));
         }
 
@@ -226,7 +226,7 @@ class File
         if ($result === 0) {
             throw new FileException(sprintf(
                 'Unable to read and print rest of file "%s"',
-                $this->filename
+                $this->path
             ));
         }
 
@@ -243,7 +243,7 @@ class File
         if (! flock($this->stream, LOCK_UN)) {
             throw new FileException(sprintf(
                 'Unable to release lock of file "%s"',
-                $this->filename
+                $this->path
             ));
         }
 
@@ -259,7 +259,7 @@ class File
     {
         $result = rewind($this->stream);
         if ($result === false) {
-            throw new FileException(sprintf('Unable to rewind file "%s"', $this->filename));
+            throw new FileException(sprintf('Unable to rewind file "%s"', $this->path));
         }
 
         return $this;
@@ -273,7 +273,7 @@ class File
     public function seekPosition(int $offset, int $whence = SEEK_SET): self
     {
         if (fseek($this->stream, $offset, $whence) === -1) {
-            throw new FileException(sprintf('Unable to seek on file "%s"', $this->filename));
+            throw new FileException(sprintf('Unable to seek on file "%s"', $this->path));
         }
 
         return $this;
@@ -288,7 +288,7 @@ class File
     public function truncate(int $size): self
     {
         if (! ftruncate($this->stream, $size)) {
-            throw new FileException(sprintf('Unable to truncate file "%s"', $this->filename));
+            throw new FileException(sprintf('Unable to truncate file "%s"', $this->path));
         }
 
         return $this;
@@ -306,7 +306,7 @@ class File
         if ($result === false) {
             throw new FileException(sprintf(
                 'Unable to write string to file "%s"',
-                $this->filename
+                $this->path
             ));
         }
 
@@ -321,7 +321,7 @@ class File
     protected function close(): void
     {
         if (fclose($this->stream) === false) {
-            throw new FileException(sprintf('Unable to close file "%s"', $this->filename));
+            throw new FileException(sprintf('Unable to close file "%s"', $this->path));
         }
     }
 
@@ -333,9 +333,9 @@ class File
     protected function open(): void
     {
         $useIncludePath = (bool) ($this->flags & self::USE_INCLUDE_PATH);
-        $stream = fopen($this->filename, $this->mode, $useIncludePath, $this->context);
+        $stream = fopen($this->path, $this->mode, $useIncludePath, $this->context);
         if ($stream === false) {
-            throw new FileException(sprintf('Unable to open file "%s"', $this->filename));
+            throw new FileException(sprintf('Unable to open file "%s"', $this->path));
         }
 
         $this->stream = $stream;

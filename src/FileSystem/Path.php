@@ -235,6 +235,11 @@ class Path
         return $result;
     }
 
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
     /**
      * Substitute for fileperms.
      *
