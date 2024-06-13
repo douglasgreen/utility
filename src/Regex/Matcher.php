@@ -8,9 +8,6 @@ use DouglasGreen\Utility\Data\TypeException;
 
 /**
  * Regex utility class to throw exceptions when basic operations fail.
- *
- * @phpstan-import-type MatchOffset from MatchOffsetArray
- * @phpstan-import-type MatchAll from MatchAllArray
  */
 class Matcher
 {
@@ -32,8 +29,8 @@ class Matcher
         string $subject,
         int $limit = -1,
     ): string {
-        $regex = new self($pattern);
-        return $regex->replace($replacement, $subject, $limit);
+        $matcher = new self($pattern);
+        return $matcher->replace($replacement, $subject, $limit);
     }
 
     /**
@@ -47,8 +44,8 @@ class Matcher
         int $limit = -1,
         int $flags = 0,
     ): array {
-        $regex = new self($pattern);
-        return $regex->split($subject, $limit, $flags)
+        $matcher = new self($pattern);
+        return $matcher->split($subject, $limit, $flags)
             ->getAll();
     }
 
@@ -61,8 +58,8 @@ class Matcher
      */
     public static function getAllMatches(string $pattern, string $subject, int $offset = 0): array
     {
-        $regex = new self($pattern);
-        $match = $regex->matchAll($subject, $offset);
+        $matcher = new self($pattern);
+        $match = $matcher->matchAll($subject, $offset);
         if ($match->has()) {
             return $match->getAll();
         }
@@ -77,8 +74,8 @@ class Matcher
      */
     public static function getMatch(string $pattern, string $subject, int $offset = 0): array
     {
-        $regex = new self($pattern);
-        return $regex->match($subject, $offset)
+        $matcher = new self($pattern);
+        return $matcher->match($subject, $offset)
             ->getAll();
     }
 
@@ -87,8 +84,8 @@ class Matcher
      */
     public static function hasMatch(string $pattern, string $subject, int $offset = 0): bool
     {
-        $regex = new self($pattern);
-        return $regex->match($subject, $offset)
+        $matcher = new self($pattern);
+        return $matcher->match($subject, $offset)
             ->has();
     }
 
