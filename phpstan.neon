@@ -1,0 +1,7 @@
+parameters:
+    # Don't use level 9 because PHP functions return mixed everywhere
+    level: 8
+    tmpDir: ./var/phpstan
+    phpVersion: 80100
+    ignoreErrors:
+        - '#Call to an undefined method DouglasGreen\\Utility\\FileSystem\\Dir::make\(\)#'

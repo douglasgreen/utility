@@ -512,6 +512,8 @@ class Path
     /**
      * Substitute for realpath.
      *
+     * Also updates the filename property.
+     *
      * @throws FileException
      */
     public function resolve(): string
@@ -520,6 +522,8 @@ class Path
         if ($result === false) {
             throw new FileException(sprintf('Unable to get real path on "%s"', $this->filename));
         }
+
+        $this->filename = $result;
 
         return $result;
     }
