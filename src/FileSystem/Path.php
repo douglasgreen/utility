@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DouglasGreen\Utility\FileSystem;
 
 use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
+use DouglasGreen\Utility\Url;
 
 /**
  * The functions in this class depend on a file path string, not an open file.
@@ -412,6 +413,23 @@ class Path
         }
 
         return $result;
+    }
+
+    /**
+     * Substitute for file_get_contents on a URL.
+     *
+     * Automatically encodes the URL if not already encoded.
+     */
+    public function loadUrl(): ?string
+    {
+        $url = $this->path;
+        if (! Url::isEncoded($url)) {
+            $url = urlencode($url);
+        }
+
+        $result = file_get_contents($url);
+
+        return $result === false ? null : $result;
     }
 
     /**

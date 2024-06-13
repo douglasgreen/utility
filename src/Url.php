@@ -72,6 +72,14 @@ class Url implements Stringable
     protected ?int $port;
 
     /**
+     * Check if a URL has already been encoded.
+     */
+    public static function isEncoded(string $url): bool
+    {
+        return urldecode($url) !== $url;
+    }
+
+    /**
      * @throws ParseException
      */
     public function __construct(string $url)
