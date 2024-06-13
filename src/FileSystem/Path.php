@@ -24,6 +24,21 @@ class Path
 
     public const USE_INCLUDE_PATH = 32;
 
+    public static function add(string $path, string $subpath): string
+    {
+        // Ensure the current filename ends with a directory separator
+        if (substr($path, -1) !== DIRECTORY_SEPARATOR) {
+            $path .= DIRECTORY_SEPARATOR;
+        }
+
+        // Ensure the subpath does not start with a directory separator
+        if (substr($subpath, 0, 1) === DIRECTORY_SEPARATOR) {
+            $subpath = ltrim($subpath, DIRECTORY_SEPARATOR);
+        }
+
+        return $path . $subpath;
+    }
+
     /**
      * @param ?resource $context
      */
@@ -32,19 +47,12 @@ class Path
         protected $context = null
     ) {}
 
+    /**
+     * Add a subpath to this object.
+     */
     public function addSubpath(string $subpath): self
     {
-        // Ensure the current filename ends with a directory separator
-        if (substr($this->filename, -1) !== DIRECTORY_SEPARATOR) {
-            $this->filename .= DIRECTORY_SEPARATOR;
-        }
-
-        // Ensure the subpath does not start with a directory separator
-        if (substr($subpath, 0, 1) === DIRECTORY_SEPARATOR) {
-            $subpath = ltrim($subpath, DIRECTORY_SEPARATOR);
-        }
-
-        $this->filename .= $subpath;
+        $this->filename = self::add($this->filename, $subpath);
 
         return $this;
     }

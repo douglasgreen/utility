@@ -42,10 +42,18 @@ class Dir
     /**
      * Substitute for mkdir.
      *
+     * If directory already exists, updates its permissions instead.
+     *
      * @throws DirectoryException
      */
     public function make(int $permissions = 0o777, int $flags = 0): self
     {
+        if (is_dir($this->directory)) {
+            $path = new Path($this->directory);
+            $path->changeMode($permissions);
+            return $this;
+        }
+
         $recursive = (bool) ($flags & self::RECURSIVE);
         if (mkdir($this->directory, $permissions, $recursive, $this->context) === false) {
             throw new DirectoryException(
