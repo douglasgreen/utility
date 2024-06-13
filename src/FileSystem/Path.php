@@ -32,6 +32,23 @@ class Path
         protected $context = null
     ) {}
 
+    public function addSubpath(string $subpath): self
+    {
+        // Ensure the current filename ends with a directory separator
+        if (substr($this->filename, -1) !== DIRECTORY_SEPARATOR) {
+            $this->filename .= DIRECTORY_SEPARATOR;
+        }
+
+        // Ensure the subpath does not start with a directory separator
+        if (substr($subpath, 0, 1) === DIRECTORY_SEPARATOR) {
+            $subpath = ltrim($subpath, DIRECTORY_SEPARATOR);
+        }
+
+        $this->filename .= $subpath;
+
+        return $this;
+    }
+
     /**
      * Substitute for md5_file.
      *
@@ -418,6 +435,18 @@ class Path
         }
 
         $this->filename = $target;
+
+        return $this;
+    }
+
+    /**
+     * Substitute for file_exists that throws exception if not existing.
+     */
+    public function mustExist(): self
+    {
+        if (! file_exists($this->filename)) {
+            throw new FileException(sprintf('File does not exist: "%s"', $this->filename));
+        }
 
         return $this;
     }
