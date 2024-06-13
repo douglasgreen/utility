@@ -410,11 +410,29 @@ class Path
      *
      * @throws FileException
      */
-    public function makeLink(string $link): self
+    public function makeHardLink(string $link): self
     {
         if (! link($this->filename, $link)) {
             throw new FileException(
                 sprintf('Unable to create hard link "%s" to file "%s"', $link, $this->filename),
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Substitute for symlink.
+     *
+     * The "filename" property should be the target.
+     *
+     * @throws FileException
+     */
+    public function makeSymlink(string $link): self
+    {
+        if (symlink($this->filename, $link) === false) {
+            throw new FileException(
+                sprintf('Unable to link "%s" to file "%s"', $link, $this->filename),
             );
         }
 
@@ -526,24 +544,6 @@ class Path
         }
 
         return $result;
-    }
-
-    /**
-     * Substitute for symlink.
-     *
-     * The "filename" property should be the target.
-     *
-     * @throws FileException
-     */
-    public function symlink(string $link): self
-    {
-        if (symlink($this->filename, $link) === false) {
-            throw new FileException(
-                sprintf('Unable to link "%s" to file "%s"', $link, $this->filename),
-            );
-        }
-
-        return $this;
     }
 
     /**
