@@ -6,29 +6,24 @@ namespace DouglasGreen\Utility\Regex;
 
 /**
  * Regex utility class to store information about preg_match matches.
- *
- * @phpstan-type Match string
  */
 class MatchArray extends RegexMatch
 {
     /**
-     * @param array<string|int, Match> $matches
+     * @param array<string|int, string> $matches
      */
     public function __construct(
         protected array $matches,
         protected int $count
     ) {}
 
-    /**
-     * @return Match
-     */
     public function get(string|int $key): string|null
     {
         return $this->matches[$key] ?? null;
     }
 
     /**
-     * @return array<string|int, Match>
+     * @return array<string|int, string>
      */
     public function getAll(): array
     {

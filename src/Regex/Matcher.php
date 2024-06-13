@@ -9,11 +9,10 @@ use DouglasGreen\Utility\Data\TypeException;
 /**
  * Regex utility class to throw exceptions when basic operations fail.
  *
- * @phpstan-import-type Match from MatchArray
  * @phpstan-import-type MatchOffset from MatchOffsetArray
  * @phpstan-import-type MatchAll from MatchAllArray
  */
-class Regex
+class Matcher
 {
     public const NO_EMPTY = 1;
 
@@ -74,7 +73,7 @@ class Regex
     /**
      * A simple static matcher that uses preg_match and returns the match.
      *
-     * @return array<string|int, Match>
+     * @return array<string|int, string>
      */
     public static function getMatch(string $pattern, string $subject, int $offset = 0): array
     {
@@ -167,7 +166,7 @@ class Regex
         $result = preg_filter($this->pattern, $replacement, $subject, $limit);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
         }
 
         return $result;
@@ -193,7 +192,7 @@ class Regex
         // preg_filter doesn't distinguish between no matches and error when using
         // array as subject, so I use a second preg_filter call to look for errors.
         if (preg_filter($this->pattern, '', '') === null) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
         }
 
         $result = preg_filter($this->pattern, $replacement, $subject, $limit, $count);
@@ -296,7 +295,7 @@ class Regex
         $result = preg_replace($this->pattern, $replacement, $subject, $limit);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
         }
 
         return $result;
@@ -314,7 +313,7 @@ class Regex
         $result = preg_replace_callback($this->pattern, $callback, $subject, $limit);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
         }
 
         return $result;
@@ -333,7 +332,7 @@ class Regex
         $result = preg_replace_callback($this->pattern, $callback, $subject, $limit, $count);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
         }
 
         return new MatchList($result, $count);
@@ -356,7 +355,7 @@ class Regex
         $result = preg_replace($this->pattern, $replacement, $subject, $limit, $count);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPattern());
+            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
         }
 
         return new MatchList($result, $count);
@@ -392,7 +391,7 @@ class Regex
     /**
      * @throws RegexException
      */
-    protected function getPattern(): string
+    protected function getPatternDesc(): string
     {
         return is_array($this->pattern) ? implode(', ', $this->pattern) : $this->pattern;
     }
