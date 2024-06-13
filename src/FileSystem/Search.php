@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
-use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
-
 /**
  * The function in this class depends on a search pattern.
  */

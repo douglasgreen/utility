@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Regex;
 
-use DouglasGreen\Utility\Exceptions\Data\TypeException;
-use DouglasGreen\Utility\Exceptions\Process\RegexException;
+use DouglasGreen\Utility\Data\TypeException;
 
 /**
  * Regex utility class to throw exceptions when basic operations fail.

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DouglasGreen\Utility\FileSystem;
 
 use Directory;
-use DouglasGreen\Utility\Exceptions\FileSystem\DirectoryException;
 
 /**
  * Directory utility class to throw exceptions when basic operations fail.

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
-use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
-
 /**
  * The functions in this class depend on a file path string, not an open file.
  * See File for other file functions.

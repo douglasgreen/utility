@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Program;
 
-use DouglasGreen\Utility\Exceptions\Program\CommandException;
 use DouglasGreen\Utility\Regex\Regex;
 
 /**

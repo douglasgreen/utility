@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
-use DouglasGreen\Utility\Exceptions\FileSystem\FileException;
-
 /**
  * File utility class to throw exceptions when basic operations fail.
  *

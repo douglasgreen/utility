@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Tests;
 
-use DouglasGreen\Utility\Exceptions\Data\ValueException;
-use DouglasGreen\Utility\Url;
+use DouglasGreen\Utility\Data\ValueException;
+use DouglasGreen\Utility\Network\Url;
 use PHPUnit\Framework\TestCase;
 
 class UrlTest extends TestCase
