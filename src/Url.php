@@ -72,18 +72,14 @@ class Url implements Stringable
     protected ?int $port;
 
     /**
-     * Check if a URL has already been encoded.
-     */
-    public static function isEncoded(string $url): bool
-    {
-        return urldecode($url) !== $url;
-    }
-
-    /**
      * @throws ParseException
      */
     public function __construct(string $url)
     {
+        if ($this->isEncoded($url)) {
+            $url = urldecode($url);
+        }
+
         $parsedUrl = parse_url($url);
         if ($parsedUrl === false) {
             throw new ParseException(sprintf('Failed to parse URL: "%s"', $url));
@@ -112,6 +108,20 @@ class Url implements Stringable
         unset($this->params[$key]);
 
         return $this;
+    }
+
+    /**
+     * Substitute for file_get_contents on a URL.
+     *
+     * Automatically encodes the URL if not already encoded.
+     */
+    public function fetchPage(): ?string
+    {
+        $url = $this->getUrl();
+
+        $result = file_get_contents(urlencode($url));
+
+        return $result === false ? null : $result;
     }
 
     public function getFragment(): ?string
@@ -412,5 +422,13 @@ class Url implements Stringable
         }
 
         return $input;
+    }
+
+    /**
+     * Check if a URL has already been encoded.
+     */
+    protected function isEncoded(string $url): bool
+    {
+        return urldecode($url) !== $url;
     }
 }
