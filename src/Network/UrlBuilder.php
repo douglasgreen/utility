@@ -17,25 +17,25 @@ use Stringable;
  * Usage example:
  *
  * try {
- *     $urlParser = new Url('http://username:password@hostname:9090/path?arg=value#anchor');
+ *     $urlBuilder = new UrlBuilder('http://username:password@hostname:9090/path?arg=value#anchor');
  *
  *     // Getting URL components
- *     $scheme = $urlParser->getScheme(); // 'http'
- *     $host = $urlParser->getHost(); // 'hostname'
+ *     $scheme = $urlBuilder->getScheme(); // 'http'
+ *     $host = $urlBuilder->getHost(); // 'hostname'
  *
  *     // Setting URL components
- *     $urlParser->setScheme('https');
- *     $urlParser->setHost('example.com');
- *     $urlParser->setParam('example', 'yes');
+ *     $urlBuilder->setScheme('https');
+ *     $urlBuilder->setHost('example.com');
+ *     $urlBuilder->setParam('example', 'yes');
  *
  *     // Reassembling and validating the URL
- *     $newUrl = $urlParser->getURL(); // 'https://username:password@example.com:9090/path?arg=value&example=yes#anchor'
+ *     $newUrl = $urlBuilder->getURL(); // 'https://username:password@example.com:9090/path?arg=value&example=yes#anchor'
  *     echo $newUrl;
  * } catch (ParseException $e) {
  *     echo 'Error: ' . $e->getMessage();
  * }
  */
-class Url implements Stringable
+class UrlBuilder implements Stringable
 {
     /**
      * @var list<string>
@@ -58,50 +58,72 @@ class Url implements Stringable
      */
     protected array $params = [];
 
-    protected ?string $fragment;
+    protected ?string $fragment = null;
 
-    protected ?string $host;
+    protected ?string $host = null;
 
-    protected ?string $pass;
+    protected ?string $pass = null;
 
-    protected ?string $path;
+    protected ?string $path = null;
 
-    protected ?string $scheme;
+    protected ?string $scheme = null;
 
-    protected ?string $user;
+    protected ?string $user = null;
 
-    protected ?int $port;
+    protected ?int $port = null;
 
     /**
-     * @throws ParseException
+     * Can pass URL to constructor or start with empty URL.
      */
-    public function __construct(string $url)
+    public function __construct(string $url = null)
     {
-        if ($this->isEncoded($url)) {
-            $url = urldecode($url);
+        if ($url !== null) {
+            $this->parse($url);
         }
-
-        $parsedUrl = parse_url($url);
-        if ($parsedUrl === false) {
-            throw new ParseException(sprintf('Failed to parse URL: "%s"', $url));
-        }
-
-        $this->setScheme($parsedUrl['scheme'] ?? null);
-        $this->setHost($parsedUrl['host'] ?? null);
-        $this->setPort($parsedUrl['port'] ?? null);
-        $this->setUser($parsedUrl['user'] ?? null);
-        $this->setPass($parsedUrl['pass'] ?? null);
-        $this->setPath($parsedUrl['path'] ?? null);
-        if (isset($parsedUrl['query'])) {
-            $this->setQuery($parsedUrl['query']);
-        }
-
-        $this->setFragment($parsedUrl['fragment'] ?? null);
     }
 
     public function __toString(): string
     {
-        return $this->getUrl();
+        return $this->build();
+    }
+
+    public function build(): string
+    {
+        $url = '';
+        if ($this->scheme !== null) {
+            $url .= $this->scheme . '://';
+        }
+
+        if ($this->user !== null) {
+            $url .= $this->user;
+            if ($this->pass !== null) {
+                $url .= ':' . $this->pass;
+            }
+
+            $url .= '@';
+        }
+
+        if ($this->host !== null) {
+            $url .= $this->host;
+        }
+
+        if ($this->port !== null) {
+            $url .= ':' . $this->port;
+        }
+
+        if ($this->path !== null) {
+            $url .= $this->path;
+        }
+
+        if ($this->params !== []) {
+            $url .= '?' . $this->getQuery();
+        }
+
+        if ($this->fragment !== null) {
+            $url .= '#' . $this->fragment;
+        }
+
+        return $url;
     }
 
     public function deleteParam(string $key): self
@@ -118,7 +140,7 @@ class Url implements Stringable
      */
     public function fetchPage(): ?string
     {
-        $url = $this->getUrl();
+        $url = $this->build();
 
         $result = file_get_contents(urlencode($url));
 
@@ -193,45 +215,6 @@ class Url implements Stringable
         return $this->scheme;
     }
 
-    public function getUrl(): string
-    {
-        $url = '';
-        if ($this->scheme !== null) {
-            $url .= $this->scheme . '://';
-        }
-
-        if ($this->user !== null) {
-            $url .= $this->user;
-            if ($this->pass !== null) {
-                $url .= ':' . $this->pass;
-            }
-
-            $url .= '@';
-        }
-
-        if ($this->host !== null) {
-            $url .= $this->host;
-        }
-
-        if ($this->port !== null) {
-            $url .= ':' . $this->port;
-        }
-
-        if ($this->path !== null) {
-            $url .= $this->path;
-        }
-
-        if ($this->params !== []) {
-            $url .= '?' . $this->getQuery();
-        }
-
-        if ($this->fragment !== null) {
-            $url .= '#' . $this->fragment;
-        }
-
-        return $url;
-    }
-
     public function getUser(): ?string
     {
         return $this->user;
@@ -273,6 +256,37 @@ class Url implements Stringable
         }
 
         return $this->port === $otherUrl->port;
+    }
+
+    /**
+     * @throws ParseException
+     */
+    public function parse(string $url): self
+    {
+        if ($this->isEncoded($url)) {
+            $url = urldecode($url);
+        }
+
+        $parsedUrl = parse_url($url);
+        if ($parsedUrl === false) {
+            throw new ParseException(sprintf('Failed to parse URL: "%s"', $url));
+        }
+
+        $this->setScheme($parsedUrl['scheme'] ?? null);
+        $this->setHost($parsedUrl['host'] ?? null);
+        $this->setPort($parsedUrl['port'] ?? null);
+        $this->setUser($parsedUrl['user'] ?? null);
+        $this->setPass($parsedUrl['pass'] ?? null);
+        $this->setPath($parsedUrl['path'] ?? null);
+        $this->setFragment($parsedUrl['fragment'] ?? null);
+
+        if (isset($parsedUrl['query'])) {
+            $this->setQuery($parsedUrl['query']);
+        } else {
+            $this->params = [];
+        }
+
+        return $this;
     }
 
     public function setFragment(?string $fragment): self
