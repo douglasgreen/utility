@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
-use Directory;
+use Directory as PhpDirectory;
 
 /**
  * Directory utility class to throw exceptions when basic operations fail.
  *
  * Manages functions on a directory name.
  */
-class Dir
+class Directory
 {
     public const RECURSIVE = 1;
 
@@ -85,7 +85,7 @@ class Dir
      *
      * @throws DirectoryException
      */
-    public function open(): Directory
+    public function open(): PhpDirectory
     {
         $result = dir($this->path, $this->context);
         if ($result === false) {

@@ -9,7 +9,7 @@ namespace DouglasGreen\Utility\FileSystem;
  *
  * Manages directory handles opened by opendir.
  */
-class Dir
+class DirectoryHandle
 {
     /**
      * @var resource

@@ -298,7 +298,7 @@ class Path
     /**
      * Substitute for is_dir.
      */
-    public function isDir(): bool
+    public function isDirectory(): bool
     {
         return is_dir($this->path);
     }
@@ -417,10 +417,10 @@ class Path
      *
      * @throws FileException
      */
-    public function makeDir(int $permissions = 0o777, int $flags = 0): self
+    public function makeDirectory(int $permissions = 0o777, int $flags = 0): self
     {
-        $dir = new Dir($this->path);
-        $dir->make($permissions, $flags);
+        $directory = new Directory($this->path);
+        $directory->make($permissions, $flags);
 
         return $this;
     }
