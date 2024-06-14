@@ -153,11 +153,6 @@ class Matcher
         return $this->count;
     }
 
-    public function matched(): bool
-    {
-        return $this->count > 0;
-    }
-
     /**
      * Do a preg_match and store the results.
      *
@@ -227,6 +222,11 @@ class Matcher
         $this->count = $result;
 
         return $matches;
+    }
+
+    public function matched(): bool
+    {
+        return $this->count > 0;
     }
 
     /**
