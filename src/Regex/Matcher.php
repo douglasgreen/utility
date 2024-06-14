@@ -18,78 +18,6 @@ class Matcher
     protected int $count;
 
     /**
-     * Substitute for preg_replace that only returns a string.
-     *
-     * Subject is limited to a string so it only returns a string.
-     *
-     * @param list<string>|string $replacement
-     * @param list<string>|string $pattern
-     */
-    public static function doReplace(
-        array|string $pattern,
-        array|string $replacement,
-        string $subject,
-        int $limit = -1,
-    ): string {
-        $matcher = new self($pattern);
-        return $matcher->replace($replacement, $subject, $limit);
-    }
-
-    /**
-     * Substitute for preg_split that returns the pieces.
-     *
-     * @return list<string>
-     */
-    public static function doSplit(
-        string $pattern,
-        string $subject,
-        int $limit = -1,
-        int $flags = 0,
-    ): array {
-        $matcher = new self($pattern);
-        return $matcher->split($subject, $limit, $flags);
-    }
-
-    /**
-     * A simple static matcher that uses preg_match_all and returns the match.
-     *
-     * Returns [] as a convenience if there are no matches.
-     *
-     * @return array<string|int, array<int, string>>
-     */
-    public static function getAllMatches(string $pattern, string $subject, int $offset = 0): array
-    {
-        $matcher = new self($pattern);
-        $matches = $matcher->matchAll($subject, $offset);
-        if ($matcher->matched()) {
-            return $matches;
-        }
-
-        return [];
-    }
-
-    /**
-     * A simple static matcher that uses preg_match and returns the match.
-     *
-     * @return array<string|int, string>
-     */
-    public static function getMatch(string $pattern, string $subject, int $offset = 0): array
-    {
-        $matcher = new self($pattern);
-        return $matcher->match($subject, $offset);
-    }
-
-    /**
-     * A simple static matcher that uses preg_match and checks that a match exists.
-     */
-    public static function hasMatch(string $pattern, string $subject, int $offset = 0): bool
-    {
-        $matcher = new self($pattern);
-        $matcher->match($subject, $offset);
-        return $matcher->matched();
-    }
-
-    /**
      * @param list<string>|string $pattern
      */
     public function __construct(
@@ -151,6 +79,11 @@ class Matcher
     public function getCount(): int
     {
         return $this->count;
+    }
+
+    public function hasMatch(): bool
+    {
+        return $this->count > 0;
     }
 
     /**
@@ -222,11 +155,6 @@ class Matcher
         $this->count = $result;
 
         return $matches;
-    }
-
-    public function matched(): bool
-    {
-        return $this->count > 0;
     }
 
     /**
