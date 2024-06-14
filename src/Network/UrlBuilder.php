@@ -133,20 +133,6 @@ class UrlBuilder implements Stringable
         return $this;
     }
 
-    /**
-     * Substitute for file_get_contents on a URL.
-     *
-     * Automatically encodes the URL if not already encoded.
-     */
-    public function fetchPage(): ?string
-    {
-        $url = $this->build();
-
-        $result = file_get_contents(urlencode($url));
-
-        return $result === false ? null : $result;
-    }
-
     public function getFragment(): ?string
     {
         return $this->fragment;
@@ -263,7 +249,7 @@ class UrlBuilder implements Stringable
      */
     public function parse(string $url): self
     {
-        if ($this->isEncoded($url)) {
+        if (Url::isEncoded($url)) {
             $url = urldecode($url);
         }
 
@@ -437,13 +423,5 @@ class UrlBuilder implements Stringable
         }
 
         return $input;
-    }
-
-    /**
-     * Check if a URL has already been encoded.
-     */
-    protected function isEncoded(string $url): bool
-    {
-        return urldecode($url) !== $url;
     }
 }
