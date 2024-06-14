@@ -15,6 +15,8 @@ class Matcher
 
     public const DELIM_CAPTURE = 2;
 
+    protected int $count;
+
     /**
      * Substitute for preg_replace that only returns a string.
      *
@@ -45,8 +47,7 @@ class Matcher
         int $flags = 0,
     ): array {
         $matcher = new self($pattern);
-        return $matcher->split($subject, $limit, $flags)
-            ->getAll();
+        return $matcher->split($subject, $limit, $flags);
     }
 
     /**
@@ -54,14 +55,14 @@ class Matcher
      *
      * Returns [] as a convenience if there are no matches.
      *
-     * @return array<string|int, MatchAll>
+     * @return array<string|int, array<int, string>>
      */
     public static function getAllMatches(string $pattern, string $subject, int $offset = 0): array
     {
         $matcher = new self($pattern);
-        $match = $matcher->matchAll($subject, $offset);
-        if ($match->has()) {
-            return $match->getAll();
+        $matches = $matcher->matchAll($subject, $offset);
+        if ($matcher->matched()) {
+            return $matches;
         }
 
         return [];
@@ -75,8 +76,7 @@ class Matcher
     public static function getMatch(string $pattern, string $subject, int $offset = 0): array
     {
         $matcher = new self($pattern);
-        return $matcher->match($subject, $offset)
-            ->getAll();
+        return $matcher->match($subject, $offset);
     }
 
     /**
@@ -85,8 +85,8 @@ class Matcher
     public static function hasMatch(string $pattern, string $subject, int $offset = 0): bool
     {
         $matcher = new self($pattern);
-        return $matcher->match($subject, $offset)
-            ->has();
+        $matcher->match($subject, $offset);
+        return $matcher->matched();
     }
 
     /**
@@ -95,54 +95,6 @@ class Matcher
     public function __construct(
         protected array|string $pattern
     ) {}
-
-    /**
-     * Substitute for preg_grep.
-     *
-     * The name indicates it is filtering the array and shouldn't be confused
-     * with preg_filter.
-     *
-     * @param list<string> $array
-     * @throws RegexException
-     * @throws TypeException
-     */
-    public function filterList(array $array): MatchList
-    {
-        if (! is_string($this->pattern)) {
-            throw new TypeException('String pattern expected');
-        }
-
-        $result = preg_grep($this->pattern, $array);
-        if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
-        }
-
-        return new MatchList($result, count($result));
-    }
-
-    /**
-     * Substitute for preg_grep that inverts the match.
-     *
-     * The name indicates it is filtering the array and shouldn't be confused
-     * with preg_filter.
-     *
-     * @param list<string> $array
-     * @throws RegexException
-     * @throws TypeException
-     */
-    public function filterListInverted(array $array): MatchList
-    {
-        if (! is_string($this->pattern)) {
-            throw new TypeException('String pattern expected');
-        }
-
-        $result = preg_grep($this->pattern, $array, PREG_GREP_INVERT);
-        if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
-        }
-
-        return new MatchList($result, count($result));
-    }
 
     /**
      * Substitute for preg_filter.
@@ -175,35 +127,45 @@ class Matcher
      * The function name indicates that preg_filter is identical to preg_replace
      * except it only returns the subjects where there was a match.
      *
-     * Takes an array as $subject so it returns a MatchList.
+     * Takes an array as $subject so it returns a list<string>.
      *
      * @param list<string>|string $replacement
      * @param list<string> $subject
+     * @return list<string>
      * @throws RegexException
      */
     public function filteredReplaceList(
         array|string $replacement,
         array $subject,
         int $limit = -1,
-    ): MatchList {
+    ): array {
         // preg_filter doesn't distinguish between no matches and error when using
         // array as subject, so I use a second preg_filter call to look for errors.
         if (preg_filter($this->pattern, '', '') === null) {
             throw new RegexException('Regex failed: ' . $this->getPatternDesc());
         }
 
-        $result = preg_filter($this->pattern, $replacement, $subject, $limit, $count);
+        return preg_filter($this->pattern, $replacement, $subject, $limit, $this->count);
+    }
 
-        return new MatchList($result, $count);
+    public function getCount(): int
+    {
+        return $this->count;
+    }
+
+    public function matched(): bool
+    {
+        return $this->count > 0;
     }
 
     /**
      * Do a preg_match and store the results.
      *
+     * @return array<string|int, string>
      * @throws RegexException
      * @throws TypeException
      */
-    public function match(string $subject, int $offset = 0): MatchArray
+    public function match(string $subject, int $offset = 0): array
     {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
@@ -214,16 +176,19 @@ class Matcher
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
-        return new MatchArray($match, $result);
+        $this->count = $result;
+
+        return $match;
     }
 
     /**
      * Do a preg_match_all and store the results.
      *
+     * @return array<string|int, array<int, string>>
      * @throws RegexException
      * @throws TypeException
      */
-    public function matchAll(string $subject, int $offset = 0): MatchAllArray
+    public function matchAll(string $subject, int $offset = 0): array
     {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
@@ -235,16 +200,19 @@ class Matcher
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
-        return new MatchAllArray($matches, $result);
+        $this->count = $result;
+
+        return $matches;
     }
 
     /**
      * Do a preg_match_all with offset capture and store the results.
      *
+     * @return array<string|int, array<int, array<int, string|int>>>
      * @throws RegexException
      * @throws TypeException
      */
-    public function matchAllOffset(string $subject, int $offset = 0): MatchAllOffsetArray
+    public function matchAllOffset(string $subject, int $offset = 0): array
     {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
@@ -256,16 +224,19 @@ class Matcher
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
-        return new MatchAllOffsetArray($matches, $result);
+        $this->count = $result;
+
+        return $matches;
     }
 
     /**
      * Do a preg_match with offset capture and store the results.
      *
+     * @return array<string|int, array<int, string|int>>
      * @throws RegexException
      * @throws TypeException
      */
-    public function matchOffset(string $subject, int $offset = 0): MatchOffsetArray
+    public function matchOffset(string $subject, int $offset = 0): array
     {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
@@ -276,7 +247,9 @@ class Matcher
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
-        return new MatchOffsetArray($match, $result);
+        $this->count = $result;
+
+        return $match;
     }
 
     /**
@@ -319,52 +292,103 @@ class Matcher
     /**
      * Substitute for preg_replace_callback.
      *
-     * Takes an array as $subject so it returns a MatchList.
+     * Takes an array as $subject so it returns a list<string>.
      *
      * @param list<string> $subject
+     * @return list<string>
      * @throws RegexException
      */
-    public function replaceCallList(callable $callback, array $subject, int $limit = -1): MatchList
+    public function replaceCallList(callable $callback, array $subject, int $limit = -1): array
     {
-        $result = preg_replace_callback($this->pattern, $callback, $subject, $limit, $count);
+        $result = preg_replace_callback($this->pattern, $callback, $subject, $limit, $this->count);
 
         if ($result === null) {
             throw new RegexException('Regex failed: ' . $this->getPatternDesc());
         }
 
-        return new MatchList($result, $count);
+        return $result;
     }
 
     /**
      * Substitute for preg_replace.
      *
-     * Takes an array as $subject so it returns a MatchList.
+     * Takes an array as $subject so it returns a list<string>.
      *
      * @param list<string>|string $replacement
      * @param list<string> $subject
+     * @return list<string>
      * @throws RegexException
      */
     public function replaceList(
         array|string $replacement,
         array $subject,
         int $limit = -1,
-    ): MatchList {
-        $result = preg_replace($this->pattern, $replacement, $subject, $limit, $count);
+    ): array {
+        $result = preg_replace($this->pattern, $replacement, $subject, $limit, $this->count);
 
         if ($result === null) {
             throw new RegexException('Regex failed: ' . $this->getPatternDesc());
         }
 
-        return new MatchList($result, $count);
+        return $result;
+    }
+
+    /**
+     * Substitute for preg_grep.
+     *
+     * @param list<string> $array
+     * @return list<string>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function searchList(array $array): array
+    {
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_grep($this->pattern, $array);
+        if ($result === false) {
+            throw new RegexException('Regex failed: ' . $this->pattern);
+        }
+
+        $this->count = count($result);
+
+        return $result;
+    }
+
+    /**
+     * Substitute for preg_grep that inverts the match.
+     *
+     * @param list<string> $array
+     * @return list<string>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function searchListInverted(array $array): array
+    {
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_grep($this->pattern, $array, PREG_GREP_INVERT);
+        if ($result === false) {
+            throw new RegexException('Regex failed: ' . $this->pattern);
+        }
+
+        $this->count = count($result);
+
+        return $result;
     }
 
     /**
      * Substitute for preg_split.
      *
+     * @return list<string>
      * @throws RegexException
      * @throws TypeException
      */
-    public function split(string $subject, int $limit = -1, int $flags = 0): MatchList
+    public function split(string $subject, int $limit = -1, int $flags = 0): array
     {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
@@ -382,7 +406,9 @@ class Matcher
             throw new RegexException('Regex failed: ' . $this->pattern);
         }
 
-        return new MatchList($result, count($result));
+        $this->count = count($result);
+
+        return $result;
     }
 
     /**
