@@ -6,6 +6,8 @@ namespace DouglasGreen\Utility\Regex;
 
 /**
  * Regex helper class with static functions.
+ *
+ * @todo Finish adding static functions.
  */
 class Regex
 {
