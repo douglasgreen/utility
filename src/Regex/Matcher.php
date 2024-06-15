@@ -11,14 +11,14 @@ use DouglasGreen\Utility\Data\TypeException;
  */
 class Matcher
 {
-    public const NO_EMPTY = 1;
+    public const DELIM_CAPTURE = 1;
 
-    public const DELIM_CAPTURE = 2;
+    public const NO_EMPTY = 2;
 
     protected int $count;
 
     /**
-     * @param list<string>|string $pattern
+     * @param array<string, callable>|list<string>|string $pattern
      */
     public function __construct(
         protected array|string $pattern
@@ -40,10 +40,10 @@ class Matcher
         string $subject,
         int $limit = -1,
     ): string {
-        $result = preg_filter($this->pattern, $replacement, $subject, $limit);
+        $result = preg_filter($this->pattern, $replacement, $subject, $limit, $this->count);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
+            throw new RegexException($this->getErrorMessage());
         }
 
         return $result;
@@ -55,7 +55,7 @@ class Matcher
      * The function name indicates that preg_filter is identical to preg_replace
      * except it only returns the subjects where there was a match.
      *
-     * Takes an array as $subject so it returns a list<string>.
+     * Takes a list<string> as $subject so it returns a list<string>.
      *
      * @param list<string>|string $replacement
      * @param list<string> $subject
@@ -70,7 +70,7 @@ class Matcher
         // preg_filter doesn't distinguish between no matches and error when using
         // array as subject, so I use a second preg_filter call to look for errors.
         if (preg_filter($this->pattern, '', '') === null) {
-            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
+            throw new RegexException($this->getErrorMessage());
         }
 
         return preg_filter($this->pattern, $replacement, $subject, $limit, $this->count);
@@ -101,7 +101,7 @@ class Matcher
 
         $result = preg_match($this->pattern, $subject, $match, 0, $offset);
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
+            throw new RegexException($this->getErrorMessage());
         }
 
         $this->count = $result;
@@ -111,6 +111,8 @@ class Matcher
 
     /**
      * Do a preg_match_all and store the results.
+     *
+     * Returns [] as a convenience if there are no matches.
      *
      * @return array<string|int, array<int, string>>
      * @throws RegexException
@@ -125,12 +127,15 @@ class Matcher
         $result = preg_match_all($this->pattern, $subject, $matches, 0, $offset);
 
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
+            throw new RegexException($this->getErrorMessage());
         }
 
         $this->count = $result;
+        if ($this->count > 0) {
+            return $matches;
+        }
 
-        return $matches;
+        return [];
     }
 
     /**
@@ -140,7 +145,7 @@ class Matcher
      * @throws RegexException
      * @throws TypeException
      */
-    public function matchAllOffset(string $subject, int $offset = 0): array
+    public function matchAllWithOffsets(string $subject, int $offset = 0): array
     {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
@@ -149,7 +154,31 @@ class Matcher
         $result = preg_match_all($this->pattern, $subject, $matches, PREG_OFFSET_CAPTURE, $offset);
 
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
+            throw new RegexException($this->getErrorMessage());
+        }
+
+        $this->count = $result;
+
+        return $matches;
+    }
+
+    /**
+     * Do a preg_match_all with PREG_SET_ORDER and store the results.
+     *
+     * @return array<int, array<string|int, string>>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function matchAllSetOrder(string $subject, int $offset = 0): array
+    {
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_match_all($this->pattern, $subject, $matches, 0, $offset);
+
+        if ($result === false) {
+            throw new RegexException($this->getErrorMessage());
         }
 
         $this->count = $result;
@@ -164,7 +193,7 @@ class Matcher
      * @throws RegexException
      * @throws TypeException
      */
-    public function matchOffset(string $subject, int $offset = 0): array
+    public function matchWithOffsets(string $subject, int $offset = 0): array
     {
         if (! is_string($this->pattern)) {
             throw new TypeException('String pattern expected');
@@ -172,7 +201,7 @@ class Matcher
 
         $result = preg_match($this->pattern, $subject, $match, PREG_OFFSET_CAPTURE, $offset);
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
+            throw new RegexException($this->getErrorMessage());
         }
 
         $this->count = $result;
@@ -190,10 +219,10 @@ class Matcher
      */
     public function replace(array|string $replacement, string $subject, int $limit = -1): string
     {
-        $result = preg_replace($this->pattern, $replacement, $subject, $limit);
+        $result = preg_replace($this->pattern, $replacement, $subject, $limit, $this->count);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
+            throw new RegexException($this->getErrorMessage());
         }
 
         return $result;
@@ -208,10 +237,10 @@ class Matcher
      */
     public function replaceCall(callable $callback, string $subject, int $limit = -1): string
     {
-        $result = preg_replace_callback($this->pattern, $callback, $subject, $limit);
+        $result = preg_replace_callback($this->pattern, $callback, $subject, $limit, $this->count);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
+            throw new RegexException($this->getErrorMessage());
         }
 
         return $result;
@@ -220,7 +249,7 @@ class Matcher
     /**
      * Substitute for preg_replace_callback.
      *
-     * Takes an array as $subject so it returns a list<string>.
+     * Takes a list<string> as $subject so it returns a list<string>.
      *
      * @param list<string> $subject
      * @return list<string>
@@ -231,7 +260,44 @@ class Matcher
         $result = preg_replace_callback($this->pattern, $callback, $subject, $limit, $this->count);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
+            throw new RegexException($this->getErrorMessage());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for preg_replace_callback_array.
+     *
+     * Takes a string as $subject so it returns a string.
+     *
+     * @throws RegexException
+     */
+    public function replaceCallMap(string $subject, int $limit = -1): string
+    {
+        $result = preg_replace_callback_array($this->pattern, $subject, $limit, $this->count);
+
+        if ($result === null) {
+            throw new RegexException($this->getErrorMessage());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Substitute for preg_replace_callback_array.
+     *
+     * Takes a list<string> as $subject so it returns a list<string>.
+     *
+     * @param list<string> $subject
+     * @throws RegexException
+     */
+    public function replaceCallMapList(array $subject, int $limit = -1): array
+    {
+        $result = preg_replace_callback_array($this->pattern, $subject, $limit, $this->count);
+
+        if ($result === null) {
+            throw new RegexException($this->getErrorMessage());
         }
 
         return $result;
@@ -240,7 +306,7 @@ class Matcher
     /**
      * Substitute for preg_replace.
      *
-     * Takes an array as $subject so it returns a list<string>.
+     * Takes a list<string> as $subject so it returns a list<string>.
      *
      * @param list<string>|string $replacement
      * @param list<string> $subject
@@ -255,7 +321,7 @@ class Matcher
         $result = preg_replace($this->pattern, $replacement, $subject, $limit, $this->count);
 
         if ($result === null) {
-            throw new RegexException('Regex failed: ' . $this->getPatternDesc());
+            throw new RegexException($this->getErrorMessage());
         }
 
         return $result;
@@ -277,7 +343,7 @@ class Matcher
 
         $result = preg_grep($this->pattern, $array);
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
+            throw new RegexException($this->getErrorMessage());
         }
 
         $this->count = count($result);
@@ -301,7 +367,7 @@ class Matcher
 
         $result = preg_grep($this->pattern, $array, PREG_GREP_INVERT);
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
+            throw new RegexException($this->getErrorMessage());
         }
 
         $this->count = count($result);
@@ -331,7 +397,7 @@ class Matcher
 
         $result = preg_split($this->pattern, $subject, $limit, $useFlags);
         if ($result === false) {
-            throw new RegexException('Regex failed: ' . $this->pattern);
+            throw new RegexException($this->getErrorMessage());
         }
 
         $this->count = count($result);
@@ -342,8 +408,22 @@ class Matcher
     /**
      * @throws RegexException
      */
-    protected function getPatternDesc(): string
+    protected function getErrorMessage(): string
     {
-        return is_array($this->pattern) ? implode(', ', $this->pattern) : $this->pattern;
+        $errorMessage = 'Regex failed';
+        if (preg_last_error() !== PREG_NO_ERROR) {
+            $errorMessage .= ' with error "' . preg_last_error_msg() . '": ';
+        }
+
+        if (is_string($this->pattern)) {
+            return $errorMessage . $this->pattern;
+        }
+
+        $patterns = array_keys($this->pattern);
+        if (is_int($patterns[0])) {
+            $patterns = array_values($this->pattern);
+        }
+
+        return $errorMessage . implode(', ', $patterns);
     }
 }

@@ -6,13 +6,52 @@ namespace DouglasGreen\Utility\Regex;
 
 /**
  * Regex helper class with static functions.
- *
- * @todo Finish adding static functions.
  */
 class Regex
 {
+    /* Same consonants as Matcher class */
+    public const DELIM_CAPTURE = 1;
+
+    public const NO_EMPTY = 2;
+
     /**
-     * A simple static matcher that uses preg_match and checks that a match exists.
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * @param list<string>|string $pattern
+     * @param list<string>|string $replacement
+     * @throws RegexException
+     */
+    public static function filteredReplace(
+        array|string $pattern,
+        array|string $replacement,
+        string $subject,
+        int $limit = -1,
+    ): string {
+        $matcher = new Matcher($pattern);
+        return $matcher->filteredReplace($replacement, $subject, $limit);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * @param list<string>|string $pattern
+     * @param list<string>|string $replacement
+     * @param list<string> $subject
+     * @return list<string>
+     * @throws RegexException
+     */
+    public static function filteredReplaceList(
+        array|string $pattern,
+        array|string $replacement,
+        array $subject,
+        int $limit = -1,
+    ): array {
+        $matcher = new Matcher($pattern);
+        return $matcher->filteredReplaceList($replacement, $subject, $limit);
+    }
+
+    /**
+     * Static function that uses preg_match and checks that a match exists.
      */
     public static function hasMatch(string $pattern, string $subject, int $offset = 0): bool
     {
@@ -22,7 +61,7 @@ class Regex
     }
 
     /**
-     * A simple static matcher that uses preg_match and returns the match.
+     * Static function that calls the equivalent function in the Matcher class.
      *
      * @return array<string|int, string>
      */
@@ -33,30 +72,69 @@ class Regex
     }
 
     /**
-     * A simple static matcher that uses preg_match_all and returns the match.
-     *
-     * Returns [] as a convenience if there are no matches.
+     * Static function that calls the equivalent function in the Matcher class.
      *
      * @return array<string|int, array<int, string>>
      */
     public static function matchAll(string $pattern, string $subject, int $offset = 0): array
     {
         $matcher = new Matcher($pattern);
-        $matches = $matcher->matchAll($subject, $offset);
-        if ($matcher->hasMatch()) {
-            return $matches;
-        }
-
-        return [];
+        return $matcher->matchAll($subject, $offset);
     }
 
     /**
-     * Substitute for preg_replace that only returns a string.
+     * Static function that calls the equivalent function in the Matcher class.
      *
-     * Subject is limited to a string so it only returns a string.
+     * @return array<int, array<string|int, string>>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public static function matchAllSetOrder(
+        string $pattern,
+        string $subject,
+        int $offset = 0
+    ): array {
+        $matcher = new Matcher($pattern);
+        return $matcher->matchAllSetOrder($subject, $offset);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
      *
-     * @param list<string>|string $replacement
+     * @return array<string|int, array<int, array<int, string|int>>>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public static function matchAllWithOffsets(
+        string $pattern,
+        string $subject,
+        int $offset = 0
+    ): array {
+        $matcher = new Matcher($pattern);
+        return $matcher->matchAllWithOffsets($subject, $offset);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * @return array<string|int, array<int, string|int>>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public static function matchWithOffsets(
+        string $pattern,
+        string $subject,
+        int $offset = 0
+    ): array {
+        $matcher = new Matcher($pattern);
+        return $matcher->matchWithOffsets($subject, $offset);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
+     *
      * @param list<string>|string $pattern
+     * @param list<string>|string $replacement
      */
     public static function replace(
         array|string $pattern,
@@ -69,7 +147,116 @@ class Regex
     }
 
     /**
-     * Substitute for preg_split that returns the pieces.
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * @param list<string>|string $pattern
+     * @throws RegexException
+     */
+    public static function replaceCall(
+        array|string $pattern,
+        callable $callback,
+        string $subject,
+        int $limit = -1
+    ): string {
+        $matcher = new Matcher($pattern);
+        return $matcher->replaceCall($callback, $subject, $limit);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * list<string>|string $pattern
+     * @param list<string> $subject
+     * @return list<string>
+     * @throws RegexException
+     */
+    public static function replaceCallList(
+        array|string $pattern,
+        callable $callback,
+        array $subject,
+        int $limit = -1
+    ): array {
+        $matcher = new Matcher($pattern);
+        return $matcher->replaceCallList($callback, $subject, $limit);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * @param array<string, callable> $pattern
+     * @throws RegexException
+     */
+    public static function replaceCallMap(array $pattern, string $subject, int $limit = -1): string
+    {
+        $matcher = new Matcher($pattern);
+        return $matcher->replaceCallMap($subject, $limit);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * @param array<string, callable> $pattern
+     * @param list<string> $subject
+     * @throws RegexException
+     */
+    public static function replaceCallMapList(
+        array $pattern,
+        array $subject,
+        int $limit = -1
+    ): array {
+        $matcher = new Matcher($pattern);
+        return $matcher->replaceCallMapList($subject, $limit);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * @param list<string>|string $pattern
+     * @param list<string>|string $replacement
+     * @param list<string> $subject
+     * @return list<string>
+     * @throws RegexException
+     */
+    public static function replaceList(
+        array|string $pattern,
+        array|string $replacement,
+        array $subject,
+        int $limit = -1,
+    ): array {
+        $matcher = new Matcher($pattern);
+        return $matcher->replaceList($replacement, $subject, $limit);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * @param list<string> $array
+     * @return list<string>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public static function searchList(string $pattern, array $array): array
+    {
+        $matcher = new Matcher($pattern);
+        return $matcher->searchList($array);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
+     *
+     * @param list<string> $array
+     * @return list<string>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public static function searchListInverted(string $pattern, array $array): array
+    {
+        $matcher = new Matcher($pattern);
+        return $matcher->searchListInverted($array);
+    }
+
+    /**
+     * Static function that calls the equivalent function in the Matcher class.
      *
      * @return list<string>
      */
