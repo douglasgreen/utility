@@ -15,7 +15,7 @@ class Matcher
 
     public const NO_EMPTY = 2;
 
-    protected int $count;
+    protected int $count = 0;
 
     /**
      * @param list<string>|string $pattern
