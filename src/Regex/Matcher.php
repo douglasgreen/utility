@@ -18,7 +18,7 @@ class Matcher
     protected int $count;
 
     /**
-     * @param array<string, callable>|list<string>|string $pattern
+     * @param list<string>|string $pattern
      */
     public function __construct(
         protected array|string $pattern
@@ -267,43 +267,6 @@ class Matcher
     }
 
     /**
-     * Substitute for preg_replace_callback_array.
-     *
-     * Takes a string as $subject so it returns a string.
-     *
-     * @throws RegexException
-     */
-    public function replaceCallMap(string $subject, int $limit = -1): string
-    {
-        $result = preg_replace_callback_array($this->pattern, $subject, $limit, $this->count);
-
-        if ($result === null) {
-            throw new RegexException($this->getErrorMessage());
-        }
-
-        return $result;
-    }
-
-    /**
-     * Substitute for preg_replace_callback_array.
-     *
-     * Takes a list<string> as $subject so it returns a list<string>.
-     *
-     * @param list<string> $subject
-     * @throws RegexException
-     */
-    public function replaceCallMapList(array $subject, int $limit = -1): array
-    {
-        $result = preg_replace_callback_array($this->pattern, $subject, $limit, $this->count);
-
-        if ($result === null) {
-            throw new RegexException($this->getErrorMessage());
-        }
-
-        return $result;
-    }
-
-    /**
      * Substitute for preg_replace.
      *
      * Takes a list<string> as $subject so it returns a list<string>.
@@ -405,25 +368,22 @@ class Matcher
         return $result;
     }
 
-    /**
-     * @throws RegexException
-     */
     protected function getErrorMessage(): string
     {
         $errorMessage = 'Regex failed';
         if (preg_last_error() !== PREG_NO_ERROR) {
-            $errorMessage .= ' with error "' . preg_last_error_msg() . '": ';
+            $errorMessage .= ' with error "' . preg_last_error_msg() . '": ' . $this->getPatternDescription();
         }
 
+        return $errorMessage;
+    }
+
+    protected function getPatternDescription(): string
+    {
         if (is_string($this->pattern)) {
-            return $errorMessage . $this->pattern;
+            return $this->pattern;
         }
 
-        $patterns = array_keys($this->pattern);
-        if (is_int($patterns[0])) {
-            $patterns = array_values($this->pattern);
-        }
-
-        return $errorMessage . implode(', ', $patterns);
+        return implode(', ', $this->pattern);
     }
 }

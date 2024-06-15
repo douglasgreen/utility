@@ -171,18 +171,18 @@ class Regex
     }
 
     /**
-     * Static function that calls the equivalent function in the Matcher class.
+     * Static function that calls the equivalent function in the ArrayMatcher class.
      *
      * @param array<string, callable> $pattern
      */
     public static function replaceCallMap(array $pattern, string $subject, int $limit = -1): string
     {
-        $matcher = new Matcher($pattern);
-        return $matcher->replaceCallMap($subject, $limit);
+        $arrayMatcher = new ArrayMatcher($pattern);
+        return $arrayMatcher->replaceCallMap($subject, $limit);
     }
 
     /**
-     * Static function that calls the equivalent function in the Matcher class.
+     * Static function that calls the equivalent function in the ArrayMatcher class.
      *
      * @param array<string, callable> $pattern
      * @param list<string> $subject
@@ -193,8 +193,8 @@ class Regex
         array $subject,
         int $limit = -1
     ): array {
-        $matcher = new Matcher($pattern);
-        return $matcher->replaceCallMapList($subject, $limit);
+        $arrayMatcher = new ArrayMatcher($pattern);
+        return $arrayMatcher->replaceCallMapList($subject, $limit);
     }
 
     /**
