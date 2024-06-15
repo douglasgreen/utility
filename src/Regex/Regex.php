@@ -19,7 +19,6 @@ class Regex
      *
      * @param list<string>|string $pattern
      * @param list<string>|string $replacement
-     * @throws RegexException
      */
     public static function filteredReplace(
         array|string $pattern,
@@ -38,7 +37,6 @@ class Regex
      * @param list<string>|string $replacement
      * @param list<string> $subject
      * @return list<string>
-     * @throws RegexException
      */
     public static function filteredReplaceList(
         array|string $pattern,
@@ -86,8 +84,6 @@ class Regex
      * Static function that calls the equivalent function in the Matcher class.
      *
      * @return array<int, array<string|int, string>>
-     * @throws RegexException
-     * @throws TypeException
      */
     public static function matchAllSetOrder(
         string $pattern,
@@ -102,8 +98,6 @@ class Regex
      * Static function that calls the equivalent function in the Matcher class.
      *
      * @return array<string|int, array<int, array<int, string|int>>>
-     * @throws RegexException
-     * @throws TypeException
      */
     public static function matchAllWithOffsets(
         string $pattern,
@@ -118,8 +112,6 @@ class Regex
      * Static function that calls the equivalent function in the Matcher class.
      *
      * @return array<string|int, array<int, string|int>>
-     * @throws RegexException
-     * @throws TypeException
      */
     public static function matchWithOffsets(
         string $pattern,
@@ -150,7 +142,6 @@ class Regex
      * Static function that calls the equivalent function in the Matcher class.
      *
      * @param list<string>|string $pattern
-     * @throws RegexException
      */
     public static function replaceCall(
         array|string $pattern,
@@ -165,10 +156,9 @@ class Regex
     /**
      * Static function that calls the equivalent function in the Matcher class.
      *
-     * list<string>|string $pattern
+     * @param list<string>|string $pattern
      * @param list<string> $subject
      * @return list<string>
-     * @throws RegexException
      */
     public static function replaceCallList(
         array|string $pattern,
@@ -184,7 +174,6 @@ class Regex
      * Static function that calls the equivalent function in the Matcher class.
      *
      * @param array<string, callable> $pattern
-     * @throws RegexException
      */
     public static function replaceCallMap(array $pattern, string $subject, int $limit = -1): string
     {
@@ -197,7 +186,7 @@ class Regex
      *
      * @param array<string, callable> $pattern
      * @param list<string> $subject
-     * @throws RegexException
+     * @return list<string>
      */
     public static function replaceCallMapList(
         array $pattern,
@@ -215,7 +204,6 @@ class Regex
      * @param list<string>|string $replacement
      * @param list<string> $subject
      * @return list<string>
-     * @throws RegexException
      */
     public static function replaceList(
         array|string $pattern,
@@ -232,8 +220,6 @@ class Regex
      *
      * @param list<string> $array
      * @return list<string>
-     * @throws RegexException
-     * @throws TypeException
      */
     public static function searchList(string $pattern, array $array): array
     {
@@ -246,8 +232,6 @@ class Regex
      *
      * @param list<string> $array
      * @return list<string>
-     * @throws RegexException
-     * @throws TypeException
      */
     public static function searchListInverted(string $pattern, array $array): array
     {
