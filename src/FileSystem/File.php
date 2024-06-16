@@ -60,10 +60,9 @@ class File
         // Distinguish between end-of-data false and error false.
         if ($fields === false) {
             if (! feof($this->stream)) {
-                throw new FileException(sprintf(
-                    'Unable to get CSV line from file "%s"',
-                    $this->path
-                ));
+                throw new FileException(
+                    sprintf('Unable to get CSV line from file "%s"', $this->path),
+                );
             }
 
             return null;
@@ -85,10 +84,7 @@ class File
         // Distinguish between end-of-data false and error false.
         if ($buffer === false) {
             if (! feof($this->stream)) {
-                throw new FileException(sprintf(
-                    'Unable to get line from file "%s"',
-                    $this->path
-                ));
+                throw new FileException(sprintf('Unable to get line from file "%s"', $this->path));
             }
 
             return null;
@@ -106,10 +102,9 @@ class File
     {
         $result = ftell($this->stream);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to return current pointer position of file "%s"',
-                $this->path
-            ));
+            throw new FileException(
+                sprintf('Unable to return current pointer position of file "%s"', $this->path),
+            );
         }
 
         return $result;
@@ -125,10 +120,9 @@ class File
     public function getExclusiveLock(): bool
     {
         if (! flock($this->stream, LOCK_EX, $wouldBlock)) {
-            throw new FileException(sprintf(
-                'Unable to get exclusive lock of file "%s"',
-                $this->path
-            ));
+            throw new FileException(
+                sprintf('Unable to get exclusive lock of file "%s"', $this->path),
+            );
         }
 
         return (bool) $wouldBlock;
@@ -144,10 +138,7 @@ class File
     public function getSharedLock(): bool
     {
         if (! flock($this->stream, LOCK_SH, $wouldBlock)) {
-            throw new FileException(sprintf(
-                'Unable to get shared lock of file "%s"',
-                $this->path
-            ));
+            throw new FileException(sprintf('Unable to get shared lock of file "%s"', $this->path));
         }
 
         return (bool) $wouldBlock;
@@ -185,10 +176,7 @@ class File
         $result = fputcsv($this->stream, $fields, $separator, $enclosure, $escape, $eol);
 
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to put CSV line into file "%s"',
-                $this->path
-            ));
+            throw new FileException(sprintf('Unable to put CSV line into file "%s"', $this->path));
         }
 
         return $result;
@@ -204,10 +192,7 @@ class File
     {
         $result = fread($this->stream, $length);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to read string from file "%s"',
-                $this->path
-            ));
+            throw new FileException(sprintf('Unable to read string from file "%s"', $this->path));
         }
 
         return $result;
@@ -222,10 +207,9 @@ class File
     {
         $result = fpassthru($this->stream);
         if ($result === 0) {
-            throw new FileException(sprintf(
-                'Unable to read and print rest of file "%s"',
-                $this->path
-            ));
+            throw new FileException(
+                sprintf('Unable to read and print rest of file "%s"', $this->path),
+            );
         }
 
         return $result;
@@ -239,10 +223,7 @@ class File
     public function releaseLock(): self
     {
         if (! flock($this->stream, LOCK_UN)) {
-            throw new FileException(sprintf(
-                'Unable to release lock of file "%s"',
-                $this->path
-            ));
+            throw new FileException(sprintf('Unable to release lock of file "%s"', $this->path));
         }
 
         return $this;
@@ -302,10 +283,7 @@ class File
     {
         $result = fwrite($this->stream, $data, $length);
         if ($result === false) {
-            throw new FileException(sprintf(
-                'Unable to write string to file "%s"',
-                $this->path
-            ));
+            throw new FileException(sprintf('Unable to write string to file "%s"', $this->path));
         }
 
         return $result;

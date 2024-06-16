@@ -55,9 +55,7 @@ class Directory
 
         $recursive = (bool) ($flags & self::RECURSIVE);
         if (mkdir($this->path, $permissions, $recursive, $this->context) === false) {
-            throw new DirectoryException(
-                sprintf('Unable to make directory: "%s"', $this->path),
-            );
+            throw new DirectoryException(sprintf('Unable to make directory: "%s"', $this->path));
         }
 
         return $this;
@@ -89,9 +87,7 @@ class Directory
     {
         $result = dir($this->path, $this->context);
         if ($result === false) {
-            throw new DirectoryException(
-                sprintf('Unable to open directory "%s"', $this->path),
-            );
+            throw new DirectoryException(sprintf('Unable to open directory "%s"', $this->path));
         }
 
         return $result;
@@ -105,9 +101,7 @@ class Directory
     public function remove(): void
     {
         if (rmdir($this->path, $this->context) === false) {
-            throw new DirectoryException(
-                sprintf('Unable to remove directory "%s"', $this->path),
-            );
+            throw new DirectoryException(sprintf('Unable to remove directory "%s"', $this->path));
         }
     }
 
@@ -121,9 +115,7 @@ class Directory
     {
         $result = scandir($this->path, $sortingOrder, $this->context);
         if ($result === false) {
-            throw new DirectoryException(
-                sprintf('Unable to scan directory: "%s"', $this->path),
-            );
+            throw new DirectoryException(sprintf('Unable to scan directory: "%s"', $this->path));
         }
 
         return $result;

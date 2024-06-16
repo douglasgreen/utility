@@ -276,11 +276,8 @@ class Matcher
      * @return list<string>
      * @throws RegexException
      */
-    public function replaceList(
-        array|string $replacement,
-        array $subject,
-        int $limit = -1,
-    ): array {
+    public function replaceList(array|string $replacement, array $subject, int $limit = -1): array
+    {
         $result = preg_replace($this->pattern, $replacement, $subject, $limit, $this->count);
 
         if ($result === null) {
@@ -372,7 +369,8 @@ class Matcher
     {
         $errorMessage = 'Regex failed';
         if (preg_last_error() !== PREG_NO_ERROR) {
-            $errorMessage .= ' with error "' . preg_last_error_msg() . '": ' . $this->getPatternDescription();
+            $errorMessage .=
+                ' with error "' . preg_last_error_msg() . '": ' . $this->getPatternDescription();
         }
 
         return $errorMessage;

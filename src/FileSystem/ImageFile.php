@@ -23,9 +23,7 @@ class ImageFile
     {
         $result = getimagesize($this->filename);
         if ($result === false) {
-            throw new FileException(
-                sprintf('Unable to get size of image: "%s"', $this->filename),
-            );
+            throw new FileException(sprintf('Unable to get size of image: "%s"', $this->filename));
         }
 
         [$width, $height, $type, $attribute] = $result;

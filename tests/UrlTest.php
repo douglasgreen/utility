@@ -133,7 +133,7 @@ class UrlTest extends TestCase
     protected function setUp(): void
     {
         $this->urlBuilder = new UrlBuilder(
-            'http://username:password@hostname:9090/path?arg=value#anchor'
+            'http://username:password@hostname:9090/path?arg=value#anchor',
         );
     }
 }

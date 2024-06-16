@@ -24,21 +24,6 @@ class Path
 
     public const USE_INCLUDE_PATH = 32;
 
-    public static function add(string $path, string $subpath): string
-    {
-        // Ensure the current filename ends with a directory separator
-        if (substr($path, -1) !== DIRECTORY_SEPARATOR) {
-            $path .= DIRECTORY_SEPARATOR;
-        }
-
-        // Ensure the subpath does not start with a directory separator
-        if (substr($subpath, 0, 1) === DIRECTORY_SEPARATOR) {
-            $subpath = ltrim($subpath, DIRECTORY_SEPARATOR);
-        }
-
-        return $path . $subpath;
-    }
-
     /**
      * @param ?resource $context
      */
@@ -48,11 +33,21 @@ class Path
     ) {}
 
     /**
-     * Add a subpath to this object.
+     * Add a subpath.
      */
     public function addSubpath(string $subpath): self
     {
-        $this->path = self::add($this->path, $subpath);
+        // Ensure the current filename ends with a directory separator
+        if (substr($this->path, -1) !== DIRECTORY_SEPARATOR) {
+            $this->path .= DIRECTORY_SEPARATOR;
+        }
+
+        // Ensure the subpath does not start with a directory separator
+        if (substr($subpath, 0, 1) === DIRECTORY_SEPARATOR) {
+            $subpath = ltrim($subpath, DIRECTORY_SEPARATOR);
+        }
+
+        $this->path .= $subpath;
 
         return $this;
     }
@@ -83,9 +78,7 @@ class Path
     public function changeGroup(string|int $group): self
     {
         if (chgrp($this->path, $group) === false) {
-            throw new FileException(
-                sprintf('Unable to change group of file "%s"', $this->path),
-            );
+            throw new FileException(sprintf('Unable to change group of file "%s"', $this->path));
         }
 
         return $this;
@@ -113,9 +106,7 @@ class Path
     public function changeOwner(string|int $user): self
     {
         if (chown($this->path, $user) === false) {
-            throw new FileException(
-                sprintf('Unable to change owner of file "%s"', $this->path),
-            );
+            throw new FileException(sprintf('Unable to change owner of file "%s"', $this->path));
         }
 
         return $this;
@@ -197,7 +188,7 @@ class Path
         return array_filter(
             $result,
             static fn($value, $key): bool => is_string($key),
-            ARRAY_FILTER_USE_BOTH
+            ARRAY_FILTER_USE_BOTH,
         );
     }
 
@@ -249,9 +240,7 @@ class Path
     {
         $result = fileperms($this->path);
         if ($result === false) {
-            throw new FileException(
-                sprintf('Unable to get permissions of file "%s"', $this->path),
-            );
+            throw new FileException(sprintf('Unable to get permissions of file "%s"', $this->path));
         }
 
         return $result;
@@ -276,7 +265,7 @@ class Path
         return array_filter(
             $result,
             static fn($value, $key): bool => is_string($key),
-            ARRAY_FILTER_USE_BOTH
+            ARRAY_FILTER_USE_BOTH,
         );
     }
 
@@ -365,6 +354,7 @@ class Path
      * Substitute for file.
      *
      * @return list<string>
+     * @throws FileException
      */
     public function loadLines(int $flags = 0): array
     {
@@ -399,13 +389,7 @@ class Path
     public function loadString(int $offset = 0, int $flags = 0, ?int $length = null): string
     {
         $useIncludePath = (bool) ($flags & self::USE_INCLUDE_PATH);
-        $result = file_get_contents(
-            $this->path,
-            $useIncludePath,
-            $this->context,
-            $offset,
-            $length,
-        );
+        $result = file_get_contents($this->path, $useIncludePath, $this->context, $offset, $length);
 
         if ($result === false) {
             throw new FileException('Unable to load file to string');
@@ -416,8 +400,6 @@ class Path
 
     /**
      * Substitute for mkdir.
-     *
-     * @throws FileException
      */
     public function makeDirectory(int $permissions = 0o777, int $flags = 0): self
     {
@@ -481,6 +463,8 @@ class Path
 
     /**
      * Substitute for file_exists that throws exception if not existing.
+     *
+     * @throws FileException
      */
     public function mustExist(): self
     {
@@ -582,10 +566,7 @@ class Path
         $result = touch($this->path, $mtime, $atime);
         if ($result === false) {
             throw new FileException(
-                sprintf(
-                    'Unable set file access and modification times on file "%s"',
-                    $this->path,
-                ),
+                sprintf('Unable set file access and modification times on file "%s"', $this->path),
             );
         }
 
