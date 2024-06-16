@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Network;
 
-use DouglasGreen\Utility\Data\ArrayUtils;
+use DouglasGreen\Utility\Data\ArrayUtil;
 use DouglasGreen\Utility\Data\ValueException;
 use DouglasGreen\Utility\Process\ParseException;
 use Stringable;
@@ -213,7 +213,7 @@ class UrlBuilder implements Stringable
 
     public function isEqual(self $otherUrl): bool
     {
-        if (! ArrayUtils::equal($this->params, $otherUrl->params)) {
+        if (! ArrayUtil::equal($this->params, $otherUrl->params)) {
             return false;
         }
 

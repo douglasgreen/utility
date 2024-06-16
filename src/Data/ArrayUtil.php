@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Data;
 
-class ArrayUtils
+class ArrayUtil
 {
     /**
      * @param array<string|int, mixed> $array1
