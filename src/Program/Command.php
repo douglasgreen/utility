@@ -16,7 +16,7 @@ class Command
     /**
      * @var list<string>
      */
-    protected array $args;
+    protected array $args = [];
 
     /**
      * @var list<string>
