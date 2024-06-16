@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
+use DouglasGreen\Utility\Data\FlagChecker;
+use DouglasGreen\Utility\Data\FlagHandler;
+
 /**
  * The function in this class depends on a search pattern.
  */
-class Search
+class Search implements FlagHandler
 {
     public const ADD_SLASH = 1;
 
@@ -27,24 +30,25 @@ class Search
      */
     public static function findAll(string $pattern, int $flags = 0): array
     {
+        $flagChecker = static::getFlagChecker($flags);
         $phpFlags = 0;
-        if (($flags & self::ADD_SLASH) !== 0) {
+        if ($flagChecker->get('addSlash')) {
             $phpFlags |= GLOB_MARK;
         }
 
-        if (($flags & self::NO_ESCAPE) !== 0) {
+        if ($flagChecker->get('noEscape')) {
             $phpFlags |= GLOB_NOESCAPE;
         }
 
-        if (($flags & self::NO_SORT) !== 0) {
+        if ($flagChecker->get('noSort')) {
             $phpFlags |= GLOB_NOSORT;
         }
 
-        if (($flags & self::ONLY_DIRS) !== 0) {
+        if ($flagChecker->get('onlyDirs')) {
             $phpFlags |= GLOB_ONLYDIR;
         }
 
-        if (($flags & self::STOP_ON_ERROR) !== 0) {
+        if ($flagChecker->get('stopOnError')) {
             $phpFlags |= GLOB_ERR;
         }
 
@@ -54,5 +58,17 @@ class Search
         }
 
         return $result;
+    }
+
+    public static function getFlagChecker(int $flags): FlagChecker
+    {
+        $flagNames = [
+            'addSlash' => self::ADD_SLASH,
+            'noEscape' => self::NO_ESCAPE,
+            'noSort' => self::NO_SORT,
+            'onlyDirs' => self::ONLY_DIRS,
+            'stopOnError' => self::STOP_ON_ERROR,
+        ];
+        return new FlagChecker($flagNames, $flags);
     }
 }

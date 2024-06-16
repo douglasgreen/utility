@@ -6,13 +6,16 @@ namespace DouglasGreen\Utility\FileSystem;
 
 use Directory as PhpDirectory;
 use DouglasGreen\Utility\Data\FlagChecker;
+use DouglasGreen\Utility\Data\FlagHandler;
 
 /**
  * Directory utility class to throw exceptions when basic operations fail.
  *
  * Manages functions on a directory name.
+ *
+ * @todo Make a static class to call this.
  */
-class Directory
+class Directory implements FlagHandler
 {
     public const RECURSIVE = 1;
 
@@ -29,6 +32,14 @@ class Directory
         }
 
         return $result;
+    }
+
+    public static function getFlagChecker(int $flags): FlagChecker
+    {
+        $flagNames = [
+            'recursive' => self::RECURSIVE,
+        ];
+        return new FlagChecker($flagNames, $flags);
     }
 
     /**
@@ -54,7 +65,7 @@ class Directory
             return $this;
         }
 
-        $flagChecker = $this->getFlagChecker($flags);
+        $flagChecker = static::getFlagChecker($flags);
         $recursive = $flagChecker->get('recursive');
         if (mkdir($this->path, $permissions, $recursive, $this->context) === false) {
             throw new DirectoryException(sprintf('Unable to make directory: "%s"', $this->path));
@@ -138,13 +149,5 @@ class Directory
         }
 
         return $this;
-    }
-
-    protected function getFlagChecker(int $value): FlagChecker
-    {
-        $tests = [
-            'recursive' => self::RECURSIVE,
-        ];
-        return new FlagChecker($tests, $value);
     }
 }

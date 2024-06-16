@@ -4,11 +4,21 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
+use DouglasGreen\Utility\Data\FlagChecker;
+use DouglasGreen\Utility\Data\FlagHandler;
+
 /**
  * File utility class to throw exceptions when basic operations fail.
  *
  * The functions in this class depend on an open file. See Path for other
  * file functions.
+ *
+ * The basic pattern of operations is:
+ * 1. Constructor opens a file.
+ * 2. Various functions are called.
+ * 3. Destructor closes file.
+ *
+ * So the parameters to the constructor are really the parameters to the open() call.
  *
  * @todo Add other file functions from this list.
  * disk_free_space
@@ -16,7 +26,7 @@ namespace DouglasGreen\Utility\FileSystem;
  * pclose
  * parse_ini_file
  */
-class File
+class File implements FlagHandler
 {
     public const USE_INCLUDE_PATH = 1;
 
@@ -24,6 +34,14 @@ class File
      * @var resource
      */
     protected $stream;
+
+    public static function getFlagChecker(int $flags): FlagChecker
+    {
+        $flagNames = [
+            'useIncludePath' => self::USE_INCLUDE_PATH,
+        ];
+        return new FlagChecker($flagNames, $flags);
+    }
 
     /**
      * @param ?resource $context
@@ -308,7 +326,8 @@ class File
      */
     protected function open(): void
     {
-        $useIncludePath = (bool) ($this->flags & self::USE_INCLUDE_PATH);
+        $flagChecker = static::getFlagChecker($this->flags);
+        $useIncludePath = $flagChecker->get('useIncludePath');
         $stream = fopen($this->path, $this->mode, $useIncludePath, $this->context);
         if ($stream === false) {
             throw new FileException(sprintf('Unable to open file "%s"', $this->path));

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace DouglasGreen\Utility\Program;
 
 use DouglasGreen\Utility\Regex\Regex;
+use DouglasGreen\Utility\Data\FlagChecker;
+use DouglasGreen\Utility\Data\FlagHandler;
 
 /**
  * Command utility class to throw exceptions when basic operations fail.
  */
-class Command
+class Command implements FlagHandler
 {
     public const ALLOW_EMPTY_OUTPUT = 1;
 
@@ -25,12 +27,19 @@ class Command
 
     protected int $resultCode;
 
+    public static function getFlagChecker(int $flags): FlagChecker
+    {
+        $flagNames = [
+            'allowEmptyOutput' => self::ALLOW_EMPTY_OUTPUT,
+        ];
+        return new FlagChecker($flagNames, $flags);
+    }
+
     /**
      * @throws CommandException
      */
     public function __construct(
         protected string $command,
-        protected int $flags = 0
     ) {
         $sep = preg_quote(PATH_SEPARATOR, '/');
         if (Regex::hasMatch('/[^\w\s' . $sep . '.-]/', $this->command)) {
@@ -120,9 +129,11 @@ class Command
      *
      * @throws CommandException
      */
-    public function shellExec(): ?string
+    public function shellExec(int $flags): ?string
     {
-        $allowEmptyOutput = (bool) ($this->flags & self::ALLOW_EMPTY_OUTPUT);
+        $flagChecker = static::getFlagChecker($flags);
+
+        $allowEmptyOutput = $flagChecker->get('allowEmptyOutput');
         $result = shell_exec($this->buildCommand());
         if ($result === false) {
             throw new CommandException(

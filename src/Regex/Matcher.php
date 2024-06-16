@@ -5,17 +5,28 @@ declare(strict_types=1);
 namespace DouglasGreen\Utility\Regex;
 
 use DouglasGreen\Utility\Data\TypeException;
+use DouglasGreen\Utility\Data\FlagChecker;
+use DouglasGreen\Utility\Data\FlagHandler;
 
 /**
  * Regex utility class to throw exceptions when basic operations fail.
  */
-class Matcher
+class Matcher implements FlagHandler
 {
     public const DELIM_CAPTURE = 1;
 
     public const NO_EMPTY = 2;
 
     protected int $count = 0;
+
+    public static function getFlagChecker(int $flags): FlagChecker
+    {
+        $flagNames = [
+            'delimCapture' => self::DELIM_CAPTURE,
+            'noEmpty' => self::NO_EMPTY,
+        ];
+        return new FlagChecker($flagNames, $flags);
+    }
 
     /**
      * @param list<string>|string $pattern
@@ -348,14 +359,15 @@ class Matcher
             throw new TypeException('String pattern expected');
         }
 
-        $useFlags = 0;
-        if ((bool) ($flags & self::NO_EMPTY)) {
-            $useFlags |= PREG_SPLIT_NO_EMPTY;
-        } elseif ((bool) ($flags & self::DELIM_CAPTURE)) {
-            $useFlags |= PREG_SPLIT_DELIM_CAPTURE;
+        $flagChecker = static::getFlagChecker($flags);
+        $phpFlags = 0;
+        if ($flagChecker->get('noEmpty')) {
+            $phpFlags |= PREG_SPLIT_NO_EMPTY;
+        } elseif ($flagChecker->get('delimCapture')) {
+            $phpFlags |= PREG_SPLIT_DELIM_CAPTURE;
         }
 
-        $result = preg_split($this->pattern, $subject, $limit, $useFlags);
+        $result = preg_split($this->pattern, $subject, $limit, $phpFlags);
         if ($result === false) {
             throw new RegexException($this->getErrorMessage());
         }

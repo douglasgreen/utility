@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
+use DouglasGreen\Utility\Data\FlagChecker;
+use DouglasGreen\Utility\Data\FlagHandler;
+
 /**
  * The functions in this class depend on a file path string, not an open file.
  * See File for other file functions.
  *
  * @todo Create static versions of these functions using callStatic.
  */
-class Path
+class Path implements FlagHandler
 {
     public const APPEND = 1;
 
@@ -23,6 +26,19 @@ class Path
     public const USE_BINARY = 16;
 
     public const USE_INCLUDE_PATH = 32;
+
+    public static function getFlagChecker(int $flags): FlagChecker
+    {
+        $flagNames = [
+            'append' => self::APPEND,
+            'ignoreNewLines' => self::IGNORE_NEW_LINES,
+            'lock' => self::LOCK,
+            'skipEmptyLines' => self::SKIP_EMPTY_LINES,
+            'useBinary' => self::USE_BINARY,
+            'useIncludePath' => self::USE_INCLUDE_PATH,
+        ];
+        return new FlagChecker($flagNames, $flags);
+    }
 
     /**
      * @param ?resource $context
@@ -59,7 +75,8 @@ class Path
      */
     public function calcMd5(int $flags = 0): string
     {
-        $useBinary = (bool) ($flags & self::USE_BINARY);
+        $flagChecker = static::getFlagChecker($flags);
+        $useBinary = $flagChecker->get('useBinary');
         $result = md5_file($this->path, $useBinary);
         if ($result === false) {
             throw new FileException(
@@ -341,7 +358,8 @@ class Path
      */
     public function loadAndPrint(int $flags = 0): int
     {
-        $useIncludePath = (bool) ($flags & self::USE_INCLUDE_PATH);
+        $flagChecker = static::getFlagChecker($flags);
+        $useIncludePath = $flagChecker->get('useIncludePath');
         $result = readfile($this->path, $useIncludePath, $this->context);
         if ($result === false) {
             throw new FileException(sprintf('Unable to load and print file "%s"', $this->path));
@@ -358,16 +376,17 @@ class Path
      */
     public function loadLines(int $flags = 0): array
     {
+        $flagChecker = static::getFlagChecker($flags);
         $phpFlags = 0;
-        if (($flags & self::IGNORE_NEW_LINES) !== 0) {
+        if ($flagChecker->get('ignoreNewLines')) {
             $phpFlags |= FILE_IGNORE_NEW_LINES;
         }
 
-        if (($flags & self::SKIP_EMPTY_LINES) !== 0) {
+        if ($flagChecker->get('skipEmptyLines')) {
             $phpFlags |= FILE_SKIP_EMPTY_LINES;
         }
 
-        if (($flags & self::USE_INCLUDE_PATH) !== 0) {
+        if ($flagChecker->get('useIncludePath')) {
             $phpFlags |= FILE_USE_INCLUDE_PATH;
         }
 
@@ -388,7 +407,8 @@ class Path
      */
     public function loadString(int $offset = 0, int $flags = 0, ?int $length = null): string
     {
-        $useIncludePath = (bool) ($flags & self::USE_INCLUDE_PATH);
+        $flagChecker = static::getFlagChecker($flags);
+        $useIncludePath = $flagChecker->get('useIncludePath');
         $result = file_get_contents($this->path, $useIncludePath, $this->context, $offset, $length);
 
         if ($result === false) {
@@ -520,16 +540,17 @@ class Path
      */
     public function saveString(mixed $data, int $flags = 0): int
     {
+        $flagChecker = static::getFlagChecker($flags);
         $phpFlags = 0;
-        if (($flags & self::APPEND) !== 0) {
+        if ($flagChecker->get('append')) {
             $phpFlags |= FILE_APPEND;
         }
 
-        if (($flags & self::LOCK) !== 0) {
+        if ($flagChecker->get('lock')) {
             $phpFlags |= LOCK_EX;
         }
 
-        if (($flags & self::USE_INCLUDE_PATH) !== 0) {
+        if ($flagChecker->get('useIncludePath')) {
             $phpFlags |= FILE_USE_INCLUDE_PATH;
         }
 

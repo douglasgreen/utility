@@ -9,16 +9,45 @@ namespace DouglasGreen\Utility\Data;
  *
  * Does error checking that flags are unique and power of two and there are no invalid flags set
  * in the test value.
- * Example usage
  *
- * $flags = [
- *     'isFlagOne' => 1,
- *     'isFlagTwo' => 2,
- *     'isFlagFour' => 4,
- * ];
- * $value = 5;
- * $flag = new Flag($flags, $value);
- * print_r($flag->isFlagTwo);
+ * This class exists because integer flags are better than booleans. When you pass booleans to a
+ * function parameter, they're not descriptive. Your function calls look like "example(true, false,
+ * true, true)". This is error-prone because one boolean can easily substitute for another. It also
+ * fails to tell you what it is configuring. Instead you should define flags as power of two integer
+ * constants on your class. There should be less than 32 Flags in a class because that is the limit
+ * on 32-bit systems running PHP. Then you can pass them to your function like
+ * "example(MyClass::RECURSIVE | MyClass::DEPTH_FIRST)". The names describe better what you're doing
+ * and are less error prone. And they don't need to be passed in a particular order.
+ *
+ * The flags and flag checker should be public for other classes to use.
+ *
+ * Example usage:
+ *
+ * use DouglasGreen\Utility\Data\FlagChecker;
+ * use DouglasGreen\Utility\Data\FlagHandler;
+ *
+ * class MyClass implements FlagHandler {
+ *     public const int RECURSIVE = 1;
+ *     public const int DEPTH_FIRST = 2;
+ *
+ *     // This function gives names to the flag integers of this class. Every class that defines
+ *     // flags needs one of these.
+ *     public static function getFlagChecker(int $flags): FlagChecker
+ *     {
+ *         $flagNames = [
+ *             'recursive' => self::RECURSIVE,
+ *             'depthFirst' => self::DEPTH_FIRST,
+ *         ];
+ *         return new FlagChecker($flagNames, $flags);
+ *     }
+ *
+ *     // This function uses the flag checker to turn its flag integers into booleans.
+ *     protected function myFunc(int $flags): void
+ *     {
+ *         $flagChecker = static::getFlagChecker($flags);
+ *         $isRecursive = $flagChecker->get('recursive');
+ *     }
+ * }
  */
 class FlagChecker
 {
@@ -28,14 +57,19 @@ class FlagChecker
     protected array $settings = [];
 
     /**
-     * @param array<string, int> $flags
+     * @param array<string, int> $flagNames
      * @throws ValueException
      */
-    public function __construct(array $flags, int $value)
+    public function __construct(array $flagNames, int $flags)
     {
+        // Limited to 32 bits in a word on 32-bit systems.
+        if (count($flagNames) > 32) {
+            throw new ValueException(sprintf('More than 32 flags defined: %d', count($flagNames)));
+        }
+
         // Validate the flags
         $uniqueValues = [];
-        foreach ($flags as $name => $flag) {
+        foreach ($flagNames as $name => $flag) {
             if (! self::isPowerOfTwo($flag)) {
                 throw new ValueException(
                     sprintf('The flag value for "%s" is not a power of two.', $name),
@@ -50,13 +84,13 @@ class FlagChecker
         }
 
         // Process the value against the flags
-        foreach ($flags as $name => $flag) {
-            $this->settings[$name] = (bool) ($value & $flag);
+        foreach ($flagNames as $name => $flag) {
+            $this->settings[$name] = (bool) ($flags & $flag);
         }
 
         // Check for any invalid flags in the value
         $validFlagsSum = array_sum(array_keys($uniqueValues));
-        if (($value & ~$validFlagsSum) !== 0) {
+        if (($flags & ~$validFlagsSum) !== 0) {
             throw new ValueException(
                 'The value contains invalid flags that are not defined in the flags array.',
             );
@@ -80,8 +114,8 @@ class FlagChecker
         return $this->settings;
     }
 
-    protected function isPowerOfTwo(int $value): bool
+    protected function isPowerOfTwo(int $flags): bool
     {
-        return $value > 0 && ($value & ($value - 1)) === 0;
+        return $flags > 0 && ($flags & ($flags - 1)) === 0;
     }
 }
