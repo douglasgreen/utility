@@ -33,7 +33,7 @@ class Command
         protected int $flags = 0
     ) {
         $sep = preg_quote(PATH_SEPARATOR, '/');
-        if (Regex::hasMatch('/[^\w' . $sep . '.-]/', $this->command)) {
+        if (Regex::hasMatch('/[^\w\s' . $sep . '.-]/', $this->command)) {
             throw new CommandException(sprintf('Invalid command: "%s"', $this->command));
         }
     }
@@ -143,7 +143,7 @@ class Command
     {
         $command = $this->command;
         if ($this->args !== []) {
-            $command .= ' ' . implode('', $this->args);
+            $command .= ' ' . implode(' ', $this->args);
         }
 
         return $command;
