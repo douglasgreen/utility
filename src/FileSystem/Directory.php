@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DouglasGreen\Utility\FileSystem;
 
 use Directory as PhpDirectory;
+use DouglasGreen\Utility\Data\FlagChecker;
 
 /**
  * Directory utility class to throw exceptions when basic operations fail.
@@ -53,7 +54,8 @@ class Directory
             return $this;
         }
 
-        $recursive = (bool) ($flags & self::RECURSIVE);
+        $flagChecker = $this->getFlagChecker($flags);
+        $recursive = $flagChecker->get('recursive');
         if (mkdir($this->path, $permissions, $recursive, $this->context) === false) {
             throw new DirectoryException(sprintf('Unable to make directory: "%s"', $this->path));
         }
@@ -136,5 +138,13 @@ class Directory
         }
 
         return $this;
+    }
+
+    protected function getFlagChecker(int $value): FlagChecker
+    {
+        $tests = [
+            'recursive' => self::RECURSIVE,
+        ];
+        return new FlagChecker($tests, $value);
     }
 }

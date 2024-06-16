@@ -12,27 +12,26 @@ namespace DouglasGreen\Utility\Data;
  * Example usage
  *
  * $flags = [
- *     'flagOne' => 1,
- *     'flagTwo' => 2,
- *     'flagFour' => 4,
+ *     'isFlagOne' => 1,
+ *     'isFlagTwo' => 2,
+ *     'isFlagFour' => 4,
  * ];
  * $value = 5;
- * $result = FlagUtil::process($flags, $value);
- * print_r($result);
+ * $flag = new Flag($flags, $value);
+ * print_r($flag->isFlagTwo);
  */
-class FlagUtil
+class FlagChecker
 {
-    // Function to check if a number is a power of two
-    public static function isPowerOfTwo(int $value): bool
-    {
-        return $value > 0 && ($value & ($value - 1)) === 0;
-    }
+    /**
+     * @var array<string, bool>
+     */
+    protected array $settings = [];
 
     /**
      * @param array<string, int> $flags
-     * @return array<string, bool>
+     * @throws ValueException
      */
-    public static function process(array $flags, int $value): array
+    public function __construct(array $flags, int $value)
     {
         // Validate the flags
         $uniqueValues = [];
@@ -51,19 +50,38 @@ class FlagUtil
         }
 
         // Process the value against the flags
-        $result = [];
         foreach ($flags as $name => $flag) {
-            $result[$name] = (bool) ($value & $flag);
+            $this->settings[$name] = (bool) ($value & $flag);
         }
 
         // Check for any invalid flags in the value
-        $validFlagsSum = array_sum($uniqueValues);
+        $validFlagsSum = array_sum(array_keys($uniqueValues));
         if (($value & ~$validFlagsSum) !== 0) {
             throw new ValueException(
                 'The value contains invalid flags that are not defined in the flags array.',
             );
         }
+    }
 
-        return $result;
+    public function get(string $name): bool
+    {
+        if (! isset($this->settings[$name])) {
+            throw new ValueException(sprintf('Invalid flag name: "%s"', $name));
+        }
+
+        return $this->settings[$name];
+    }
+
+    /**
+     * @return array<string, bool>
+     */
+    public function getSettings(): array
+    {
+        return $this->settings;
+    }
+
+    protected function isPowerOfTwo(int $value): bool
+    {
+        return $value > 0 && ($value & ($value - 1)) === 0;
     }
 }
