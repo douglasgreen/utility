@@ -70,7 +70,7 @@ class FlagChecker
         // Validate the flags
         $uniqueValues = [];
         foreach ($flagNames as $name => $flag) {
-            if (! self::isPowerOfTwo($flag)) {
+            if (! static::isPowerOfTwo($flag)) {
                 throw new ValueException(
                     sprintf('The flag value for "%s" is not a power of two.', $name),
                 );
@@ -114,7 +114,7 @@ class FlagChecker
         return $this->settings;
     }
 
-    protected function isPowerOfTwo(int $flags): bool
+    protected static function isPowerOfTwo(int $flags): bool
     {
         return $flags > 0 && ($flags & ($flags - 1)) === 0;
     }

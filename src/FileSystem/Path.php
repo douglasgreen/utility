@@ -10,8 +10,6 @@ use DouglasGreen\Utility\Data\FlagHandler;
 /**
  * The functions in this class depend on a file path string, not an open file.
  * See File for other file functions.
- *
- * @todo Create static versions of these functions using callStatic.
  */
 class Path implements FlagHandler
 {

@@ -277,7 +277,7 @@ class UrlBuilder implements Stringable
 
     public function setFragment(?string $fragment): self
     {
-        $this->fragment = $this->strip($fragment);
+        $this->fragment = static::strip($fragment);
 
         return $this;
     }
@@ -287,7 +287,7 @@ class UrlBuilder implements Stringable
      */
     public function setHost(?string $host): self
     {
-        $host = $this->strip($host);
+        $host = static::strip($host);
         if ($host !== null && ! filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
             throw new ValueException(sprintf('Invalid host: "%s"', $host));
         }
@@ -299,13 +299,13 @@ class UrlBuilder implements Stringable
 
     public function setParam(string $key, string|float|int $value): self
     {
-        $key = $this->strip($key);
+        $key = static::strip($key);
         if ($key === '') {
             return $this;
         }
 
         if (is_string($value)) {
-            $value = $this->strip($value);
+            $value = static::strip($value);
             if ($value === '') {
                 return $this;
             }
@@ -321,7 +321,7 @@ class UrlBuilder implements Stringable
      */
     public function setParamArray(string $key, array $value): self
     {
-        $key = $this->strip($key);
+        $key = static::strip($key);
         if ($key === '') {
             return $this;
         }
@@ -337,14 +337,14 @@ class UrlBuilder implements Stringable
 
     public function setPass(?string $pass): self
     {
-        $this->pass = $this->strip($pass);
+        $this->pass = static::strip($pass);
 
         return $this;
     }
 
     public function setPath(?string $path): self
     {
-        $this->path = $this->strip($path);
+        $this->path = static::strip($path);
 
         return $this;
     }
@@ -365,7 +365,7 @@ class UrlBuilder implements Stringable
 
     public function setQuery(?string $query): self
     {
-        $query = $this->strip($query);
+        $query = static::strip($query);
         if ($query === null) {
             return $this;
         }
@@ -396,14 +396,14 @@ class UrlBuilder implements Stringable
             throw new ValueException(sprintf('Invalid scheme: "%s"', $scheme));
         }
 
-        $this->scheme = $this->strip($scheme);
+        $this->scheme = static::strip($scheme);
 
         return $this;
     }
 
     public function setUser(?string $user): self
     {
-        $this->user = $this->strip($user);
+        $this->user = static::strip($user);
 
         return $this;
     }
@@ -411,7 +411,7 @@ class UrlBuilder implements Stringable
     /**
      * Strip extra spaces and return null if empty
      */
-    protected function strip(?string $input): ?string
+    protected static function strip(?string $input): ?string
     {
         if ($input === null) {
             return null;
