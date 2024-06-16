@@ -150,30 +150,6 @@ class Matcher implements FlagHandler
     }
 
     /**
-     * Do a preg_match_all with offset capture and store the results.
-     *
-     * @return array<string|int, array<int, array<int, string|int>>>
-     * @throws RegexException
-     * @throws TypeException
-     */
-    public function matchAllWithOffsets(string $subject, int $offset = 0): array
-    {
-        if (! is_string($this->pattern)) {
-            throw new TypeException('String pattern expected');
-        }
-
-        $result = preg_match_all($this->pattern, $subject, $matches, PREG_OFFSET_CAPTURE, $offset);
-
-        if ($result === false) {
-            throw new RegexException($this->getErrorMessage());
-        }
-
-        $this->count = $result;
-
-        return $matches;
-    }
-
-    /**
      * Do a preg_match_all with PREG_SET_ORDER and store the results.
      *
      * @return array<int, array<string|int, string>>
@@ -187,6 +163,30 @@ class Matcher implements FlagHandler
         }
 
         $result = preg_match_all($this->pattern, $subject, $matches, 0, $offset);
+
+        if ($result === false) {
+            throw new RegexException($this->getErrorMessage());
+        }
+
+        $this->count = $result;
+
+        return $matches;
+    }
+
+    /**
+     * Do a preg_match_all with offset capture and store the results.
+     *
+     * @return array<string|int, array<int, array<int, string|int>>>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function matchAllWithOffsets(string $subject, int $offset = 0): array
+    {
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_match_all($this->pattern, $subject, $matches, PREG_OFFSET_CAPTURE, $offset);
 
         if ($result === false) {
             throw new RegexException($this->getErrorMessage());
