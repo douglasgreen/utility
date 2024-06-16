@@ -61,6 +61,24 @@ class File implements FlagHandler
     }
 
     /**
+     * Substitute for flock.
+     *
+     * Returns true if the lock would block.
+     *
+     * @throws FileException
+     */
+    public function getExclusiveLock(): bool
+    {
+        if (! flock($this->stream, LOCK_EX, $wouldBlock)) {
+            throw new FileException(
+                sprintf('Unable to get exclusive lock of file "%s"', $this->path),
+            );
+        }
+
+        return (bool) $wouldBlock;
+    }
+
+    /**
      * Substitute for fgetcsv.
      *
      * @param ?int<0, max> $length
@@ -126,24 +144,6 @@ class File implements FlagHandler
         }
 
         return $result;
-    }
-
-    /**
-     * Substitute for flock.
-     *
-     * Returns true if the lock would block.
-     *
-     * @throws FileException
-     */
-    public function getExclusiveLock(): bool
-    {
-        if (! flock($this->stream, LOCK_EX, $wouldBlock)) {
-            throw new FileException(
-                sprintf('Unable to get exclusive lock of file "%s"', $this->path),
-            );
-        }
-
-        return (bool) $wouldBlock;
     }
 
     /**
