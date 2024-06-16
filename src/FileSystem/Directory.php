@@ -12,32 +12,36 @@ use DouglasGreen\Utility\Data\FlagHandler;
  * Directory utility class to throw exceptions when basic operations fail.
  *
  * Manages functions on a directory name.
- *
- * @todo Make a static class to call this.
  */
 class Directory implements FlagHandler
 {
+    /**
+     * @var int
+     */
     public const RECURSIVE = 1;
 
     /**
-     * Substitute for getcwd.
-     *
-     * @throws DirectoryException
+     * @var int
      */
-    public static function getCurrent(): string
-    {
-        $result = getcwd();
-        if ($result === false) {
-            throw new DirectoryException('Unable to get current working directory');
-        }
+    public const SORT_ASCENDING = 2;
 
-        return $result;
-    }
+    /**
+     * @var int
+     */
+    public const SORT_DESCENDING = 4;
+
+    /**
+     * @var int
+     */
+    public const SORT_NONE = 8;
 
     public static function getFlagChecker(int $flags): FlagChecker
     {
         $flagNames = [
             'recursive' => self::RECURSIVE,
+            'sortAscending' => self::SORT_ASCENDING,
+            'sortDescending' => self::SORT_DESCENDING,
+            'sortNone' => self::SORT_NONE,
         ];
         return new FlagChecker($flagNames, $flags);
     }
@@ -124,9 +128,19 @@ class Directory implements FlagHandler
      * @return list<string>
      * @throws DirectoryException
      */
-    public function scan(int $sortingOrder = SCANDIR_SORT_ASCENDING): array
+    public function scan(int $flags = 0): array
     {
-        $result = scandir($this->path, $sortingOrder, $this->context);
+        $flagChecker = static::getFlagChecker($flags);
+        $phpFlags = 0;
+        if ($flagChecker->get('sortAscending')) {
+            $phpFlags |= SCANDIR_SORT_ASCENDING;
+        } elseif ($flagChecker->get('sortDescending')) {
+            $phpFlags |= SCANDIR_SORT_DESCENDING;
+        } else {
+            $phpFlags |= SCANDIR_SORT_NONE;
+        }
+
+        $result = scandir($this->path, $phpFlags, $this->context);
         if ($result === false) {
             throw new DirectoryException(sprintf('Unable to scan directory: "%s"', $this->path));
         }

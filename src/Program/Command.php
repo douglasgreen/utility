@@ -39,7 +39,7 @@ class Command implements FlagHandler
      * @throws CommandException
      */
     public function __construct(
-        protected string $command,
+        protected string $command
     ) {
         $sep = preg_quote(PATH_SEPARATOR, '/');
         if (Regex::hasMatch('/[^\w\s' . $sep . '.-]/', $this->command)) {
