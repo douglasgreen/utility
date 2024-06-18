@@ -176,6 +176,43 @@ class File implements FlagHandler
     }
 
     /**
+     * Substitute for fgetcsv that throws errors if fields not read.
+     *
+     * @param ?int<0, max> $length
+     * @return list<string>
+     * @throws FileException
+     */
+    public function mustGetFields(
+        ?int $length = null,
+        string $separator = ',',
+        string $enclosure = '"',
+        string $escape = '\\',
+    ): array {
+        $fields = $this->getFields($length, $separator, $enclosure, $escape);
+        if ($fields === null) {
+            throw new FileException(sprintf('Unable to get CSV line from file "%s"', $this->path));
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Substitute for fgets that throws errors if fields not read.
+     *
+     * @param int<0, max> $length
+     * @throws FileException
+     */
+    public function mustGetLine(?int $length = null): string
+    {
+        $line = $this->getLine($length);
+        if ($line === null) {
+            throw new FileException(sprintf('Unable to get line from file "%s"', $this->path));
+        }
+
+        return $line;
+    }
+
+    /**
      * Substitute for fputcsv.
      *
      * @param list<string|float|int|null> $fields
