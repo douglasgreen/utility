@@ -220,4 +220,13 @@ class Regex
         $matcher = new Matcher($pattern);
         return $matcher->split($subject, $limit, $flags);
     }
+
+    /**
+     * @return list<string>
+     */
+    public static function splitAll(string $pattern, string $subject): array
+    {
+        $matcher = new Matcher($pattern);
+        return $matcher->splitAll($subject);
+    }
 }

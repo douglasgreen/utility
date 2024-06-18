@@ -377,6 +377,29 @@ class Matcher implements FlagHandler
         return $result;
     }
 
+    /**
+     * Substitute for preg_split that returns all non-empty pieces.
+     *
+     * @return list<string>
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function splitAll(string $subject): array
+    {
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_split($this->pattern, $subject, -1, self::NO_EMPTY);
+        if ($result === false) {
+            throw new RegexException($this->getErrorMessage());
+        }
+
+        $this->count = count($result);
+
+        return $result;
+    }
+
     protected function getErrorMessage(): string
     {
         $errorMessage = 'Regex failed';
