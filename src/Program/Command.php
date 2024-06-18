@@ -25,7 +25,7 @@ class Command implements FlagHandler
      */
     protected array $output;
 
-    protected int $resultCode;
+    protected int $returnCode;
 
     public static function getFlagChecker(int $flags): FlagChecker
     {
@@ -44,7 +44,7 @@ class Command implements FlagHandler
      * @throws CommandException
      */
     public function __construct(
-        protected string $command
+        protected readonly string $command
     ) {
         $sep = preg_quote(PATH_SEPARATOR, '/');
         if (Regex::hasMatch('/[^\w\s' . $sep . '.-]/', $this->command)) {
@@ -71,15 +71,15 @@ class Command implements FlagHandler
      */
     public function exec(): array
     {
-        $result = exec($this->buildCommand(), $output, $resultCode);
+        $result = exec($this->buildCommand(), $output, $returnCode);
         if ($result === false) {
             throw new CommandException(
-                sprintf('Command "%s" failed with error code "%s"', $this->command, $resultCode),
+                sprintf('Command "%s" failed with error code "%s"', $this->command, $returnCode),
             );
         }
 
         $this->output = $output;
-        $this->resultCode = $resultCode;
+        $this->returnCode = $returnCode;
 
         return $this->output;
     }
@@ -91,13 +91,13 @@ class Command implements FlagHandler
      */
     public function execAndPrint(): string
     {
-        $result = system($this->buildCommand(), $this->resultCode);
+        $result = system($this->buildCommand(), $this->returnCode);
         if ($result === false) {
             throw new CommandException(
                 sprintf(
                     'Command "%s" failed with error code "%s"',
                     $this->command,
-                    $this->resultCode,
+                    $this->returnCode,
                 ),
             );
         }
@@ -112,21 +112,21 @@ class Command implements FlagHandler
      */
     public function execAndPrintBinary(): void
     {
-        $result = passthru($this->buildCommand(), $this->resultCode);
+        $result = passthru($this->buildCommand(), $this->returnCode);
         if ($result === false) {
             throw new CommandException(
                 sprintf(
                     'Command "%s" failed with error code "%s"',
                     $this->command,
-                    $this->resultCode,
+                    $this->returnCode,
                 ),
             );
         }
     }
 
-    public function getResultCode(): ?int
+    public function getReturnCode(): ?int
     {
-        return $this->resultCode;
+        return $this->returnCode;
     }
 
     /**
