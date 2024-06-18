@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/config-setup.git",
-                "reference": "b22243ec84dd3886c37a4c23630a185538618075"
+                "reference": "005208570b60a85328bd834d23f24837dab6632c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/b22243ec84dd3886c37a4c23630a185538618075",
-                "reference": "b22243ec84dd3886c37a4c23630a185538618075",
+                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/005208570b60a85328bd834d23f24837dab6632c",
+                "reference": "005208570b60a85328bd834d23f24837dab6632c",
                 "shasum": ""
             },
             "require": {
@@ -220,7 +220,7 @@
                 "source": "https://github.com/douglasgreen/config-setup/tree/main",
                 "issues": "https://github.com/douglasgreen/config-setup/issues"
             },
-            "time": "2024-06-18T00:11:47+00:00"
+            "time": "2024-06-18T13:43:27+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2838,16 +2838,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "12.2.1",
+            "version": "12.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/easy-coding-standard/easy-coding-standard.git",
-                "reference": "095fe591b2e51fd84edd21b8c9be74402eadc50e"
+                "reference": "f919574aa566b4d00fd06700ca61168aafef66e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/easy-coding-standard/easy-coding-standard/zipball/095fe591b2e51fd84edd21b8c9be74402eadc50e",
-                "reference": "095fe591b2e51fd84edd21b8c9be74402eadc50e",
+                "url": "https://api.github.com/repos/easy-coding-standard/easy-coding-standard/zipball/f919574aa566b4d00fd06700ca61168aafef66e1",
+                "reference": "f919574aa566b4d00fd06700ca61168aafef66e1",
                 "shasum": ""
             },
             "require": {
@@ -2883,7 +2883,7 @@
             ],
             "support": {
                 "issues": "https://github.com/easy-coding-standard/easy-coding-standard/issues",
-                "source": "https://github.com/easy-coding-standard/easy-coding-standard/tree/12.2.1"
+                "source": "https://github.com/easy-coding-standard/easy-coding-standard/tree/12.3.0"
             },
             "funding": [
                 {
@@ -2895,7 +2895,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-02T01:25:21+00:00"
+            "time": "2024-06-18T07:35:59+00:00"
         },
         {
             "name": "theseer/tokenizer",
