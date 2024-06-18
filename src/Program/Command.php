@@ -36,6 +36,11 @@ class Command implements FlagHandler
     }
 
     /**
+     * Set a command to execute.
+     *
+     * The command is limited to words, spaces, dots, and hyphens. Any arguments with different characters
+     * than those will need to be added using addArg so they can be properly escaped.
+     *
      * @throws CommandException
      */
     public function __construct(
