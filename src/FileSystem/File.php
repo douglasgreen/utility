@@ -21,9 +21,6 @@ use DouglasGreen\Utility\Data\FlagHandler;
  * So the parameters to the constructor are really the parameters to the open() call.
  *
  * @todo Add other file functions from this list.
- * disk_free_space
- * popen
- * pclose
  * parse_ini_file
  */
 class File implements FlagHandler
