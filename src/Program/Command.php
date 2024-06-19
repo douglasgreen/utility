@@ -78,7 +78,7 @@ class Command implements FlagHandler, \Stringable
 
         $arg = $flag;
         if ($flagArgument !== null) {
-            $arg .= escapeshellarg($flagArgument);
+            $arg .= ' ' . escapeshellarg($flagArgument);
         }
 
         $this->args[] = $arg;
