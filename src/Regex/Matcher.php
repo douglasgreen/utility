@@ -32,7 +32,7 @@ class Matcher implements FlagHandler
      * @param list<string>|string $pattern
      */
     public function __construct(
-        protected array|string $pattern
+        protected readonly array|string $pattern
     ) {}
 
     /**

@@ -6,6 +6,8 @@ namespace DouglasGreen\Utility\Network;
 
 class Url
 {
+    protected readonly string $url;
+
     /**
      * Check if a URL has already been encoded.
      */
@@ -14,12 +16,13 @@ class Url
         return urldecode($url) !== $url;
     }
 
-    public function __construct(
-        protected string $url
-    ) {
-        if (self::isEncoded($this->url)) {
-            $this->url = urldecode($this->url);
+    public function __construct(string $url)
+    {
+        if (self::isEncoded($url)) {
+            $url = urldecode($url);
         }
+
+        $this->url = $url;
     }
 
     /**

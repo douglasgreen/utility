@@ -13,7 +13,7 @@ class ArrayMatcher extends Matcher
      * @param array<string, callable> $patterns
      */
     public function __construct(
-        protected array $patterns
+        protected readonly array $patterns
     ) {}
 
     /**

@@ -27,8 +27,8 @@ class SimpleProcess
     protected $stream;
 
     public function __construct(
-        protected string $command,
-        protected string $mode = 'r'
+        protected readonly string $command,
+        protected readonly string $mode = 'r',
     ) {}
 
     /**
