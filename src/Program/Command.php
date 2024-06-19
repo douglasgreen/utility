@@ -63,6 +63,16 @@ class Command implements FlagHandler
         return $this;
     }
 
+    public function buildCommand(): string
+    {
+        $command = $this->command;
+        if ($this->args !== []) {
+            $command .= ' ' . implode(' ', $this->args);
+        }
+
+        return $command;
+    }
+
     /**
      * Wrapper for exec.
      *
@@ -153,15 +163,5 @@ class Command implements FlagHandler
         }
 
         return $result;
-    }
-
-    protected function buildCommand(): string
-    {
-        $command = $this->command;
-        if ($this->args !== []) {
-            $command .= ' ' . implode(' ', $this->args);
-        }
-
-        return $command;
     }
 }
