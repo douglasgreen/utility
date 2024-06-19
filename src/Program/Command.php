@@ -69,6 +69,22 @@ class Command implements FlagHandler, \Stringable
         return $this;
     }
 
+    public function addFlag(string $flag, ?string $flagArgument = null): self
+    {
+        $flag = trim($flag);
+        if (! Regex::hasMatch('/^--?\w+$/', $flag)) {
+            throw new ArgumentException(sprintf('Invalid flag: "%s"', $flag));
+        }
+
+        $arg = $flag;
+        if ($flagArgument !== null) {
+            $arg .= escapeshellarg($flagArgument);
+        }
+
+        $this->args[] = $arg;
+        return $this;
+    }
+
     /**
      * @param list<string> $args
      * @throws ArgumentException
