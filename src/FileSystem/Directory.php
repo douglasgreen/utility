@@ -40,7 +40,7 @@ class Directory implements FlagHandler
     /**
      * @var int
      */
-    public const SORT_NONE = 8;
+    public const SORT_NONE = 16;
 
     public static function getFlagChecker(int $flags): FlagChecker
     {

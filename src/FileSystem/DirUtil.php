@@ -34,6 +34,11 @@ class DirUtil
     public const SORT_DESCENDING = 8;
 
     /**
+     * @var int
+     */
+    public const SORT_NONE = 16;
+
+    /**
      * @throws DirectoryException
      */
     public static function getCurrent(): string
