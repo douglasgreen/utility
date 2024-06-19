@@ -238,9 +238,6 @@ class Command implements FlagHandler, \Stringable
         // Define a regular expression that matches valid characters in commands
         $pattern = '/^[\w\s\/\\\:\.\-\_]+$/';
 
-        // Debug output (optional)
-        var_dump($pattern, $command);
-
         // Check if the command is empty or contains invalid characters
         if ($command === '' || ! Regex::hasMatch($pattern, $command)) {
             throw new ArgumentException(sprintf('Invalid command: "%s"', $command));
