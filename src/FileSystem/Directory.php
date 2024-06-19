@@ -186,7 +186,7 @@ class Directory implements FlagHandler
         foreach ($iterator as $file) {
             if ($file->isDir()) {
                 // Don't delete current directory.
-                if (PathUtil::isSame($this->path, $file->getFilename())) {
+                if (PathUtil::isSame($this->path, $file->getPathname())) {
                     continue;
                 }
 
