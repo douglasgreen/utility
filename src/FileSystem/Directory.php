@@ -20,17 +20,22 @@ class Directory implements FlagHandler
     /**
      * @var int
      */
-    public const RECURSIVE = 1;
+    public const NO_DOT_DIRS = 1;
 
     /**
      * @var int
      */
-    public const SORT_ASCENDING = 2;
+    public const RECURSIVE = 2;
 
     /**
      * @var int
      */
-    public const SORT_DESCENDING = 4;
+    public const SORT_ASCENDING = 4;
+
+    /**
+     * @var int
+     */
+    public const SORT_DESCENDING = 8;
 
     /**
      * @var int
@@ -40,6 +45,7 @@ class Directory implements FlagHandler
     public static function getFlagChecker(int $flags): FlagChecker
     {
         $flagNames = [
+            'noDotDirs' => self::NO_DOT_DIRS,
             'recursive' => self::RECURSIVE,
             'sortAscending' => self::SORT_ASCENDING,
             'sortDescending' => self::SORT_DESCENDING,
@@ -55,6 +61,31 @@ class Directory implements FlagHandler
         protected string $path,
         protected $context = null
     ) {}
+
+    /**
+     * @return list<string>
+     */
+    public function listFiles(int $flags = 0): array
+    {
+        $files = [];
+
+        if (is_dir($this->path)) {
+            $dirContents = $this->scan($flags | self::NO_DOT_DIRS);
+
+            foreach ($dirContents as $dirContent) {
+                $path = $this->path . DIRECTORY_SEPARATOR . $dirContent;
+
+                if (is_dir($path)) {
+                    $dir = new self($path, $this->context);
+                    $files = array_merge($files, $dir->listFiles($flags));
+                } else {
+                    $files[] = $path;
+                }
+            }
+        }
+
+        return $files;
+    }
 
     /**
      * Substitute for mkdir.
@@ -167,6 +198,8 @@ class Directory implements FlagHandler
     /**
      * Substitute for scandir.
      *
+     * Adds a NO_DOT_DIRS flag to exclude the . and .. directories used in Linux.
+     *
      * @return list<string>
      * @throws DirectoryException
      */
@@ -185,6 +218,10 @@ class Directory implements FlagHandler
         $result = scandir($this->path, $phpFlags, $this->context);
         if ($result === false) {
             throw new DirectoryException(sprintf('Unable to scan directory: "%s"', $this->path));
+        }
+
+        if ($flagChecker->get('noDotDirs')) {
+            return array_diff($result, ['..', '.']);
         }
 
         return $result;

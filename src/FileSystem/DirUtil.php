@@ -16,7 +16,22 @@ class DirUtil
     /**
      * @var int
      */
-    public const RECURSIVE = 1;
+    public const NO_DOT_DIRS = 1;
+
+    /**
+     * @var int
+     */
+    public const RECURSIVE = 2;
+
+    /**
+     * @var int
+     */
+    public const SORT_ASCENDING = 4;
+
+    /**
+     * @var int
+     */
+    public const SORT_DESCENDING = 8;
 
     /**
      * @throws DirectoryException
@@ -29,6 +44,15 @@ class DirUtil
         }
 
         return $result;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function listFiles(string $path, int $flags = 0): array
+    {
+        $directory = new Directory($path);
+        return $directory->listFiles($flags);
     }
 
     public static function make(string $path, int $permissions = 0o777, int $flags = 0): Directory
