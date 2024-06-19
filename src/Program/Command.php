@@ -134,13 +134,18 @@ class Command implements FlagHandler, \Stringable
         return $command;
     }
 
+    public function getReturnCode(): ?int
+    {
+        return $this->returnCode;
+    }
+
     /**
      * Wrapper for exec.
      *
      * @return list<string>
      * @throws CommandException
      */
-    public function exec(): array
+    public function run(): array
     {
         $result = exec($this->buildCommand(), $output, $returnCode);
         if ($result === false) {
@@ -160,7 +165,7 @@ class Command implements FlagHandler, \Stringable
      *
      * @throws CommandException
      */
-    public function execAndPrint(): string
+    public function runAndPrint(): string
     {
         $result = system($this->buildCommand(), $this->returnCode);
         if ($result === false) {
@@ -181,7 +186,7 @@ class Command implements FlagHandler, \Stringable
      *
      * @throws CommandException
      */
-    public function execAndPrintBinary(): void
+    public function runAndPrintBinary(): void
     {
         $result = passthru($this->buildCommand(), $this->returnCode);
         if ($result === false) {
@@ -193,11 +198,6 @@ class Command implements FlagHandler, \Stringable
                 ),
             );
         }
-    }
-
-    public function getReturnCode(): ?int
-    {
-        return $this->returnCode;
     }
 
     /**
