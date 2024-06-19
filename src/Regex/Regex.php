@@ -49,8 +49,7 @@ class Regex
     public static function hasMatch(string $pattern, string $subject, int $offset = 0): bool
     {
         $matcher = new Matcher($pattern);
-        $matcher->match($subject, $offset);
-        return $matcher->hasMatch();
+        return $matcher->hasMatch($subject, $offset);
     }
 
     /**

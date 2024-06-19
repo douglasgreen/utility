@@ -92,9 +92,22 @@ class Matcher implements FlagHandler
         return $this->count;
     }
 
-    public function hasMatch(): bool
+    /**
+     * @throws RegexException
+     * @throws TypeException
+     */
+    public function hasMatch(string $subject, int $offset = 0): bool
     {
-        return $this->count > 0;
+        if (! is_string($this->pattern)) {
+            throw new TypeException('String pattern expected');
+        }
+
+        $result = preg_match($this->pattern, $subject, $match, 0, $offset);
+        if ($result === false) {
+            throw new RegexException($this->getErrorMessage());
+        }
+
+        return $match !== [];
     }
 
     /**
@@ -195,6 +208,11 @@ class Matcher implements FlagHandler
         $this->count = $result;
 
         return $matches;
+    }
+
+    public function matched(): bool
+    {
+        return $this->count > 0;
     }
 
     /**
