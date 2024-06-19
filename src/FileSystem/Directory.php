@@ -7,6 +7,8 @@ namespace DouglasGreen\Utility\FileSystem;
 use Directory as PhpDirectory;
 use DouglasGreen\Utility\Data\FlagChecker;
 use DouglasGreen\Utility\Data\FlagHandler;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Directory utility class to throw exceptions when basic operations fail.
@@ -115,10 +117,50 @@ class Directory implements FlagHandler
      *
      * @throws DirectoryException
      */
-    public function remove(): void
+    public function remove(int $flags = 0): void
     {
+        $flagChecker = static::getFlagChecker($flags);
+        $recursive = $flagChecker->get('recursive');
+
+        if ($recursive) {
+            $this->removeRecursive();
+            return;
+        }
+
         if (rmdir($this->path, $this->context) === false) {
             throw new DirectoryException(sprintf('Unable to remove directory "%s"', $this->path));
+        }
+    }
+
+    /**
+     * Recursively remove a directory and delete its contents.
+     *
+     * Can also be called with $this->remove(Directory::RECURSIVE).
+     */
+    public function removeRecursive(): void
+    {
+        // OK if path doesn't exist.
+        if (! is_dir($this->path)) {
+            return;
+        }
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($this->path, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST,
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->isDir()) {
+                if (rmdir($file->getPathname(), $this->context) === false) {
+                    throw new DirectoryException(
+                        sprintf('Unable to remove directory "%s"', $file->getFilename()),
+                    );
+                }
+            } elseif (unlink($file->getPathname(), $this->context) === false) {
+                throw new FileException(
+                    sprintf('Unable to delete file "%s"', $file->getFilename()),
+                );
+            }
         }
     }
 

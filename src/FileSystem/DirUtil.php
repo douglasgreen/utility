@@ -50,10 +50,16 @@ class DirUtil
         return $directory->open();
     }
 
-    public static function remove(string $path): void
+    public static function remove(string $path, int $flags = 0): void
     {
         $directory = new Directory($path);
-        $directory->remove();
+        $directory->remove($flags);
+    }
+
+    public static function removeRecursive(string $path): void
+    {
+        $directory = new Directory($path);
+        $directory->removeRecursive();
     }
 
     /**
