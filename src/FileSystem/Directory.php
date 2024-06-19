@@ -42,6 +42,8 @@ class Directory implements FlagHandler
      */
     public const SORT_NONE = 16;
 
+    protected readonly string $path;
+
     public static function getFlagChecker(int $flags): FlagChecker
     {
         $flagNames = [
@@ -58,9 +60,15 @@ class Directory implements FlagHandler
      * @param ?resource $context
      */
     public function __construct(
-        protected string $path,
+        ?string $path = null,
         protected $context = null
-    ) {}
+    ) {
+        if ($path === null) {
+            $path = DirUtil::getCurrent();
+        }
+
+        $this->path = $path;
+    }
 
     /**
      * @return list<string>
