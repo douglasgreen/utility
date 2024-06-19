@@ -145,6 +145,12 @@ class PathUtil
         return is_readable($path);
     }
 
+    public static function isSame(string $path, string $other): bool
+    {
+        $path = new Path($path);
+        return $path->isSame($other);
+    }
+
     public static function isUpload(string $path): bool
     {
         return is_uploaded_file($path);

@@ -150,6 +150,11 @@ class Directory implements FlagHandler
      */
     public function remove(int $flags = 0): void
     {
+        // OK if path doesn't exist.
+        if (! is_dir($this->path)) {
+            return;
+        }
+
         $flagChecker = static::getFlagChecker($flags);
         $recursive = $flagChecker->get('recursive');
 
@@ -164,11 +169,9 @@ class Directory implements FlagHandler
     }
 
     /**
-     * Recursively remove a directory and delete its contents.
-     *
-     * Can also be called with $this->remove(Directory::RECURSIVE).
+     * Recursively remove the contents of a directory but leave the directory.
      */
-    public function removeRecursive(): void
+    public function removeContents(): void
     {
         // OK if path doesn't exist.
         if (! is_dir($this->path)) {
@@ -182,6 +185,11 @@ class Directory implements FlagHandler
 
         foreach ($iterator as $file) {
             if ($file->isDir()) {
+                // Don't delete current directory.
+                if (PathUtil::isSame($this->path, $file->getFilename())) {
+                    continue;
+                }
+
                 if (rmdir($file->getPathname(), $this->context) === false) {
                     throw new DirectoryException(
                         sprintf('Unable to remove directory "%s"', $file->getFilename()),
@@ -193,6 +201,17 @@ class Directory implements FlagHandler
                 );
             }
         }
+    }
+
+    /**
+     * Recursively remove the contents of a directory including the directory.
+     *
+     * Can also be called with $this->remove(Directory::RECURSIVE).
+     */
+    public function removeRecursive(): void
+    {
+        $this->removeContents();
+        $this->remove();
     }
 
     /**

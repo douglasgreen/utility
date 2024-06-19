@@ -85,6 +85,12 @@ class DirUtil
         $directory->remove($flags);
     }
 
+    public static function removeContents(string $path): void
+    {
+        $directory = new Directory($path);
+        $directory->removeContents();
+    }
+
     public static function removeRecursive(string $path): void
     {
         $directory = new Directory($path);

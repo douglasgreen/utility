@@ -348,6 +348,18 @@ class Path implements FlagHandler
     }
 
     /**
+     * Check if two files are the same by comparing their realpath.
+     */
+    public function isSame(self|string $other): bool
+    {
+        if (is_string($other)) {
+            $other = new self($other);
+        }
+
+        return $this->resolve() === $other->resolve();
+    }
+
+    /**
      * Substitute for is_uploaded_file.
      */
     public function isUpload(): bool
