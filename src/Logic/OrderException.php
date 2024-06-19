@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\Utility\Process;
+namespace DouglasGreen\Utility\Logic;
 
 /**
  * Thrown when operations such as function calls are done in the wrong order.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\Utility\Process;
+namespace DouglasGreen\Utility\Logic;
 
 /**
  * Thrown when unable to parse a string.
