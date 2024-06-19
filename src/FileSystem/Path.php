@@ -25,6 +25,8 @@ class Path implements FlagHandler
 
     public const USE_INCLUDE_PATH = 32;
 
+    protected string $path;
+
     public static function getFlagChecker(int $flags): FlagChecker
     {
         $flagNames = [
@@ -42,9 +44,15 @@ class Path implements FlagHandler
      * @param ?resource $context
      */
     public function __construct(
-        protected string $path,
+        ?string $path = null,
         protected $context = null
-    ) {}
+    ) {
+        if ($path === null) {
+            $path = DirUtil::getCurrent();
+        }
+
+        $this->path = $path;
+    }
 
     /**
      * Add a subpath.
