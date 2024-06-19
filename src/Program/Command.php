@@ -27,7 +27,7 @@ class Command implements FlagHandler, \Stringable
     protected array $output;
 
     /**
-     * @var list<array{op: string, cmd: Command}>
+     * @var list<array{op: string, command: ?string, args: list<string>}>
      */
     protected array $subcommands = [];
 
@@ -46,16 +46,11 @@ class Command implements FlagHandler, \Stringable
      *
      * The command is limited to words, spaces, dots, and hyphens. Any arguments with different characters
      * than those will need to be added using addArg so they can be properly escaped.
-     *
-     * @throws CommandException
      */
     public function __construct(
         protected readonly string $command
     ) {
-        $sep = preg_quote(PATH_SEPARATOR, '/');
-        if (Regex::hasMatch('/[^\w\s' . $sep . '.-]/', $this->command)) {
-            throw new CommandException(sprintf('Invalid command: "%s"', $this->command));
-        }
+        self::validateCommand($this->command);
     }
 
     public function __toString(): string
@@ -75,24 +70,29 @@ class Command implements FlagHandler, \Stringable
     }
 
     /**
+     * @param list<string> $args
      * @throws ArgumentException
      */
-    public function addSubcommand(string $redirectionOperator, self $subcommand): self
-    {
-        // Define a list of valid redirection operators
-        $validOperators = ['|', '>', '>>', '<', '2>', '2>>', '&>', '&>>', '>&', '<&'];
+    public function addSubcommand(
+        string $redirectionOperator,
+        ?string $subcommand = null,
+        array $args = [],
+    ): self {
+        if ($subcommand === null && $args === []) {
+            throw new ArgumentException('Subcommand and args are both empty');
+        }
 
-        // Check if the provided operator is valid
-        if (! in_array($redirectionOperator, $validOperators, true)) {
-            throw new ArgumentException(
-                sprintf('Invalid redirection operator: "%s"', $redirectionOperator),
-            );
+        self::validateRedirectionOperator($redirectionOperator);
+
+        if ($subcommand !== null) {
+            self::validateCommand($subcommand);
         }
 
         // Add the subcommand if the operator is valid
         $this->subcommands[] = [
             'op' => $redirectionOperator,
-            'cmd' => $subcommand,
+            'command' => $subcommand,
+            'args' => $args,
         ];
         return $this;
     }
@@ -105,7 +105,14 @@ class Command implements FlagHandler, \Stringable
         }
 
         foreach ($this->subcommands as $subcommand) {
-            $command .= sprintf(' %s %s', $subcommand['op'], $subcommand['cmd']);
+            $command .= ' ' . $subcommand['op'];
+            if ($subcommand['command'] !== null) {
+                $command .= ' ' . $subcommand['command'];
+            }
+
+            foreach ($subcommand['args'] as $arg) {
+                $command .= ' ' . escapeshellarg($arg);
+            }
         }
 
         return $command;
@@ -201,5 +208,32 @@ class Command implements FlagHandler, \Stringable
         }
 
         return $result;
+    }
+
+    /**
+     * @throws ArgumentException
+     */
+    protected static function validateCommand(string $command): void
+    {
+        $sep = preg_quote(PATH_SEPARATOR, '/');
+        if ($command === '' || Regex::hasMatch('/[^\w\s' . $sep . '.-]/', $command)) {
+            throw new ArgumentException(sprintf('Invalid command: "%s"', $command));
+        }
+    }
+
+    /**
+     * @throws ArgumentException
+     */
+    protected static function validateRedirectionOperator(string $redirectionOperator): void
+    {
+        // Define a list of valid redirection operators
+        $validOperators = ['|', '>', '>>', '<', '2>', '2>>', '&>', '&>>', '>&', '<&'];
+
+        // Check if the provided operator is valid
+        if (! in_array($redirectionOperator, $validOperators, true)) {
+            throw new ArgumentException(
+                sprintf('Invalid redirection operator: "%s"', $redirectionOperator),
+            );
+        }
     }
 }
