@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Program;
 
-use DouglasGreen\Utility\Regex\Regex;
+use DouglasGreen\Utility\Data\ArgumentException;
 use DouglasGreen\Utility\Data\FlagChecker;
 use DouglasGreen\Utility\Data\FlagHandler;
+use DouglasGreen\Utility\Regex\Regex;
 
 /**
  * Command utility class to throw exceptions when basic operations fail.
  */
-class Command implements FlagHandler
+class Command implements FlagHandler, \Stringable
 {
     public const ALLOW_EMPTY_OUTPUT = 1;
 
@@ -24,6 +25,11 @@ class Command implements FlagHandler
      * @var list<string>
      */
     protected array $output;
+
+    /**
+     * @var list<array{op: string, cmd: Command}>
+     */
+    protected array $subcommands = [];
 
     protected int $returnCode;
 
@@ -52,6 +58,11 @@ class Command implements FlagHandler
         }
     }
 
+    public function __toString(): string
+    {
+        return $this->buildCommand();
+    }
+
     public function addArg(string $arg): self
     {
         $arg = trim($arg);
@@ -63,11 +74,38 @@ class Command implements FlagHandler
         return $this;
     }
 
+    /**
+     * @throws ArgumentException
+     */
+    public function addSubcommand(string $redirectionOperator, self $subcommand): self
+    {
+        // Define a list of valid redirection operators
+        $validOperators = ['|', '>', '>>', '<', '2>', '2>>', '&>', '&>>', '>&', '<&'];
+
+        // Check if the provided operator is valid
+        if (! in_array($redirectionOperator, $validOperators, true)) {
+            throw new ArgumentException(
+                sprintf('Invalid redirection operator: "%s"', $redirectionOperator),
+            );
+        }
+
+        // Add the subcommand if the operator is valid
+        $this->subcommands[] = [
+            'op' => $redirectionOperator,
+            'cmd' => $subcommand,
+        ];
+        return $this;
+    }
+
     public function buildCommand(): string
     {
         $command = $this->command;
         if ($this->args !== []) {
             $command .= ' ' . implode(' ', $this->args);
+        }
+
+        foreach ($this->subcommands as $subcommand) {
+            $command .= sprintf(' %s %s', $subcommand['op'], $subcommand['cmd']);
         }
 
         return $command;

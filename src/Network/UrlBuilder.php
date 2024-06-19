@@ -6,7 +6,7 @@ namespace DouglasGreen\Utility\Network;
 
 use DouglasGreen\Utility\Data\ArrayUtil;
 use DouglasGreen\Utility\Data\ValueException;
-use DouglasGreen\Utility\Process\ParseException;
+use DouglasGreen\Utility\Logic\ParseException;
 use Stringable;
 
 /**
