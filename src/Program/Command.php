@@ -211,12 +211,38 @@ class Command implements FlagHandler, \Stringable
     }
 
     /**
-     * @throws ArgumentException
+     * Validates a simple command string to ensure it contains only valid characters.
+     *
+     * This function checks if the provided command string is valid for execution on both Windows
+     * and Linux systems. A valid command is a path to a file with possible switches that do not
+     * require escaping due to having special characters.
+     *
+     * The regular expression used in the validation allows the following characters:
+     * - \w: Word characters (letters, digits, and underscores)
+     * - \s: Whitespace characters (spaces, tabs)
+     * - \/: Forward slashes (for Linux paths)
+     * - \\: Backslashes (for Windows paths)
+     * - \:: Colons (for drive letters in Windows paths)
+     * - \.: Dots (for file extensions)
+     * - \-: Hyphens (common in file names and switches)
+     * - \_: Underscores (common in file names and switches)
+     *
+     * If the command string is empty or contains invalid characters, an ArgumentException is
+     * thrown.
+     *
+     * @param string $command The command string to validate.
+     * @throws ArgumentException If the command string is invalid.
      */
     protected static function validateCommand(string $command): void
     {
-        $sep = preg_quote(PATH_SEPARATOR, '/');
-        if ($command === '' || Regex::hasMatch('/[^\w\s' . $sep . '.-]/', $command)) {
+        // Define a regular expression that matches valid characters in commands
+        $pattern = '/^[\w\s\/\\\:\.\-\_]+$/';
+
+        // Debug output (optional)
+        var_dump($pattern, $command);
+
+        // Check if the command is empty or contains invalid characters
+        if ($command === '' || ! Regex::hasMatch($pattern, $command)) {
             throw new ArgumentException(sprintf('Invalid command: "%s"', $command));
         }
     }
