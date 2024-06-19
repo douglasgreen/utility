@@ -16,15 +16,22 @@ class DirectoryHandle
      */
     protected $handle;
 
+    protected readonly string $directory;
+
     /**
      * Calls opendir.
      *
      * @param ?resource $context
      */
     public function __construct(
-        protected string $directory,
+        ?string $directory = null,
         protected $context = null
     ) {
+        if ($directory === null) {
+            $directory = DirUtil::getCurrent();
+        }
+
+        $this->directory = $directory;
         $this->handle = $this->open();
     }
 

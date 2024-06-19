@@ -12,7 +12,7 @@ namespace DouglasGreen\Utility\FileSystem;
 class Disk
 {
     public function __construct(
-        protected string $directory
+        protected readonly string $directory
     ) {}
 
     /**

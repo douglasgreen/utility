@@ -44,9 +44,9 @@ class File implements FlagHandler
      * @param ?resource $context
      */
     public function __construct(
-        protected string $path,
-        protected string $mode = 'r',
-        protected int $flags = 0,
+        protected readonly string $path,
+        protected readonly string $mode = 'r',
+        protected readonly int $flags = 0,
         protected $context = null,
     ) {
         $this->open();

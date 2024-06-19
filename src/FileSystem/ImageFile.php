@@ -10,7 +10,7 @@ namespace DouglasGreen\Utility\FileSystem;
 class ImageFile
 {
     public function __construct(
-        protected string $filename
+        protected readonly string $filename
     ) {}
 
     /**

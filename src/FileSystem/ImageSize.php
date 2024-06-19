@@ -7,13 +7,13 @@ namespace DouglasGreen\Utility\FileSystem;
 class ImageSize
 {
     public function __construct(
-        protected int $width,
-        protected int $height,
-        protected int $type,
-        protected string $attribute,
-        protected string $mime,
-        protected ?int $channels = null,
-        protected ?int $bits = null,
+        protected readonly int $width,
+        protected readonly int $height,
+        protected readonly int $type,
+        protected readonly string $attribute,
+        protected readonly string $mime,
+        protected readonly ?int $channels = null,
+        protected readonly ?int $bits = null,
     ) {}
 
     public function getAttribute(): string
