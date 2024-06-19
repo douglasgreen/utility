@@ -142,6 +142,20 @@ class Path implements FlagHandler
             );
         }
 
+        // Preserve the timestamp of the source file
+        $timestamp = filemtime($this->path);
+        if ($timestamp === false) {
+            throw new FileException(
+                sprintf('Unable to get the file modification time for "%s"', $this->path),
+            );
+        }
+
+        if (! touch($target, $timestamp)) {
+            throw new FileException(
+                sprintf('Unable to set the file modification time for "%s"', $target),
+            );
+        }
+
         return new self($target);
     }
 
