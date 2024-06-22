@@ -76,7 +76,7 @@ class Command implements FlagHandler, Stringable
     public function addFlag(string $flag, ?string $flagArgument = null): self
     {
         $flag = trim($flag);
-        if (! Regex::hasMatch('/^--?\w+$/', $flag)) {
+        if (! Regex::hasMatch('/^--?\w+(-\w+)*$/', $flag)) {
             throw new ArgumentException(sprintf('Invalid flag: "%s"', $flag));
         }
 
