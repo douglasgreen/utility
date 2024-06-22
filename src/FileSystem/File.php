@@ -49,7 +49,7 @@ class File implements FlagHandler
         protected readonly int $flags = 0,
         protected $context = null,
     ) {
-        $this->open();
+        $this->stream = $this->open();
     }
 
     public function __destruct()
@@ -356,9 +356,10 @@ class File implements FlagHandler
     /**
      * Substitute for fopen.
      *
+     * @return resource
      * @throws FileException
      */
-    protected function open(): void
+    protected function open()
     {
         $flagChecker = static::getFlagChecker($this->flags);
         $useIncludePath = $flagChecker->get('useIncludePath');
@@ -367,6 +368,6 @@ class File implements FlagHandler
             throw new FileException(sprintf('Unable to open file "%s"', $this->path));
         }
 
-        $this->stream = $stream;
+        return $stream;
     }
 }

@@ -186,6 +186,9 @@ class Directory implements FlagHandler
 
     /**
      * Recursively remove the contents of a directory but leave the directory.
+     *
+     * @throws DirectoryException
+     * @throws FileException
      */
     public function removeContents(): void
     {

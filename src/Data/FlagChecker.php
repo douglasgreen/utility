@@ -54,7 +54,7 @@ class FlagChecker
     /**
      * @var array<string, bool>
      */
-    protected array $settings = [];
+    protected readonly array $settings;
 
     /**
      * @param array<string, int> $flagNames
@@ -84,9 +84,12 @@ class FlagChecker
         }
 
         // Process the value against the flags
+        $settings = [];
         foreach ($flagNames as $name => $flag) {
-            $this->settings[$name] = (bool) ($flags & $flag);
+            $settings[$name] = (bool) ($flags & $flag);
         }
+
+        $this->settings = $settings;
 
         // Check for any invalid flags in the value
         $validFlagsSum = array_sum(array_keys($uniqueValues));

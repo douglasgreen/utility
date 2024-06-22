@@ -27,6 +27,9 @@
             "DouglasGreen\\Utility\\Tests\\": "tests/"
         }
     },
+    "config": {
+        "sort-packages": true
+    },
     "require": {
         "php": ">=8.1"
     },
