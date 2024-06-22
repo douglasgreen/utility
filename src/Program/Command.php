@@ -76,13 +76,15 @@ class Command implements FlagHandler, Stringable
     public function addFlag(string $flag, ?string $flagArgument = null): self
     {
         $flag = trim($flag);
-        if (! Regex::hasMatch('/^--?\w+(-\w+)*$/', $flag)) {
+        $match = Regex::match('/^(--?)\w+(-\w+)*$/', $flag);
+        if ($match === []) {
             throw new ArgumentException(sprintf('Invalid flag: "%s"', $flag));
         }
 
+        $separator = $match[1] === '--' ? '=' : ' ';
         $arg = $flag;
         if ($flagArgument !== null) {
-            $arg .= ' ' . escapeshellarg($flagArgument);
+            $arg .= $separator . escapeshellarg($flagArgument);
         }
 
         $this->args[] = $arg;
