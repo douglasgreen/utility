@@ -67,6 +67,16 @@ class DirUtil
         return $directory;
     }
 
+    public static function makeRecursive(
+        string $path,
+        int $permissions = 0o777,
+        int $flags = 0,
+    ): Directory {
+        $directory = new Directory($path);
+        $directory->makeRecursive($permissions, $flags);
+        return $directory;
+    }
+
     public static function makeTemp(string $path, string $prefix): string
     {
         $directory = new Directory($path);

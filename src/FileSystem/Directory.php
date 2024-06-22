@@ -120,6 +120,14 @@ class Directory implements FlagHandler
     }
 
     /**
+     * Substitute for mkdir that is recursive.
+     */
+    public function makeRecursive(int $permissions = 0o777, int $flags = 0): self
+    {
+        return $this->make($permissions, $flags | self::RECURSIVE);
+    }
+
+    /**
      * Substitute for tempnam.
      *
      * @throws DirectoryException
