@@ -67,7 +67,7 @@ class Directory implements FlagHandler
             $path = DirUtil::getCurrent();
         }
 
-        $this->path = $path;
+        $this->path = rtrim($path, DIRECTORY_SEPARATOR);
     }
 
     /**
