@@ -36,32 +36,32 @@ class UrlTest extends TestCase
     public function testSetFragment(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(UrlBuilder::class))->getProperty('fragment');
-        $property->setAccessible(true);
+        $reflectionProperty = (new \ReflectionClass(UrlBuilder::class))->getProperty('fragment');
+        $reflectionProperty->setAccessible(true);
 
         $this->urlBuilder->setFragment($expected);
-        $this->assertSame($expected, $property->getValue($this->urlBuilder));
+        $this->assertSame($expected, $reflectionProperty->getValue($this->urlBuilder));
     }
 
     public function testSetHost(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(UrlBuilder::class))->getProperty('host');
-        $property->setAccessible(true);
+        $reflectionProperty = (new \ReflectionClass(UrlBuilder::class))->getProperty('host');
+        $reflectionProperty->setAccessible(true);
 
         $this->urlBuilder->setHost($expected);
-        $this->assertSame($expected, $property->getValue($this->urlBuilder));
+        $this->assertSame($expected, $reflectionProperty->getValue($this->urlBuilder));
     }
 
     public function testSetParam(): void
     {
         $key = 'newParam';
         $value = 'newValue';
-        $property = (new \ReflectionClass(UrlBuilder::class))->getProperty('params');
-        $property->setAccessible(true);
+        $reflectionProperty = (new \ReflectionClass(UrlBuilder::class))->getProperty('params');
+        $reflectionProperty->setAccessible(true);
 
         $this->urlBuilder->setParam($key, $value);
-        $params = $property->getValue($this->urlBuilder);
+        $params = $reflectionProperty->getValue($this->urlBuilder);
         $this->assertIsArray($params);
         $this->assertArrayHasKey($key, $params);
         $this->assertSame($value, $params[$key]);
@@ -70,41 +70,41 @@ class UrlTest extends TestCase
     public function testSetPass(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(UrlBuilder::class))->getProperty('pass');
-        $property->setAccessible(true);
+        $reflectionProperty = (new \ReflectionClass(UrlBuilder::class))->getProperty('pass');
+        $reflectionProperty->setAccessible(true);
 
         $this->urlBuilder->setPass($expected);
-        $this->assertSame($expected, $property->getValue($this->urlBuilder));
+        $this->assertSame($expected, $reflectionProperty->getValue($this->urlBuilder));
     }
 
     public function testSetPath(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(UrlBuilder::class))->getProperty('path');
-        $property->setAccessible(true);
+        $reflectionProperty = (new \ReflectionClass(UrlBuilder::class))->getProperty('path');
+        $reflectionProperty->setAccessible(true);
 
         $this->urlBuilder->setPath($expected);
-        $this->assertSame($expected, $property->getValue($this->urlBuilder));
+        $this->assertSame($expected, $reflectionProperty->getValue($this->urlBuilder));
     }
 
     public function testSetPort(): void
     {
         $expected = 42;
-        $property = (new \ReflectionClass(UrlBuilder::class))->getProperty('port');
-        $property->setAccessible(true);
+        $reflectionProperty = (new \ReflectionClass(UrlBuilder::class))->getProperty('port');
+        $reflectionProperty->setAccessible(true);
 
         $this->urlBuilder->setPort($expected);
-        $this->assertSame($expected, $property->getValue($this->urlBuilder));
+        $this->assertSame($expected, $reflectionProperty->getValue($this->urlBuilder));
     }
 
     public function testSetQuery(): void
     {
         $query = 'newQuery=value';
-        $property = (new \ReflectionClass(UrlBuilder::class))->getProperty('params');
-        $property->setAccessible(true);
+        $reflectionProperty = (new \ReflectionClass(UrlBuilder::class))->getProperty('params');
+        $reflectionProperty->setAccessible(true);
 
         $this->urlBuilder->setQuery($query);
-        $params = $property->getValue($this->urlBuilder);
+        $params = $reflectionProperty->getValue($this->urlBuilder);
         $this->assertIsArray($params);
         $this->assertArrayHasKey('newQuery', $params);
         $this->assertSame('value', $params['newQuery']);
@@ -113,21 +113,21 @@ class UrlTest extends TestCase
     public function testSetScheme(): void
     {
         $expected = 'https';
-        $property = (new \ReflectionClass(UrlBuilder::class))->getProperty('scheme');
-        $property->setAccessible(true);
+        $reflectionProperty = (new \ReflectionClass(UrlBuilder::class))->getProperty('scheme');
+        $reflectionProperty->setAccessible(true);
 
         $this->urlBuilder->setScheme($expected);
-        $this->assertSame($expected, $property->getValue($this->urlBuilder));
+        $this->assertSame($expected, $reflectionProperty->getValue($this->urlBuilder));
     }
 
     public function testSetUser(): void
     {
         $expected = '42';
-        $property = (new \ReflectionClass(UrlBuilder::class))->getProperty('user');
-        $property->setAccessible(true);
+        $reflectionProperty = (new \ReflectionClass(UrlBuilder::class))->getProperty('user');
+        $reflectionProperty->setAccessible(true);
 
         $this->urlBuilder->setUser($expected);
-        $this->assertSame($expected, $property->getValue($this->urlBuilder));
+        $this->assertSame($expected, $reflectionProperty->getValue($this->urlBuilder));
     }
 
     protected function setUp(): void

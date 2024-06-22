@@ -26,6 +26,21 @@ class SimpleProcess
      */
     protected $stream;
 
+    /**
+     * @throws ProgramException
+     */
+    public static function sigchildEnabled(): bool
+    {
+        ob_start();
+        phpinfo(INFO_GENERAL);
+        $info = ob_get_clean();
+        if ($info === false) {
+            throw new ProgramException('Unable to get PHP info');
+        }
+
+        return str_contains($info, '--enable-sigchild');
+    }
+
     public function __construct(
         protected readonly string $command,
         protected readonly string $mode = 'r',
@@ -47,7 +62,7 @@ class SimpleProcess
         $result = pclose($this->stream);
         $this->stream = null;
 
-        if ($this->sigchildEnabled()) {
+        if (self::sigchildEnabled()) {
             return null;
         }
 
@@ -143,20 +158,5 @@ class SimpleProcess
         }
 
         return $result;
-    }
-
-    /**
-     * @throws ProgramException
-     */
-    protected function sigchildEnabled(): bool
-    {
-        ob_start();
-        phpinfo(INFO_GENERAL);
-        $info = ob_get_clean();
-        if ($info === false) {
-            throw new ProgramException('Unable to get PHP info');
-        }
-
-        return str_contains($info, '--enable-sigchild');
     }
 }

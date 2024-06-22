@@ -8,11 +8,12 @@ use DouglasGreen\Utility\Data\ArgumentException;
 use DouglasGreen\Utility\Data\FlagChecker;
 use DouglasGreen\Utility\Data\FlagHandler;
 use DouglasGreen\Utility\Regex\Regex;
+use Stringable;
 
 /**
  * Command utility class to throw exceptions when basic operations fail.
  */
-class Command implements FlagHandler, \Stringable
+class Command implements FlagHandler, Stringable
 {
     public const ALLOW_EMPTY_OUTPUT = 1;
 
@@ -69,6 +70,9 @@ class Command implements FlagHandler, \Stringable
         return $this;
     }
 
+    /**
+     * @throw ArgumentException
+     */
     public function addFlag(string $flag, ?string $flagArgument = null): self
     {
         $flag = trim($flag);

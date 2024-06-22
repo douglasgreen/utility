@@ -190,11 +190,11 @@ class Directory implements FlagHandler
      * @throws DirectoryException
      * @throws FileException
      */
-    public function removeContents(): void
+    public function removeContents(): self
     {
         // OK if path doesn't exist.
         if (! is_dir($this->path)) {
-            return;
+            return $this;
         }
 
         $iterator = new RecursiveIteratorIterator(
@@ -220,6 +220,8 @@ class Directory implements FlagHandler
                 );
             }
         }
+
+        return $this;
     }
 
     /**

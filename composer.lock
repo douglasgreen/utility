@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67c365cda0eae2cf998f658ecab9d9a2",
+    "content-hash": "17ed05a36f5b1cc5f96d11c7ce881c51",
     "packages": [],
     "packages-dev": [
         {
@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/config-setup.git",
-                "reference": "b9422bb3662b14f94aef6a5c7a20e251564a05db"
+                "reference": "dfe7be84e61dc7c7005d854a1bf20004862b4b5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/b9422bb3662b14f94aef6a5c7a20e251564a05db",
-                "reference": "b9422bb3662b14f94aef6a5c7a20e251564a05db",
+                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/dfe7be84e61dc7c7005d854a1bf20004862b4b5e",
+                "reference": "dfe7be84e61dc7c7005d854a1bf20004862b4b5e",
                 "shasum": ""
             },
             "require": {
@@ -164,8 +164,8 @@
             },
             "require-dev": {
                 "phpmd/phpmd": "^2.15",
-                "phpstan/phpstan": "^1.10",
-                "rector/rector": "^1.0",
+                "phpstan/phpstan": "^1.11",
+                "rector/rector": "^1.1",
                 "symplify/easy-coding-standard": "^12.3"
             },
             "default-branch": true,
@@ -220,7 +220,7 @@
                 "source": "https://github.com/douglasgreen/config-setup/tree/main",
                 "issues": "https://github.com/douglasgreen/config-setup/issues"
             },
-            "time": "2024-06-20T19:20:43+00:00"
+            "time": "2024-06-21T20:31:27+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1257,16 +1257,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "556509e2dcf527369892b7d411379c4a02f31859"
+                "reference": "c930cdb21294f10955ddfc31b720971e8333943d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/556509e2dcf527369892b7d411379c4a02f31859",
-                "reference": "556509e2dcf527369892b7d411379c4a02f31859",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/c930cdb21294f10955ddfc31b720971e8333943d",
+                "reference": "c930cdb21294f10955ddfc31b720971e8333943d",
                 "shasum": ""
             },
             "require": {
@@ -1304,7 +1304,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.1.0"
+                "source": "https://github.com/rectorphp/rector/tree/1.1.1"
             },
             "funding": [
                 {
@@ -1312,7 +1312,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-05-18T09:40:27+00:00"
+            "time": "2024-06-21T07:51:17+00:00"
         },
         {
             "name": "sebastian/cli-parser",
