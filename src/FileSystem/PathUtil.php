@@ -110,6 +110,12 @@ class PathUtil
         return $path->getPermissions();
     }
 
+    public static function getRelativeSubpath(string $path, string $absolutePath): string
+    {
+        $path = new Path($path);
+        return $path->getRelativeSubpath($absolutePath);
+    }
+
     /**
      * @return array<string, int>
      */
