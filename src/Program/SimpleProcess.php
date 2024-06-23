@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Program;
 
+use Stringable;
+
 /**
  * Process class to throw exceptions when basic operations fail.
  *
@@ -19,7 +21,7 @@ namespace DouglasGreen\Utility\Program;
  *
  * @todo Write the Process class.
  */
-class SimpleProcess
+class SimpleProcess implements Stringable
 {
     /**
      * @var ?resource
@@ -45,6 +47,11 @@ class SimpleProcess
         protected readonly string $command,
         protected readonly string $mode = 'r',
     ) {}
+
+    public function __toString(): string
+    {
+        return $this->command;
+    }
 
     /**
      * Substitute for pclose.

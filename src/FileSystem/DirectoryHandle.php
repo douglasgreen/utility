@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
+use Stringable;
+
 /**
  * Directory utility class to throw exceptions when basic operations fail.
  *
  * Manages directory handles opened by opendir.
  */
-class DirectoryHandle
+class DirectoryHandle implements Stringable
 {
     /**
      * @var resource
@@ -41,6 +43,11 @@ class DirectoryHandle
     public function __destruct()
     {
         closedir($this->handle);
+    }
+
+    public function __toString(): string
+    {
+        return $this->directory;
     }
 
     /**

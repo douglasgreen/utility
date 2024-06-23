@@ -6,12 +6,13 @@ namespace DouglasGreen\Utility\FileSystem;
 
 use DouglasGreen\Utility\Data\FlagChecker;
 use DouglasGreen\Utility\Data\FlagHandler;
+use Stringable;
 
 /**
  * The functions in this class depend on a file path string, not an open file.
  * See File for other file functions.
  */
-class Path implements FlagHandler
+class Path implements FlagHandler, Stringable
 {
     public const APPEND = 1;
 
@@ -52,6 +53,11 @@ class Path implements FlagHandler
         }
 
         $this->path = $path;
+    }
+
+    public function __toString(): string
+    {
+        return $this->path;
     }
 
     /**

@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
+use Stringable;
+
 /**
  * Disk utility class to throw exceptions when basic operations fail.
  *
  * Manages functions on a directory name that refers to a disk.
  */
-class Disk
+class Disk implements Stringable
 {
     public function __construct(
         protected readonly string $directory
     ) {}
+
+    public function __toString(): string
+    {
+        return $this->directory;
+    }
 
     /**
      * Substitute for disk_free_space.

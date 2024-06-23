@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\FileSystem;
 
+use Stringable;
+
 /**
  * Image file utility class to throw exceptions when basic operations fail.
  */
-class ImageFile
+class ImageFile implements Stringable
 {
     public function __construct(
         protected readonly string $filename
     ) {}
+
+    public function __toString(): string
+    {
+        return $this->filename;
+    }
 
     /**
      * Wrapper for getimagesize.

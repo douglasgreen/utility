@@ -9,13 +9,14 @@ use DouglasGreen\Utility\Data\FlagChecker;
 use DouglasGreen\Utility\Data\FlagHandler;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Stringable;
 
 /**
  * Directory utility class to throw exceptions when basic operations fail.
  *
  * Manages functions on a directory name.
  */
-class Directory implements FlagHandler
+class Directory implements FlagHandler, Stringable
 {
     /**
      * @var int
@@ -68,6 +69,11 @@ class Directory implements FlagHandler
         }
 
         $this->path = rtrim($path, DIRECTORY_SEPARATOR);
+    }
+
+    public function __toString(): string
+    {
+        return $this->path;
     }
 
     /**

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Network;
 
-class Url
+use Stringable;
+
+class Url implements Stringable
 {
     protected readonly string $url;
 
@@ -23,6 +25,11 @@ class Url
         }
 
         $this->url = $url;
+    }
+
+    public function __toString(): string
+    {
+        return $this->url;
     }
 
     /**
