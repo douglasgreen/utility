@@ -110,12 +110,6 @@ class PathUtil
         return $path->getPermissions();
     }
 
-    public static function getRelativeSubpath(string $path, string $absolutePath): string
-    {
-        $path = new Path($path);
-        return $path->getRelativeSubpath($absolutePath);
-    }
-
     /**
      * @return array<string, int>
      */
@@ -123,6 +117,12 @@ class PathUtil
     {
         $path = new Path($path);
         return $path->getStats();
+    }
+
+    public static function getSubpath(string $path, string $absolutePath): string
+    {
+        $path = new Path($path);
+        return $path->getSubpath($absolutePath);
     }
 
     public static function getWriteTime(string $path): int
