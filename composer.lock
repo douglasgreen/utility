@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/config-setup.git",
-                "reference": "8a0e24220d2ac18b3dfc34bfbe72e3b5f5673d01"
+                "reference": "c7624fcaea6403a66f21a9a9e6aa27ff955fd509"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/8a0e24220d2ac18b3dfc34bfbe72e3b5f5673d01",
-                "reference": "8a0e24220d2ac18b3dfc34bfbe72e3b5f5673d01",
+                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/c7624fcaea6403a66f21a9a9e6aa27ff955fd509",
+                "reference": "c7624fcaea6403a66f21a9a9e6aa27ff955fd509",
                 "shasum": ""
             },
             "require": {
@@ -226,7 +226,7 @@
                 "source": "https://github.com/douglasgreen/config-setup/tree/main",
                 "issues": "https://github.com/douglasgreen/config-setup/issues"
             },
-            "time": "2024-06-24T14:24:07+00:00"
+            "time": "2024-06-24T16:48:17+00:00"
         },
         {
             "name": "douglasgreen/optparser",
@@ -308,12 +308,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/php-linter.git",
-                "reference": "798020e8132c0aebc68b7eb1f0fd2339ed07f35b"
+                "reference": "116d3124729133f4b7e587b6663afc7f571c6045"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/php-linter/zipball/798020e8132c0aebc68b7eb1f0fd2339ed07f35b",
-                "reference": "798020e8132c0aebc68b7eb1f0fd2339ed07f35b",
+                "url": "https://api.github.com/repos/douglasgreen/php-linter/zipball/116d3124729133f4b7e587b6663afc7f571c6045",
+                "reference": "116d3124729133f4b7e587b6663afc7f571c6045",
                 "shasum": ""
             },
             "require": {
@@ -335,6 +335,7 @@
             "bin": [
                 "bin/check_metrics.php",
                 "bin/check_style.php",
+                "bin/php-linter",
                 "bin/run_pdepend.php"
             ],
             "type": "project",
@@ -346,6 +347,7 @@
             },
             "scripts": {
                 "lint": [
+                    "php-linter",
                     "ecs",
                     "phpstan analyse",
                     "phpmd --cache --cache-file var/cache/phpmd/cache.php . text phpmd.xml",
@@ -395,7 +397,7 @@
                 "source": "https://github.com/douglasgreen/php-linter/tree/main",
                 "issues": "https://github.com/douglasgreen/php-linter/issues"
             },
-            "time": "2024-06-24T14:20:37+00:00"
+            "time": "2024-06-24T16:53:01+00:00"
         },
         {
             "name": "myclabs/deep-copy",
