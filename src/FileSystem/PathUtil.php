@@ -83,6 +83,12 @@ class PathUtil
         return $path->getAccessTime();
     }
 
+    public static function getFileType(string $path): ?string
+    {
+        $path = new Path($path);
+        return $path->getFileType();
+    }
+
     /**
      * @return array<string, int>
      */

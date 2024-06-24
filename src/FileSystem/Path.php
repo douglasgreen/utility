@@ -6,6 +6,7 @@ namespace DouglasGreen\Utility\FileSystem;
 
 use DouglasGreen\Utility\Data\FlagChecker;
 use DouglasGreen\Utility\Data\FlagHandler;
+use DouglasGreen\Utility\Regex\Regex;
 use Stringable;
 
 /**
@@ -210,6 +211,37 @@ class Path implements FlagHandler, Stringable
         }
 
         return $result;
+    }
+
+    /**
+     * Get the type of a file based on its extension or other info.
+     *
+     * @todo Use the return type of "file" command if available.
+     * Example: file -b bin/task.php
+     * a /usr/bin/env php script, ASCII text executable
+     */
+    public function getFileType(): ?string
+    {
+        if (! str_contains($this->path, '.')) {
+            // @todo Use file here instead of this.
+            $file = new File($this->path);
+            $line = $file->getLine();
+            if ($line === null) {
+                return null;
+            }
+
+            $match = Regex::match('/^#!.*\b(\w+)$/', $line);
+            if ($match !== []) {
+                return $this->getExtensionType($match[1]);
+            }
+        } else {
+            $match = Regex::match('/\.(\w+)$/', $this->path);
+            if ($match !== []) {
+                return $this->getExtensionType($match[1]);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -652,5 +684,23 @@ class Path implements FlagHandler, Stringable
         }
 
         return $this;
+    }
+
+    protected function getExtensionType(string $extension): ?string
+    {
+        return match ($extension) {
+            'bash', 'sh' => 'bash',
+            'css' => 'css',
+            'csv', 'pdv', 'tsv', 'txt' => 'data',
+            'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'webp' => 'images',
+            'js', 'ts' => 'js',
+            'json' => 'json',
+            'md' => 'md',
+            'php' => 'php',
+            'sql' => 'sql',
+            'xml', 'xsd', 'xsl', 'xslt', 'xhtml' => 'xml',
+            'yaml', 'yml' => 'yaml',
+            default => null,
+        };
     }
 }
