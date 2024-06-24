@@ -30,10 +30,16 @@
     "config": {
         "sort-packages": true
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/douglasgreen/config-setup"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/douglasgreen/php-linter"
         }
     ],
     "require": {
@@ -41,6 +47,7 @@
     },
     "require-dev": {
         "douglasgreen/config-setup": "dev-main",
+        "douglasgreen/php-linter": "dev-main",
         "phpmd/phpmd": "^2.15",
         "phpstan/phpstan": "^1.11",
         "phpunit/phpunit": "^10.5",
@@ -49,6 +56,8 @@
     },
     "scripts": {
         "lint": [
+            "check_metrics.php",
+            "check_style.php",
             "ecs",
             "phpstan analyse",
             "phpmd --cache --cache-file var/cache/phpmd/cache.php . text phpmd.xml",
