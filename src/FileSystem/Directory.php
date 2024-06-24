@@ -92,10 +92,12 @@ class Directory implements FlagHandler, Stringable
                 if (is_dir($path)) {
                     $dir = new self($path, $this->context);
                     $files = array_merge($files, $dir->listFiles($flags));
-                } else {
+                } elseif (is_file($path)) {
                     $files[] = $path;
                 }
             }
+        } elseif (is_file($this->path)) {
+            $files[] = $this->path;
         }
 
         return $files;
