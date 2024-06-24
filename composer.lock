@@ -233,12 +233,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/optparser.git",
-                "reference": "a8789c2e31191e1336c336fc97cda9046d571cd6"
+                "reference": "f3cae07472afaec08cd36d1901bef5bb18a569cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/optparser/zipball/a8789c2e31191e1336c336fc97cda9046d571cd6",
-                "reference": "a8789c2e31191e1336c336fc97cda9046d571cd6",
+                "url": "https://api.github.com/repos/douglasgreen/optparser/zipball/f3cae07472afaec08cd36d1901bef5bb18a569cd",
+                "reference": "f3cae07472afaec08cd36d1901bef5bb18a569cd",
                 "shasum": ""
             },
             "require": {
@@ -299,7 +299,7 @@
                 "issues": "https://github.com/douglasgreen/optparser/issues",
                 "source": "https://github.com/douglasgreen/optparser/tree/main"
             },
-            "time": "2024-06-24T14:25:40+00:00"
+            "time": "2024-06-24T17:47:28+00:00"
         },
         {
             "name": "douglasgreen/php-linter",
