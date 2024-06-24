@@ -28,9 +28,11 @@ The functions were renamed for clarity. Function argument order was preserved, e
 -   If a signal value is returned, return null rather than false.
 -   Arrays with multiple shapes and types were reduced to a single shape and type.
 
-## Setup
+## Project setup
 
-See [Project Setup Guide](docs/setup_guide.md).
+Standard config files for linting and testing are copied into place from a GitHub repository called
+[config-setup](https://github.com/douglasgreen/config-setup). See that project's README page for
+details.
 
 ## Todo
 
