@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/config-setup.git",
-                "reference": "ff6a40af08b5a8a80094afce1ca8191ef2ed5ea6"
+                "reference": "79ccace6df2c39c0f49e1c5d6bfcc108a61a0ebd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/ff6a40af08b5a8a80094afce1ca8191ef2ed5ea6",
-                "reference": "ff6a40af08b5a8a80094afce1ca8191ef2ed5ea6",
+                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/79ccace6df2c39c0f49e1c5d6bfcc108a61a0ebd",
+                "reference": "79ccace6df2c39c0f49e1c5d6bfcc108a61a0ebd",
                 "shasum": ""
             },
             "require": {
@@ -225,7 +225,7 @@
                 "source": "https://github.com/douglasgreen/config-setup/tree/main",
                 "issues": "https://github.com/douglasgreen/config-setup/issues"
             },
-            "time": "2024-06-24T17:42:38+00:00"
+            "time": "2024-06-24T17:51:14+00:00"
         },
         {
             "name": "douglasgreen/optparser",
