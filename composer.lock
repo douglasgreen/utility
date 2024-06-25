@@ -308,12 +308,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/php-linter.git",
-                "reference": "e07b4517811396ec7586b7cb6e94383e815dd0db"
+                "reference": "ba5485a40f635a041b2afb5a5e84429a7d59ce8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/php-linter/zipball/e07b4517811396ec7586b7cb6e94383e815dd0db",
-                "reference": "e07b4517811396ec7586b7cb6e94383e815dd0db",
+                "url": "https://api.github.com/repos/douglasgreen/php-linter/zipball/ba5485a40f635a041b2afb5a5e84429a7d59ce8e",
+                "reference": "ba5485a40f635a041b2afb5a5e84429a7d59ce8e",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "issues": "https://github.com/douglasgreen/php-linter/issues",
                 "source": "https://github.com/douglasgreen/php-linter/tree/main"
             },
-            "time": "2024-06-25T11:13:44+00:00"
+            "time": "2024-06-25T11:18:30+00:00"
         },
         {
             "name": "myclabs/deep-copy",
