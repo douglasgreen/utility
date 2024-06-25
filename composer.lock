@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ad48d9fcdf26a715309d299920a45b8",
+    "content-hash": "cf13742b4e13b83c48d8b6f8a90693b8",
     "packages": [],
     "packages-dev": [
         {
@@ -150,16 +150,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/config-setup.git",
-                "reference": "79ccace6df2c39c0f49e1c5d6bfcc108a61a0ebd"
+                "reference": "4ee84d8f3a9113cb1d836d32a6b42c2e26c119a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/79ccace6df2c39c0f49e1c5d6bfcc108a61a0ebd",
-                "reference": "79ccace6df2c39c0f49e1c5d6bfcc108a61a0ebd",
+                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/4ee84d8f3a9113cb1d836d32a6b42c2e26c119a3",
+                "reference": "4ee84d8f3a9113cb1d836d32a6b42c2e26c119a3",
                 "shasum": ""
             },
             "require": {
                 "douglasgreen/php-linter": "dev-main",
+                "douglasgreen/utility": "dev-main",
                 "nette/neon": "^3.4",
                 "php": ">=8.1"
             },
@@ -225,7 +226,7 @@
                 "source": "https://github.com/douglasgreen/config-setup/tree/main",
                 "issues": "https://github.com/douglasgreen/config-setup/issues"
             },
-            "time": "2024-06-24T17:51:14+00:00"
+            "time": "2024-06-24T22:48:27+00:00"
         },
         {
             "name": "douglasgreen/optparser",
@@ -233,12 +234,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/optparser.git",
-                "reference": "f3cae07472afaec08cd36d1901bef5bb18a569cd"
+                "reference": "08d27c3191ea6f9253f81d12caeb01222dd4421d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/optparser/zipball/f3cae07472afaec08cd36d1901bef5bb18a569cd",
-                "reference": "f3cae07472afaec08cd36d1901bef5bb18a569cd",
+                "url": "https://api.github.com/repos/douglasgreen/optparser/zipball/08d27c3191ea6f9253f81d12caeb01222dd4421d",
+                "reference": "08d27c3191ea6f9253f81d12caeb01222dd4421d",
                 "shasum": ""
             },
             "require": {
@@ -299,7 +300,7 @@
                 "issues": "https://github.com/douglasgreen/optparser/issues",
                 "source": "https://github.com/douglasgreen/optparser/tree/main"
             },
-            "time": "2024-06-24T17:47:28+00:00"
+            "time": "2024-06-24T20:40:52+00:00"
         },
         {
             "name": "douglasgreen/php-linter",
@@ -307,12 +308,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/php-linter.git",
-                "reference": "063a03a95d36cf2277be31be9e866d30bdb16b73"
+                "reference": "e07b4517811396ec7586b7cb6e94383e815dd0db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/php-linter/zipball/063a03a95d36cf2277be31be9e866d30bdb16b73",
-                "reference": "063a03a95d36cf2277be31be9e866d30bdb16b73",
+                "url": "https://api.github.com/repos/douglasgreen/php-linter/zipball/e07b4517811396ec7586b7cb6e94383e815dd0db",
+                "reference": "e07b4517811396ec7586b7cb6e94383e815dd0db",
                 "shasum": ""
             },
             "require": {
@@ -334,8 +335,8 @@
             "bin": [
                 "bin/check-metrics",
                 "bin/check-style",
-                "bin/php-linter",
-                "bin/run-pdepend"
+                "bin/generate-metrics",
+                "bin/php-linter"
             ],
             "type": "project",
             "autoload": {
@@ -344,28 +345,7 @@
                     "DouglasGreen\\PhpLinter\\Tests\\": "tests/"
                 }
             },
-            "scripts": {
-                "lint": [
-                    "php-linter",
-                    "ecs",
-                    "phpstan analyse",
-                    "phpmd --cache --cache-file var/cache/phpmd/cache.php . text phpmd.xml",
-                    "rector --dry-run"
-                ],
-                "lint:fix": [
-                    "ecs --fix",
-                    "rector"
-                ],
-                "post-install-cmd": [
-                    "config-setup"
-                ],
-                "post-update-cmd": [
-                    "config-setup"
-                ],
-                "test": [
-                    "phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -393,10 +373,10 @@
                 "syntax check"
             ],
             "support": {
-                "source": "https://github.com/douglasgreen/php-linter/tree/main",
-                "issues": "https://github.com/douglasgreen/php-linter/issues"
+                "issues": "https://github.com/douglasgreen/php-linter/issues",
+                "source": "https://github.com/douglasgreen/php-linter/tree/main"
             },
-            "time": "2024-06-24T17:41:15+00:00"
+            "time": "2024-06-25T11:13:44+00:00"
         },
         {
             "name": "myclabs/deep-copy",
