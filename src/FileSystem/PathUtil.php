@@ -152,6 +152,11 @@ class PathUtil
         return is_file($path);
     }
 
+    public static function isLink(string $path): bool
+    {
+        return is_link($path);
+    }
+
     public static function isReadable(string $path): bool
     {
         return is_readable($path);

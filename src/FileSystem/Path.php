@@ -408,6 +408,14 @@ class Path implements FlagHandler, Stringable
     }
 
     /**
+     * Substitute for is_link.
+     */
+    public function isLink(): bool
+    {
+        return is_link($this->path);
+    }
+
+    /**
      * Substitute for is_readable.
      */
     public function isReadable(): bool
