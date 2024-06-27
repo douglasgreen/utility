@@ -125,12 +125,6 @@ class PathUtil
         return $path->getStats();
     }
 
-    public static function getSubpath(string $path, string $absolutePath): string
-    {
-        $path = new Path($path);
-        return $path->getSubpath($absolutePath);
-    }
-
     public static function getWriteTime(string $path): int
     {
         $path = new Path($path);
@@ -242,6 +236,12 @@ class PathUtil
         $path = new Path($path);
         $path->mustExist();
         return $path;
+    }
+
+    public static function removeBase(string $path, string $absolutePath): string
+    {
+        $path = new Path($path);
+        return $path->removeBase($absolutePath);
     }
 
     public static function rename(string $path, string $target): Path

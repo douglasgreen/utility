@@ -345,28 +345,6 @@ class Path implements FlagHandler, Stringable
     }
 
     /**
-     * Remove the base path and get the relative subpath from an absolute path.
-     */
-    public function getSubpath(string $absolutePath): string
-    {
-        $base = $this->path;
-
-        // Ensure the base path ends with a directory separator
-        if (substr($base, -1) !== DIRECTORY_SEPARATOR) {
-            $base .= DIRECTORY_SEPARATOR;
-        }
-
-        // Check if the absolute path starts with the base path
-        if (str_starts_with($absolutePath, $base)) {
-            // Remove the base path from the absolute path to get the relative subpath
-            return substr($absolutePath, strlen($base));
-        }
-
-        // If the absolute path does not contain the base path, return it instead
-        return $absolutePath;
-    }
-
-    /**
      * Substitute for filemtime.
      *
      * @throws FileException
@@ -593,6 +571,28 @@ class Path implements FlagHandler, Stringable
         }
 
         return $this;
+    }
+
+    /**
+     * Remove the base path and get the relative subpath from an absolute path.
+     */
+    public function removeBase(string $absolutePath): string
+    {
+        $base = $this->path;
+
+        // Ensure the base path ends with a directory separator
+        if (substr($base, -1) !== DIRECTORY_SEPARATOR) {
+            $base .= DIRECTORY_SEPARATOR;
+        }
+
+        // Check if the absolute path starts with the base path
+        if (str_starts_with($absolutePath, $base)) {
+            // Remove the base path from the absolute path to get the relative subpath
+            return substr($absolutePath, strlen($base));
+        }
+
+        // If the absolute path does not contain the base path, return it instead
+        return $absolutePath;
     }
 
     /**
