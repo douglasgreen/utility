@@ -64,7 +64,7 @@ class CommentChecker extends NodeChecker
      */
     protected static function getPhpdocTags(string $text): array
     {
-        $matches = Regex::matchAll('/@\w+/', $text);
+        $matches = Regex::matchAll('/@\w+(-\w+)*/', $text);
         if ($matches !== []) {
             return $matches[0];
         }
