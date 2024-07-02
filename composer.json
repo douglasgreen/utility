@@ -60,11 +60,9 @@
     "autoload": {
         "psr-4": {
             "DouglasGreen\\ConfigSetup\\": "src/ConfigSetup",
-            "DouglasGreen\\OptParser\\": "src/",
-            "DouglasGreen\\OptParser\\Tests\\": "tests/",
+            "DouglasGreen\\OptParser\\": "src/OptParser",
             "DouglasGreen\\PhpLinter\\": "src/PhpLinter",
-            "DouglasGreen\\Utility\\": "src/Utility",
-            "DouglasGreen\\Utility\\Tests\\": "tests/Utility"
+            "DouglasGreen\\Utility\\": "src/Utility"
         }
     },
     "bin": [
