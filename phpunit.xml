@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+    bootstrap="/home/dsg/github/php-linter/vendor/autoload.php"
+    cacheDirectory="/home/dsg/github/php-linter/var/cache/phpunit"
+    cacheResult="true"
+    colors="true"
+    executionOrder="random"
+    failOnIncomplete="false"
+    failOnNotice="true"
+    failOnRisky="false"
+    failOnWarning="true"
+    stopOnFailure="false"
+>
+  <testsuites>
+    <testsuite name="Project Test Suite">
+      <directory>/home/dsg/github/php-linter/tests</directory>
+    </testsuite>
+  </testsuites>
+  <logging>
+    <junit outputFile="/home/dsg/github/php-linter/var/report/phpunit/junit.xml" />
+  </logging>
+  <source>
+    <include>
+      <directory suffix=".php">/home/dsg/github/php-linter/src</directory>
+    </include>
+  </source>
+</phpunit>

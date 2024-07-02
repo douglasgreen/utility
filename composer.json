@@ -1,6 +1,6 @@
 {
     "name": "douglasgreen/utility",
-    "description": "A PHP utility project for exception classes and wrapper functions",
+    "description": "PHP utility project that combines CLI option parser, config setup, php linting, and utility classes",
     "license": "MIT",
     "type": "library",
     "homepage": "https://github.com/douglasgreen/utility",
@@ -13,40 +13,82 @@
         }
     ],
     "keywords": [
+        "ast",
+        "automation",
+        "ci cd",
+        "cli",
+        "cli library",
+        "cli tool",
+        "code quality",
+        "code standards",
+        "code validation",
+        "coding standards",
+        "command",
+        "command line",
+        "command-line interface",
+        "command-line utility",
+        "composer",
+        "config",
+        "console",
         "directory",
         "exceptions",
         "file",
+        "fixing",
+        "linter",
+        "linting",
         "php",
+        "php automation",
+        "php cli",
+        "php command line",
+        "php console application",
+        "phpcs",
+        "php cs fixer",
+        "php fig",
+        "php parser",
+        "php scripting",
+        "phpunit",
+        "psr",
         "regex",
+        "scripting",
+        "static analysis",
+        "syntax check",
+        "terminal",
+        "testing",
         "utility",
         "wrapper"
     ],
     "autoload": {
         "psr-4": {
-            "DouglasGreen\\Utility\\": "src/",
-            "DouglasGreen\\Utility\\Tests\\": "tests/"
+            "DouglasGreen\\ConfigSetup\\": "src/ConfigSetup",
+            "DouglasGreen\\OptParser\\": "src/",
+            "DouglasGreen\\OptParser\\Tests\\": "tests/",
+            "DouglasGreen\\PhpLinter\\": "src/PhpLinter",
+            "DouglasGreen\\Utility\\": "src/Utility",
+            "DouglasGreen\\Utility\\Tests\\": "tests/Utility"
         }
     },
+    "bin": [
+        "bin/config-setup",
+        "bin/check-metrics",
+        "bin/check-style",
+        "bin/generate-metrics",
+        "bin/php-linter"
+    ],
     "config": {
         "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/douglasgreen/config-setup"
-        }
-    ],
     "require": {
-        "php": ">=8.1"
+        "php": ">=8.1",
+        "nette/neon": "^3.4",
+        "nikic/php-parser": "^5.1",
+        "pdepend/pdepend": "^2.16"
     },
     "require-dev": {
-        "douglasgreen/config-setup": "dev-main",
-        "douglasgreen/php-linter": "dev-main",
         "phpstan/phpstan": "^1.11",
         "phpunit/phpunit": "^10.5",
-        "rector/rector": "^1.1",
+        "rector/rector": "^1.2",
         "symplify/easy-coding-standard": "^12.3"
     },
     "scripts": {
@@ -60,8 +102,6 @@
             "ecs --fix",
             "rector"
         ],
-        "post-install-cmd": "config-setup --pre-commit",
-        "post-update-cmd": "config-setup --pre-commit",
         "test": "phpunit"
     }
 }

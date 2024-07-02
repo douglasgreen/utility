@@ -1,6 +1,6 @@
 {
     "name": "douglasgreen/utility",
-    "description": "A PHP utility project for exception classes and wrapper functions",
+    "description": "PHP utility project that combines CLI option parser, config setup, php linting, and utility classes",
     "license": "MIT",
     "engines": {
         "node": ">=18",
@@ -9,8 +9,10 @@
     "devDependencies": {
         "@commitlint/cli": "^19.3",
         "@commitlint/config-conventional": "^19.2",
+        "@prettier/plugin-xml": "^3.4",
         "husky": "^9.0",
-        "prettier": "^3.3"
+        "prettier": "^3.3",
+        "prettier-plugin-sh": "^0.14"
     },
     "scripts": {
         "commitlint": "commitlint --edit",
