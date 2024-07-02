@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/config-setup.git",
-                "reference": "d56597584cbd8d4c85d99d33b07a26da8adf3459"
+                "reference": "a143bf8e8394fd4df34dfd23caf2954d538650b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/d56597584cbd8d4c85d99d33b07a26da8adf3459",
-                "reference": "d56597584cbd8d4c85d99d33b07a26da8adf3459",
+                "url": "https://api.github.com/repos/douglasgreen/config-setup/zipball/a143bf8e8394fd4df34dfd23caf2954d538650b7",
+                "reference": "a143bf8e8394fd4df34dfd23caf2954d538650b7",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "source": "https://github.com/douglasgreen/config-setup/tree/main",
                 "issues": "https://github.com/douglasgreen/config-setup/issues"
             },
-            "time": "2024-07-01T13:49:11+00:00"
+            "time": "2024-07-02T12:15:56+00:00"
         },
         {
             "name": "douglasgreen/optparser",
@@ -95,12 +95,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/optparser.git",
-                "reference": "05b37f3cbfe47a61cb44a3b3ecabbec3462b354f"
+                "reference": "a14e3271de1b05d3524a926eda340ba73fc5213c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/optparser/zipball/05b37f3cbfe47a61cb44a3b3ecabbec3462b354f",
-                "reference": "05b37f3cbfe47a61cb44a3b3ecabbec3462b354f",
+                "url": "https://api.github.com/repos/douglasgreen/optparser/zipball/a14e3271de1b05d3524a926eda340ba73fc5213c",
+                "reference": "a14e3271de1b05d3524a926eda340ba73fc5213c",
                 "shasum": ""
             },
             "require": {
@@ -160,7 +160,7 @@
                 "issues": "https://github.com/douglasgreen/optparser/issues",
                 "source": "https://github.com/douglasgreen/optparser/tree/main"
             },
-            "time": "2024-07-01T13:49:29+00:00"
+            "time": "2024-07-02T12:16:30+00:00"
         },
         {
             "name": "douglasgreen/php-linter",
@@ -168,18 +168,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/douglasgreen/php-linter.git",
-                "reference": "64380cf133a5c3fd7095f9ef89f2b543111c3062"
+                "reference": "2c9c054bb2d4bb444458774a32b8ae929f1cbd1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douglasgreen/php-linter/zipball/64380cf133a5c3fd7095f9ef89f2b543111c3062",
-                "reference": "64380cf133a5c3fd7095f9ef89f2b543111c3062",
+                "url": "https://api.github.com/repos/douglasgreen/php-linter/zipball/2c9c054bb2d4bb444458774a32b8ae929f1cbd1b",
+                "reference": "2c9c054bb2d4bb444458774a32b8ae929f1cbd1b",
                 "shasum": ""
             },
             "require": {
                 "douglasgreen/optparser": "dev-main",
                 "douglasgreen/utility": "dev-main",
-                "nikic/php-parser": "^5.0",
+                "nikic/php-parser": "^5.1",
                 "pdepend/pdepend": "^2.16",
                 "php": ">=8.1"
             },
@@ -235,7 +235,7 @@
                 "issues": "https://github.com/douglasgreen/php-linter/issues",
                 "source": "https://github.com/douglasgreen/php-linter/tree/main"
             },
-            "time": "2024-07-01T13:48:34+00:00"
+            "time": "2024-07-02T12:14:37+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -367,16 +367,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.2",
+            "version": "v5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13"
+                "reference": "683130c2ff8c2739f4822ff7ac5c873ec529abd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/139676794dc1e9231bf7bcd123cfc0c99182cb13",
-                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/683130c2ff8c2739f4822ff7ac5c873ec529abd1",
+                "reference": "683130c2ff8c2739f4822ff7ac5c873ec529abd1",
                 "shasum": ""
             },
             "require": {
@@ -387,7 +387,7 @@
             },
             "require-dev": {
                 "ircmaxell/php-yacc": "^0.0.7",
-                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
+                "phpunit/phpunit": "^9.0"
             },
             "bin": [
                 "bin/php-parse"
@@ -419,9 +419,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.2"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.1.0"
             },
-            "time": "2024-03-05T20:51:40+00:00"
+            "time": "2024-07-01T20:03:41+00:00"
         },
         {
             "name": "pdepend/pdepend",
@@ -606,16 +606,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.11.5",
+            "version": "1.11.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "490f0ae1c92b082f154681d7849aee776a7c1443"
+                "reference": "6ac78f1165346c83b4a753f7e4186d969c6ad0ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/490f0ae1c92b082f154681d7849aee776a7c1443",
-                "reference": "490f0ae1c92b082f154681d7849aee776a7c1443",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6ac78f1165346c83b4a753f7e4186d969c6ad0ee",
+                "reference": "6ac78f1165346c83b4a753f7e4186d969c6ad0ee",
                 "shasum": ""
             },
             "require": {
@@ -660,7 +660,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-17T15:10:54+00:00"
+            "time": "2024-07-01T15:33:06+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1139,16 +1139,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "c930cdb21294f10955ddfc31b720971e8333943d"
+                "reference": "2fa387553db22b6f9bcccf5ff16f2c2c18a52a65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/c930cdb21294f10955ddfc31b720971e8333943d",
-                "reference": "c930cdb21294f10955ddfc31b720971e8333943d",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/2fa387553db22b6f9bcccf5ff16f2c2c18a52a65",
+                "reference": "2fa387553db22b6f9bcccf5ff16f2c2c18a52a65",
                 "shasum": ""
             },
             "require": {
@@ -1186,7 +1186,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.1.1"
+                "source": "https://github.com/rectorphp/rector/tree/1.2.0"
             },
             "funding": [
                 {
@@ -1194,7 +1194,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-21T07:51:17+00:00"
+            "time": "2024-07-01T14:24:45+00:00"
         },
         {
             "name": "sebastian/cli-parser",
