@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\PhpLinter\Nikic;
+namespace DouglasGreen\PhpLinter;
 
 /**
  * Hold an array of issues.
@@ -20,6 +20,11 @@ trait IssueHolder
     public function getIssues(): array
     {
         return $this->issues;
+    }
+
+    public function hasIssues(): bool
+    {
+        return $this->issues !== [];
     }
 
     protected function addIssue(string $issue): void

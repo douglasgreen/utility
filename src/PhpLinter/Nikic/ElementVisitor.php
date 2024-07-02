@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DouglasGreen\PhpLinter\Nikic;
 
 use DouglasGreen\PhpLinter\ComposerFile;
+use DouglasGreen\PhpLinter\IssueHolder;
 use DouglasGreen\PhpLinter\Nikic\Checker\ArrayChecker;
 use DouglasGreen\PhpLinter\Nikic\Checker\ClassChecker;
 use DouglasGreen\PhpLinter\Nikic\Checker\CommentChecker;
@@ -284,11 +285,6 @@ class ElementVisitor extends NodeVisitorAbstract
         $this->addIssues($commentChecker->check());
 
         return null;
-    }
-
-    public function hasIssues(): bool
-    {
-        return $this->issues !== [];
     }
 
     public function isLocalScope(): bool
