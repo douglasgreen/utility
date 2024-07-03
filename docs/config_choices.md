@@ -1,4 +1,4 @@
-# Project Configuration
+# Configuration Choices
 
 Here are notes on the configuration choices made for each project.
 
@@ -130,8 +130,9 @@ Here is a summary of the configuration options in the `.eslintrc.json` file:
 }
 ```
 
-This file is customized when copied to your project. It will extend the `standard` or `airbnb-base`
-depending on which plugins are installed in `package.json`.
+This file is customized when copied to your project. It will extend the `eslint-config-standard` or
+`airbnb-base` depending on which plugins are installed in `package.json`. But the `standard` plugin
+will ignore it since it is not configurable.
 
 ### Prettier
 

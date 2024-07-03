@@ -81,9 +81,3 @@ The `.phplintignore` file supports a simple syntax for specifying ignore pattern
     -   `*.log` ignores all files with the `.log` extension.
     -   `build/*.tmp` ignores all `.tmp` files in the `build` directory.
     -   `config/*.php` ignores all `.php` files in the `config` directory.
-
-## Project setup
-
-Standard config files for linting and testing are copied into place from a GitHub repository called
-[config-setup](https://github.com/douglasgreen/config-setup). See that project's README page for
-details.

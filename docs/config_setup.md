@@ -4,28 +4,7 @@ Preconfigured setup files for linting, fixing, and testing PHP and JavaScript pr
 
 ## Initial Setup
 
-First, add the repository to `composer.json`. It also depends on `php-linter`.
-
-```
-{
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/douglasgreen/config-setup"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/douglasgreen/php-linter"
-        }
-    ],
-    "require-dev": {
-        "douglasgreen/config-setup": "dev-main",
-        "douglasgreen/php-linter": "dev-main"
-    }
-}
-```
-
-Then add this script to `composer.json` to copy the config files to your project root when you run
+Add this script to `composer.json` to make links to the config files in your project when you run
 `composer install` or `composer update`:
 
 ```
@@ -37,15 +16,16 @@ Then add this script to `composer.json` to copy the config files to your project
 }
 ```
 
-The config files will be copied every time you run `composer update` or `composer install`.
+The config files will be linked every time you run `composer update` or `composer install`. The link
+is a symlink to the original file.
 
-The file copier skips copying files if:
+The file linker skips linking files if:
 
 -   The relevant project was not found in your `composer.json` or `package.json` file.
 -   The same file is committed into your Git project and shouldn't be overwritten.
--   The same file was already copied before and is unchanged.
+-   The same file was already linked before and the link is unchanged.
 
-The file copier will add the list of files copied to `/.git/info/exclude` to exclude them from being
+The file copier will add the list of links to `/.git/info/exclude` to exclude them from being
 committed to Git.
 
 ## Cloning
@@ -54,7 +34,7 @@ After you clone a repository that uses this config setup library, run `composer 
 files into place. Then you can run `script/setup` to complex the install process and get the Husky
 hooks to work.
 
-### File Copy Arguments
+### Arguments
 
 When running `config-setup`, there are some possible arguments:
 
@@ -73,8 +53,8 @@ main WordPress stubs, just install:
 -   [phpstan-wordpress](https://github.com/szepeviktor/phpstan-wordpress)
 -   [woocommerce-stubs](https://github.com/php-stubs/woocommerce-stubs)
 
-This file copier automatically adds the files include and bootstrap files to phpstan.neon so you
-don't need to use the PHPStan extension installer.
+The file linker automatically adds the include and bootstrap lines for the stub files to
+phpstan.neon so you don't need to use the PHPStan extension installer.
 
 ### Environment Variables
 
@@ -82,7 +62,7 @@ The ECS file `ecs.php` checks if `ECS_RISKY` is true before running risky tests.
 
 ### File Customization
 
-Several scripts are customized during the install process.
+Several scripts are customized during the linking process.
 
 -   `ecs.php` sets the value of `line_length` to the value specified in the `--wrap` parameter.
 -   `.eslintrc.json` adds an "extends" field if the Standard (eslint-config-standard) or Airbnb
@@ -110,16 +90,16 @@ and testing.
 
 The setup and update scripts attempt to do more by:
 
--   Running `script/setup_db.sh` or `script/update_db.sh` for database updates if those scripts
-    exist.
+-   Running `script/setup-db` or `script/update-db` for database updates if those scripts exist.
 -   Doing `source .env` to set up or update environment variables if the `.env` file exists.
 
 You can create those files to use for standard project configuration.
 
 ## Installing Dependencies
 
-Once the config files are copied, you need to install the right project dependencies for each
-project and define a script for it if you want to use those tools with those config files.
+Once the config files are linked, you need to install the right project dependencies for each
+project and define a script for it if you want to use those tools with those config files. The
+php-linter script is included in this project.
 
 ### PHP Dependencies
 
@@ -127,10 +107,10 @@ For PHP, that is done with `composer.json` like this:
 
 ```
     "require-dev": {
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^1.11",
         "phpunit/phpunit": "^10.5",
-        "rector/rector": "^1.0",
-        "symplify/easy-coding-standard": "^12.2"
+        "rector/rector": "^1.2",
+        "symplify/easy-coding-standard": "^12.3"
     },
     "scripts": {
         "lint": [
@@ -149,7 +129,7 @@ For PHP, that is done with `composer.json` like this:
 
 That installs:
 
--   [PHP Linter](https://github.com/douglasgreen/php-linter) for linting
+-   [PHP Linter](php_linter.md) for code metrics and linting
 -   [PHPStan](https://phpstan.org/) for linting
 -   [PHPUnit](https://phpunit.de/index.html) for unit tests
 -   [Rector](https://github.com/rectorphp/rector) for linting and fixing (reformatting and
@@ -158,7 +138,7 @@ That installs:
     linting and fixing
 
 Each of the commands is configured to use the list of files in `php_paths`. This file is generated
-automatically by this project's file copier, which makes a list of the directories and PHP files in
+automatically by this project's file linker, which makes a list of the directories and PHP files in
 the top level of your project. That enables all of the tools to automatically lint and fix the right
 set of files.
 
@@ -169,30 +149,22 @@ For JavaScript/NPM, that is done with `package.json` like this:
         "@commitlint/cli": "^19.3",
         "@commitlint/config-conventional": "^19.2",
 
-        "eslint": "^8.57",
-        "eslint-config-standard": "^17.1",
-        "eslint-plugin-import": "^2.29",
-        "eslint-plugin-n": "^16.6",
-        "eslint-plugin-promise": "^6.2",
-
         "husky": "^9.0",
-
-        "mocha": "^10.2",
 
         "prettier": "^3.3",
         "prettier-plugin-sh": "^0.14",
-        "@prettier/plugin-php": "^0.22",
         "@prettier/plugin-xml": "^3.4",
+
+        'standard' => '^17.1',
 
         "stylelint": "^16.6",
         "stylelint-config-standard": "^36.0"
     },
     "scripts": {
         "commitlint": "commitlint --edit",
-        "lint": "eslint --cache --cache-location var/cache/eslint/cache . && stylelint '**/*.css'",
-        "lint:fix": "eslint --cache --cache-location var/cache/eslint/cache --fix . && prettier --write .",
-        "prepare": "husky",
-        "test": "mocha"
+        "lint": "standard . && stylelint '**/*.css'",
+        "lint:fix": "prettier --write . && standard --fix .",
+        "prepare": "husky"
     }
 ```
 
@@ -201,14 +173,26 @@ That installs:
 -   [Commitlint](https://commitlint.js.org/) for linting commit messages and
     [@commitlint/config-conventional](https://www.npmjs.com/package/@commitlint/config-conventional)
     for a typical set of rules
+-   [Husky](https://www.npmjs.com/package/husky) to run the GitHub actions defined as scripts in the
+    `.husky` directory
+-   [Standard](https://standardjs.com/) JavaScript linter and formatter
+-   [Prettier](https://prettier.io/) for linting and fixing with some plugins
+-   [Stylelint](https://stylelint.io/) for CSS linting with its standard plugin
+
+Alternatives include:
+
 -   [ESLint](https://eslint.org/) for linting and fixing and
     [eslint-config-standard](https://github.com/standard/eslint-config-standard) and its required
     dependencies for a typical set of rules
--   [Husky](https://www.npmjs.com/package/husky) to run the GitHub actions defined as scripts in the
-    `.husky` directory
--   [Mocha](https://mochajs.org/) for unit tests
--   [Prettier](https://prettier.io/) for linting and fixing
--   [Stylelint](https://stylelint.io/) for CSS linting
+
+If you install ESlint instead of Standard, you should use its caching feature like this:
+
+```
+        "lint": "eslint --cache --cache-location var/cache/eslint/cache . && stylelint '**/*.css'",
+        "lint:fix": "prettier --write . && eslint --cache --cache-location var/cache/eslint/cache --fix .",
+```
+
+You might also want to install Jest, Vite, or Mocha to do JavaScript unit tests.
 
 ## Linting, Fixing, and Testing
 
@@ -226,21 +210,12 @@ Scripts to run as needed include:
 
 -   Lint: `npm run lint`
 -   Fix: `npm run lint:fix`
--   Test: `npm run test`
+-   Test: `npm run test` (not shown here)
 
 Automatic scripts include:
 
 -   Commitlint: this script is run by a Husky hook
 -   Prepare: this script is run automatically to prepare Husky
-
-### Fixing PHP
-
-When using prettier with `@prettier/plugin-php`, PHP is being reformatted with `npm run lint:fix`
-and with `composer lint:fix`. You should run `npm run lint:fix` first and let `composer lint:fix`
-clean up afterward.
-
-Currently `@prettier/plugin-php` only supports up to PHP 8.2 so it may give up with some syntax
-errors if you use PHP 3 features like type hints on class constants.
 
 ## Husky Hooks
 
@@ -267,4 +242,4 @@ Sometimes Rector has trouble deleting files from the cache and gives errors. Whe
 ## More Information
 
 For more information about the decisions behind configuration choices, see
-[Project Configuration](configuration.md).
+[Configuration Choices](config_choices.md).

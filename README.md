@@ -9,3 +9,11 @@ classes.
 -   [Config Setup](docs/config_setup.md)
 -   [PHP Linter](docs/php_linter.md)
 -   [Utility Classes](docs/utility.md)
+
+## Setup
+
+Add the project with Composer.
+
+```
+composer require douglasgreen/utility
+```

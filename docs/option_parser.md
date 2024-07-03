@@ -214,9 +214,3 @@ harder to confuse.
 to add all terms, parameters, and flags without having to repeat their names.
 `OptParser::addUsage()` is for the case when you have multiple commands. Call this function to add
 each command with its associated terms, parameters, and flags by name.
-
-## Project setup
-
-Standard config files for linting and testing are copied into place from a GitHub repository called
-[config-setup](https://github.com/douglasgreen/config-setup). See that project's README page for
-details.
