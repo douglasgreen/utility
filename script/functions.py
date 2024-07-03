@@ -112,10 +112,10 @@ def run_npm_test():
         sys.exit(1)
 
 def setup_database():
-    if os.path.isfile("script/setup_db"):
+    if os.path.isfile("script/setup-db"):
         print("==> Setting up database...")
         try:
-            subprocess.run(["script/setup_db"], check=True)
+            subprocess.run(["script/setup-db"], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error setting up database: {e}", file=sys.stderr)
             sys.exit(1)
@@ -137,10 +137,10 @@ def set_xdebug_mode():
     os.environ["XDEBUG_MODE"] = "coverage"
 
 def update_database():
-    if os.path.isfile("script/update_db"):
+    if os.path.isfile("script/update-db"):
         print("==> Updating database...")
         try:
-            subprocess.run(["script/update_db"], check=True)
+            subprocess.run(["script/update-db"], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error updating database: {e}", file=sys.stderr)
             sys.exit(1)
