@@ -99,7 +99,7 @@ class ElementVisitor extends NodeVisitorAbstract
     {
         // We have to wait until after traverse until both qualified names and use statements are
         // available.
-        if (isset($this->nameVisitor)) {
+        if (property_exists($this, 'nameVisitor') && $this->nameVisitor instanceof NameVisitor) {
             $qualifiedNames = $this->nameVisitor->getQualifiedNames();
             foreach (array_keys($qualifiedNames) as $qualifiedName) {
                 if (isset($this->useStatements[$qualifiedName])) {
@@ -267,7 +267,10 @@ class ElementVisitor extends NodeVisitorAbstract
             $this->constFetches[$name] = true;
         }
 
-        if (! isset($this->nameVisitor)) {
+        if (! property_exists(
+            $this,
+            'nameVisitor'
+        ) || ! $this->nameVisitor instanceof NameVisitor) {
             $this->nameVisitor = new NameVisitor();
         }
 

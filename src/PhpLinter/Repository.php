@@ -13,6 +13,11 @@ class Repository
     use IssueHolder;
 
     /**
+     * @var array<string, bool>
+     */
+    protected $issues = [];
+
+    /**
      * @var list<string>
      */
     protected readonly array $files;
