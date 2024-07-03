@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\OptParser\Tests;
+namespace DouglasGreen\OptParser\Option\Tests;
 
 use DouglasGreen\OptParser\Option\Param;
 use DouglasGreen\Utility\Data\ArgumentException;
