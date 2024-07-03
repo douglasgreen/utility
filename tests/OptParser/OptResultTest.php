@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\OptParser\Tests;
+namespace DouglasGreen\Tests\OptParser;
 
 use DouglasGreen\OptParser\OptResult;
 use PHPUnit\Framework\TestCase;

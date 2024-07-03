@@ -23,6 +23,13 @@ class ArrayUtil
      */
     public static function sortRecursively(array $array): array
     {
+        // Check for numeric or non-numeric sort.
+        if (array_keys($array) === range(0, count($array) - 1)) {
+            sort($array);
+        } else {
+            asort($array);
+        }
+
         foreach ($array as &$value) {
             if (is_array($value)) {
                 $value = self::sortRecursively($value);
@@ -30,10 +37,6 @@ class ArrayUtil
         }
 
         unset($value);
-        ksort($array);
-        if (array_keys($array) === range(0, count($array) - 1)) {
-            sort($array);
-        }
 
         return $array;
     }

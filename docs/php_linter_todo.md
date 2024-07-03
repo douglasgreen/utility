@@ -114,3 +114,15 @@ Allow user to mark classes with @di meaning "this class should be injected".
 
 Check every usage of @di classes and resources in functions that are not in @di classes. Meaning a
 @di class can contain resources.
+
+### Namespaces
+
+Namespaces should be non-overlapping. This agrees with directory structure.
+
+Src: <owner>\<project>
+
+Src dir: src/ for simple project, src/<project> for multi-project
+
+Tests: <owner>\Tests\<project>
+
+Test dir: tests/ for simple project, tests/<project> for multi-project.

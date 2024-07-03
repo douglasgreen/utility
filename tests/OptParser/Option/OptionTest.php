@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\OptParser\Option\Tests;
+namespace DouglasGreen\Tests\OptParser\Option;
 
 use DouglasGreen\OptParser\Option\Command;
 use DouglasGreen\OptParser\Option\Flag;

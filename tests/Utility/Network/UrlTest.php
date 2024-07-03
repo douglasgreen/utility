@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DouglasGreen\Utility\Network\Tests;
+namespace DouglasGreen\Tests\Utility\Network;
 
 use DouglasGreen\Utility\Data\ValueException;
 use DouglasGreen\Utility\Network\UrlBuilder;
