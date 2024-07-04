@@ -7,7 +7,7 @@ namespace DouglasGreen\Utility\Regex;
 /**
  * Regex utility class to handle preg_replace_callback_array.
  */
-class ArrayMatcher extends Matcher
+class ArrayMatcher extends AbstractMatcher
 {
     /**
      * @param array<string, callable> $patterns
