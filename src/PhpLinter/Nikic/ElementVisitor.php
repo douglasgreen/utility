@@ -95,31 +95,36 @@ class ElementVisitor extends NodeVisitorAbstract
         protected readonly string $phpFile
     ) {}
 
+    public function beforeTraverse(array $nodes): null
+    {
+        $this->nameVisitor = new NameVisitor();
+
+        return null;
+    }
+
     public function afterTraverse(array $nodes): null
     {
         // We have to wait until after traverse until both qualified names and use statements are
         // available.
-        if (property_exists($this, 'nameVisitor') && $this->nameVisitor instanceof NameVisitor) {
-            $qualifiedNames = $this->nameVisitor->getQualifiedNames();
-            foreach (array_keys($qualifiedNames) as $qualifiedName) {
-                if (isset($this->useStatements[$qualifiedName])) {
-                    continue;
-                }
-
-                if (isset($this->classNames[$qualifiedName])) {
-                    continue;
-                }
-
-                if (isset($this->funcCalls[$qualifiedName])) {
-                    continue;
-                }
-
-                if (isset($this->constFetches[$qualifiedName])) {
-                    continue;
-                }
-
-                $this->addIssue('Import external classes with use statement: ' . $qualifiedName);
+        $qualifiedNames = $this->nameVisitor->getQualifiedNames();
+        foreach (array_keys($qualifiedNames) as $qualifiedName) {
+            if (isset($this->useStatements[$qualifiedName])) {
+                continue;
             }
+
+            if (isset($this->classNames[$qualifiedName])) {
+                continue;
+            }
+
+            if (isset($this->funcCalls[$qualifiedName])) {
+                continue;
+            }
+
+            if (isset($this->constFetches[$qualifiedName])) {
+                continue;
+            }
+
+            $this->addIssue('Import external classes with use statement: ' . $qualifiedName);
         }
 
         return null;
@@ -265,13 +270,6 @@ class ElementVisitor extends NodeVisitorAbstract
         if ($node instanceof ConstFetch && $node->name instanceof Name) {
             $name = $node->name->toString();
             $this->constFetches[$name] = true;
-        }
-
-        if (! property_exists(
-            $this,
-            'nameVisitor'
-        ) || ! $this->nameVisitor instanceof NameVisitor) {
-            $this->nameVisitor = new NameVisitor();
         }
 
         $this->nameVisitor->checkNode($node);
