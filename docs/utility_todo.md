@@ -15,3 +15,15 @@ See https://www.php.net/manual/en/function.fsockopen.php.
 
 -   fsockopen - returns resource
 -   The other functions don't share data and should be static functions on a Network class.
+
+## Documentation
+
+Write documentation with examples.
+
+## Finder
+
+Write a function finder to find and replace.
+
+## Static
+
+Swap static and non-static functions.
