@@ -12,6 +12,9 @@ use Stringable;
 
 /**
  * Command utility class to throw exceptions when basic operations fail.
+ *
+ * This class provides a structured way to build and execute shell commands with proper validation
+ * and error handling mechanisms.
  */
 class Command implements FlagHandler, Stringable
 {
@@ -32,7 +35,7 @@ class Command implements FlagHandler, Stringable
      */
     protected array $subcommands = [];
 
-    protected int $returnCode;
+    protected ?int $returnCode = null;
 
     public static function getFlagChecker(int $flags): FlagChecker
     {
@@ -59,6 +62,14 @@ class Command implements FlagHandler, Stringable
         return $this->buildCommand();
     }
 
+    /**
+     * Adds an argument to the command.
+     *
+     * This method trims the input argument and escapes it for shell usage. If the argument is
+     * empty after trimming, it will not be added.
+     *
+     * @param string $arg The argument to add to the command.
+     */
     public function addArg(string $arg): self
     {
         $arg = trim($arg);
@@ -71,7 +82,14 @@ class Command implements FlagHandler, Stringable
     }
 
     /**
-     * @throw ArgumentException
+     * Adds a flag to the command, optionally with an argument.
+     *
+     * This method validates the flag format and adds it to the command. If a flag argument is
+     * provided, it is properly separated and escaped.
+     *
+     * @param string $flag The flag to add (e.g., '-f' or '--flag').
+     * @param string|null $flagArgument Optional argument for the flag.
+     * @throws ArgumentException If the flag format is invalid.
      */
     public function addFlag(string $flag, ?string $flagArgument = null): self
     {
@@ -92,8 +110,39 @@ class Command implements FlagHandler, Stringable
     }
 
     /**
-     * @param list<string> $args
-     * @throws ArgumentException
+     * Adds a redirection to the command.
+     *
+     * @param string $redirectionOperator The redirection operator (e.g., '>', '>>', '<', '2>', etc.)
+     * @param string $sourceOrTarget The source or target for the redirection
+     * @throws ArgumentException If the redirection operator is invalid or the source/target is empty
+     */
+    public function addRedirect(string $redirectionOperator, string $sourceOrTarget): self
+    {
+        if (trim($sourceOrTarget) === '') {
+            throw new ArgumentException('Source or target for redirection cannot be empty');
+        }
+
+        self::validateRedirectionOperator($redirectionOperator);
+
+        $this->subcommands[] = [
+            'op' => $redirectionOperator,
+            'command' => null,
+            'args' => [$sourceOrTarget],
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Adds a subcommand to the command with a redirection operator.
+     *
+     * This method validates the redirection operator and the subcommand (if provided). It then
+     * adds the subcommand with its arguments to the command structure.
+     *
+     * @param string $redirectionOperator The redirection operator (e.g., '|', '>', '>>', '<').
+     * @param string|null $subcommand The subcommand to add, or null if not applicable.
+     * @param list<string> $args An array of arguments for the subcommand.
+     * @throws ArgumentException If both subcommand and args are empty, or if the redirection operator is invalid.
      */
     public function addSubcommand(
         string $redirectionOperator,
@@ -211,7 +260,7 @@ class Command implements FlagHandler, Stringable
      *
      * @throws CommandException
      */
-    public function shellExec(int $flags): ?string
+    public function shellExec(int $flags = 0): ?string
     {
         $flagChecker = static::getFlagChecker($flags);
 
