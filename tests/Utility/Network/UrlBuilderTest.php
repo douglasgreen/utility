@@ -8,7 +8,7 @@ use DouglasGreen\Utility\Data\ValueException;
 use DouglasGreen\Utility\Network\UrlBuilder;
 use PHPUnit\Framework\TestCase;
 
-class UrlTest extends TestCase
+class UrlBuilderTest extends TestCase
 {
     protected UrlBuilder $urlBuilder;
 
