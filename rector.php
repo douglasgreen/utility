@@ -28,6 +28,7 @@ use Rector\CodeQuality\Rector\ClassMethod\LocallyCalledStaticMethodToNonStaticRe
 use Rector\Config\RectorConfig;
 use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Naming\Rector\ClassMethod\RenameVariableToMatchNewTypeRector;
+use Rector\Naming\Rector\Foreach_\RenameForeachValueVariableToMatchExprVariableRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
@@ -138,5 +139,6 @@ return RectorConfig::configure()
     )
     ->withSkip([
         LocallyCalledStaticMethodToNonStaticRector::class,
+        RenameForeachValueVariableToMatchExprVariableRector::class,
         RenameVariableToMatchNewTypeRector::class,
     ]);
