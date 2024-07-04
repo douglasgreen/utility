@@ -15,7 +15,7 @@ class Repository
     /**
      * @var array<string, bool>
      */
-    protected $issues = [];
+    protected array $issues = [];
 
     /**
      * @var list<string>
