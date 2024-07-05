@@ -63,7 +63,7 @@ class Matcher extends AbstractMatcher
     ): array {
         // preg_filter doesn't distinguish between no matches and error when using
         // array as subject, so I use a second preg_filter call to look for errors.
-        if (preg_filter($this->pattern, '', '') === null) {
+        if (preg_filter($this->pattern, $replacement, $subject[0]) === null) {
             throw new RegexException($this->getErrorMessage());
         }
 
@@ -153,7 +153,7 @@ class Matcher extends AbstractMatcher
             throw new TypeException('String pattern expected');
         }
 
-        $result = preg_match_all($this->pattern, $subject, $matches, 0, $offset);
+        $result = preg_match_all($this->pattern, $subject, $matches, PREG_SET_ORDER, $offset);
 
         if ($result === false) {
             throw new RegexException($this->getErrorMessage());
