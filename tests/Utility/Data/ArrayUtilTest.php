@@ -49,6 +49,14 @@ class ArrayUtilTest extends TestCase
         $this->assertFalse(ArrayUtil::equal($array1, $array2));
     }
 
+    public function testSortRecursively(): void
+    {
+        $array = [3, 2, 1, ['c', 'a', 'b', ['z', 'x', 'y']]];
+        $expected = [1, 2, 3, ['a', 'b', 'c', ['x', 'y', 'z']]];
+
+        $this->assertSame($expected, ArrayUtil::sortRecursively($array));
+    }
+
     public function testSortRecursivelyWithMixedValues(): void
     {
         $array = [
