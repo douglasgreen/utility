@@ -10,6 +10,20 @@ use PHPUnit\Framework\TestCase;
 
 class FlagCheckerTest extends TestCase
 {
+    public function testExcessiveFlagCount(): void
+    {
+        $this->expectException(ValueException::class);
+        $flagNames = [];
+        for ($index = 0; $index < 33; $index++) {
+            $flagNames['flag' . $index] = $index;
+        }
+
+        // Testing flag count only, so pass fake value here.
+        $flags = 1;
+
+        new FlagChecker($flagNames, $flags);
+    }
+
     public function testGetInvalidFlagName(): void
     {
         $this->expectException(ValueException::class);
