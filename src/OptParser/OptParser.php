@@ -193,9 +193,6 @@ class OptParser
 
     /**
      * @param ?string[] $args
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function parse(?array $args = null): OptResult
     {
@@ -382,8 +379,6 @@ class OptParser
 
     /**
      * Check for errors then write them and exit.
-     *
-     * @SuppressWarnings(PHPMD.ExitExpression)
      */
     protected function checkResult(OptResult $optResult): void
     {
@@ -426,8 +421,6 @@ class OptParser
      * - description
      * - usage
      * - options
-     *
-     * @SuppressWarnings(PHPMD.ExitExpression)
      */
     protected function printHelp(): void
     {

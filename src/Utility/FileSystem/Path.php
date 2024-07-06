@@ -251,7 +251,6 @@ class Path implements FlagHandler, Stringable
      *
      * @return array<string, int>
      * @throws FileException
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function getLinkStats(): array
     {
@@ -328,7 +327,6 @@ class Path implements FlagHandler, Stringable
      *
      * @return array<string, int>
      * @throws FileException
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function getStats(): array
     {
