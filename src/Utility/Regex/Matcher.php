@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Regex;
 
+use DouglasGreen\Utility\Data\FlagChecker;
+use DouglasGreen\Utility\Data\FlagHandler;
 use DouglasGreen\Utility\Data\TypeException;
 
 /**
  * Regex utility class to throw exceptions when basic operations fail.
  */
-class Matcher extends AbstractMatcher
+class Matcher extends AbstractMatcher implements FlagHandler
 {
+    public const DELIM_CAPTURE = 1;
+
+    public const NO_EMPTY = 2;
+
     /**
      * @param list<string>|string $pattern
      */
@@ -68,6 +74,15 @@ class Matcher extends AbstractMatcher
         }
 
         return preg_filter($this->pattern, $replacement, $subject, $limit, $this->count);
+    }
+
+    public static function getFlagChecker(int $flags): FlagChecker
+    {
+        $flagNames = [
+            'delimCapture' => self::DELIM_CAPTURE,
+            'noEmpty' => self::NO_EMPTY,
+        ];
+        return new FlagChecker($flagNames, $flags);
     }
 
     /**
@@ -350,7 +365,7 @@ class Matcher extends AbstractMatcher
             throw new TypeException('String pattern expected');
         }
 
-        $flagChecker = static::getFlagChecker($flags);
+        $flagChecker = self::getFlagChecker($flags);
         $phpFlags = 0;
         if ($flagChecker->get('noEmpty')) {
             $phpFlags |= PREG_SPLIT_NO_EMPTY;

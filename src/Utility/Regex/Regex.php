@@ -11,11 +11,6 @@ namespace DouglasGreen\Utility\Regex;
  */
 class Regex
 {
-    /* Same consonants as Matcher class */
-    public const DELIM_CAPTURE = 1;
-
-    public const NO_EMPTY = 2;
-
     /**
      * @param list<string>|string $pattern
      * @param list<string>|string $replacement

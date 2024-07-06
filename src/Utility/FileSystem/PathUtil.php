@@ -11,19 +11,6 @@ namespace DouglasGreen\Utility\FileSystem;
  */
 class PathUtil
 {
-    /* Same consonants as Path class */
-    public const APPEND = 1;
-
-    public const IGNORE_NEW_LINES = 2;
-
-    public const LOCK = 4;
-
-    public const SKIP_EMPTY_LINES = 8;
-
-    public const USE_BINARY = 16;
-
-    public const USE_INCLUDE_PATH = 32;
-
     public static function addSubpath(string $path, string $subpath): string
     {
         $path = new Path($path);

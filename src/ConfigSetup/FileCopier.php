@@ -8,6 +8,7 @@ use DOMDocument;
 use DouglasGreen\Utility\Data\ValueException;
 use DouglasGreen\Utility\Data\XmlException;
 use DouglasGreen\Utility\FileSystem\DirUtil;
+use DouglasGreen\Utility\FileSystem\Path;
 use DouglasGreen\Utility\FileSystem\PathUtil;
 use DouglasGreen\Utility\Program\Command;
 use DouglasGreen\Utility\Program\CommandException;
@@ -189,7 +190,7 @@ class FileCopier
     {
         $excludeLines = [];
         if (file_exists($this->excludeFile)) {
-            $excludeLines = PathUtil::loadLines($this->excludeFile, PathUtil::IGNORE_NEW_LINES);
+            $excludeLines = PathUtil::loadLines($this->excludeFile, Path::IGNORE_NEW_LINES);
         }
 
         $oldExcludeLines = $excludeLines;
@@ -695,7 +696,7 @@ class FileCopier
         $pathFile = $this->repoDir . '/php_paths';
         $oldPaths = file_exists($pathFile) ? PathUtil::loadLines(
             $pathFile,
-            PathUtil::IGNORE_NEW_LINES
+            Path::IGNORE_NEW_LINES
         ) : [];
 
         // Write the list of directories to php_paths file

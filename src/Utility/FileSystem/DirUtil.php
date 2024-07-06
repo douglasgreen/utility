@@ -14,31 +14,6 @@ use Directory as PhpDirectory;
 class DirUtil
 {
     /**
-     * @var int
-     */
-    public const NO_DOT_DIRS = 1;
-
-    /**
-     * @var int
-     */
-    public const RECURSIVE = 2;
-
-    /**
-     * @var int
-     */
-    public const SORT_ASCENDING = 4;
-
-    /**
-     * @var int
-     */
-    public const SORT_DESCENDING = 8;
-
-    /**
-     * @var int
-     */
-    public const SORT_NONE = 16;
-
-    /**
      * @throws DirectoryException
      */
     public static function getCurrent(): string
