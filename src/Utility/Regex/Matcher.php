@@ -276,7 +276,7 @@ class Matcher extends AbstractMatcher implements FlagHandler
     {
         $result = preg_replace_callback($this->pattern, $callback, $subject, $limit, $this->count);
 
-        if ($result === null) {
+        if ($result === null || preg_last_error() !== PREG_NO_ERROR) {
             throw new RegexException($this->getErrorMessage());
         }
 
@@ -297,7 +297,7 @@ class Matcher extends AbstractMatcher implements FlagHandler
     {
         $result = preg_replace($this->pattern, $replacement, $subject, $limit, $this->count);
 
-        if ($result === null) {
+        if ($result === null || preg_last_error() !== PREG_NO_ERROR) {
             throw new RegexException($this->getErrorMessage());
         }
 
