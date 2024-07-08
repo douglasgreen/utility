@@ -12,6 +12,73 @@ class UrlBuilderTest extends TestCase
 {
     protected UrlBuilder $urlBuilder;
 
+    public function testBuildAndToString(): void
+    {
+        $url = 'https://user:pass@example.com:8080/path?param1=value1&param2=value2#fragment';
+        $urlBuilder = new UrlBuilder($url);
+
+        $this->assertSame($url, $urlBuilder->build());
+        $this->assertSame($url, (string) $urlBuilder);
+    }
+
+    public function testDeleteParam(): void
+    {
+        $urlBuilder = new UrlBuilder('https://example.com?param1=value1&param2=value2');
+        $urlBuilder->deleteParam('param1');
+
+        $this->assertFalse($urlBuilder->hasParam('param1'));
+        $this->assertTrue($urlBuilder->hasParam('param2'));
+        $this->assertSame('https://example.com?param2=value2', $urlBuilder->build());
+    }
+
+    public function testGetComponents(): void
+    {
+        $url = 'https://user:pass@example.com:8080/path?param=value#fragment';
+        $urlBuilder = new UrlBuilder($url);
+
+        $this->assertSame('fragment', $urlBuilder->getFragment());
+        $this->assertSame('example.com', $urlBuilder->getHost());
+        $this->assertSame('pass', $urlBuilder->getPass());
+        $this->assertSame('/path', $urlBuilder->getPath());
+        $this->assertSame(8080, $urlBuilder->getPort());
+        $this->assertSame('https', $urlBuilder->getScheme());
+        $this->assertSame('user', $urlBuilder->getUser());
+    }
+
+    public function testGetParamAndParamArray(): void
+    {
+        $urlBuilder = new UrlBuilder(
+            'https://example.com?param1=value1&param2[]=value2&param2[]=value3'
+        );
+
+        $this->assertSame('value1', $urlBuilder->getParam('param1'));
+        $this->assertNull($urlBuilder->getParam('param2'));
+        $this->assertSame(['value2', 'value3'], $urlBuilder->getParamArray('param2'));
+        $this->assertNull($urlBuilder->getParamArray('param1'));
+    }
+
+    public function testGetQuery(): void
+    {
+        $urlBuilder = new UrlBuilder('https://example.com?param1=value1&param2=value2');
+
+        $this->assertSame('param1=value1&param2=value2', $urlBuilder->getQuery());
+
+        $urlBuilder->deleteParam('param1');
+        $this->assertSame('param2=value2', $urlBuilder->getQuery());
+
+        $urlBuilder->deleteParam('param2');
+        $this->assertNull($urlBuilder->getQuery());
+    }
+
+    public function testHasParam(): void
+    {
+        $urlBuilder = new UrlBuilder('https://example.com?param1=value1&param2=value2');
+
+        $this->assertTrue($urlBuilder->hasParam('param1'));
+        $this->assertTrue($urlBuilder->hasParam('param2'));
+        $this->assertFalse($urlBuilder->hasParam('param3'));
+    }
+
     public function testInvalidHostThrowsException(): void
     {
         $this->expectException(ValueException::class);
@@ -31,6 +98,16 @@ class UrlBuilderTest extends TestCase
         $this->expectException(ValueException::class);
         $this->expectExceptionMessage('Invalid scheme: "invalid-scheme"');
         $this->urlBuilder->setScheme('invalid-scheme');
+    }
+
+    public function testIsEqual(): void
+    {
+        $url1 = new UrlBuilder('https://example.com?param1=value1&param2=value2');
+        $url2 = new UrlBuilder('https://example.com?param1=value1&param2=value2');
+        $url3 = new UrlBuilder('https://example.com?param1=value1&param3=value3');
+
+        $this->assertTrue($url1->isEqual($url2));
+        $this->assertFalse($url1->isEqual($url3));
     }
 
     public function testSetFragment(): void
@@ -65,6 +142,18 @@ class UrlBuilderTest extends TestCase
         $this->assertIsArray($params);
         $this->assertArrayHasKey($key, $params);
         $this->assertSame($value, $params[$key]);
+    }
+
+    public function testSetParamArray(): void
+    {
+        $urlBuilder = new UrlBuilder('https://example.com');
+        $urlBuilder->setParamArray('param', ['value1', 'value2']);
+
+        $this->assertSame(['value1', 'value2'], $urlBuilder->getParamArray('param'));
+        $this->assertSame(
+            'https://example.com?param%5B0%5D=value1&param%5B1%5D=value2',
+            $urlBuilder->build()
+        );
     }
 
     public function testSetPass(): void
