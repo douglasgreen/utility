@@ -13,11 +13,6 @@ class MatcherTest extends TestCase
 {
     protected Matcher $matcher;
 
-    protected function setUp(): void
-    {
-        $this->matcher = new Matcher('/test/');
-    }
-
     public function testFilteredReplace(): void
     {
         $result = $this->matcher->filteredReplace('replacement', 'test string test');
@@ -340,5 +335,10 @@ class MatcherTest extends TestCase
         $this->expectException(TypeException::class);
         $matcher = new Matcher(['not a string']);
         $matcher->split('subject');
+    }
+
+    protected function setUp(): void
+    {
+        $this->matcher = new Matcher('/test/');
     }
 }
