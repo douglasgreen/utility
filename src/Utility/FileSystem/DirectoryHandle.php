@@ -20,6 +20,8 @@ class DirectoryHandle implements Stringable
 
     protected readonly string $directory;
 
+    protected bool $atEnd = false;
+
     /**
      * Calls opendir.
      *
@@ -55,13 +57,30 @@ class DirectoryHandle implements Stringable
      *
      * @throws DirectoryException
      */
-    public function read(): string
+    public function read(): ?string
     {
         $result = readdir($this->handle);
         if ($result === false) {
-            throw new DirectoryException(
-                sprintf('Unable to read directory handle: "%s"', $this->directory),
-            );
+            $error = error_get_last();
+            if ($error !== null) {
+                throw new DirectoryException(
+                    sprintf(
+                        'Error "%s" reading directory handle "%s"',
+                        $error['message'],
+                        $this->directory
+                    )
+                );
+            }
+
+            if ($this->atEnd) {
+                throw new DirectoryException(
+                    sprintf('Read past end of directory: "%s"', $this->directory)
+                );
+            }
+
+            $this->atEnd = true;
+            return null;
+
         }
 
         return $result;
@@ -73,6 +92,7 @@ class DirectoryHandle implements Stringable
     public function rewind(): self
     {
         rewinddir($this->handle);
+        $this->atEnd = false;
 
         return $this;
     }
