@@ -78,8 +78,6 @@ class MatcherTest extends TestCase
 
         $this->expectException(RegexException::class);
         $invalidMatcher = new Matcher('/invalid(/');
-
-        // Suppress expected warnings for bad regex so exception test can pass
         @$invalidMatcher->match('test');
     }
 

@@ -62,8 +62,6 @@ class DirectoryTest extends TestCase
     {
         $this->expectException(DirectoryException::class);
         $dir = new Directory('/root/impossible_dir');
-
-        // Suppress expected warnings so exception test can pass
         @$dir->make();
     }
 
@@ -136,8 +134,6 @@ class DirectoryTest extends TestCase
     {
         $this->expectException(DirectoryException::class);
         $dir = new Directory('/root/non_existent_dir');
-
-        // Suppress expected warnings so exception test can pass
         @$dir->scan();
     }
 
@@ -154,8 +150,6 @@ class DirectoryTest extends TestCase
     {
         $this->expectException(DirectoryException::class);
         $dir = new Directory('/root/non_existent_dir');
-
-        // Suppress expected warnings so exception test can pass
         @$dir->setCurrent();
     }
 

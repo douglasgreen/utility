@@ -4,19 +4,30 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Utility\Network;
 
+use DouglasGreen\Utility\Data\ValueException;
+use DouglasGreen\Utility\FileSystem\FileException;
+use DouglasGreen\Utility\FileSystem\Path;
 use Stringable;
 
 class UrlFetcher implements Stringable
 {
+    protected readonly Path $path;
+
     protected readonly string $url;
 
     public function __construct(string $url)
     {
-        if (Url::isEncoded($url)) {
-            $url = urldecode($url);
+        $filteredUrl = filter_var($url, FILTER_VALIDATE_URL);
+        if ($filteredUrl === false) {
+            throw new ValueException('Bad URL: ' . $url);
         }
 
-        $this->url = $url;
+        $decodedUrl = Url::isEncoded($filteredUrl) ? urldecode($filteredUrl) : $filteredUrl;
+
+        $this->url = $decodedUrl;
+
+        // Path can't be injected with DI because $url must be cleaned up before new Path().
+        $this->path = new Path(Url::encode($this->url));
     }
 
     public function __toString(): string
@@ -26,13 +37,20 @@ class UrlFetcher implements Stringable
 
     /**
      * Substitute for file_get_contents on a URL.
-     *
-     * Automatically encodes the URL if not already encoded.
      */
     public function fetchPage(): ?string
     {
-        $result = file_get_contents(urlencode($this->url));
+        // Call getPath() so Path can be mocked in unit tests.
+        $path = $this->getPath();
+        try {
+            return $path->loadString();
+        } catch (FileException) {
+            return null;
+        }
+    }
 
-        return $result === false ? null : $result;
+    public function getPath(): Path
+    {
+        return $this->path;
     }
 }

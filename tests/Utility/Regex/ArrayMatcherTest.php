@@ -52,8 +52,6 @@ class ArrayMatcherTest extends TestCase
             '/(?<unclosed>/' => fn($matches): string => 'error',
         ];
         $matcher = new ArrayMatcher($patterns);
-
-        // Suppress expected warnings for bad regex so exception test can pass
         @$matcher->replaceCallMapList(['foo baz', 'foo qux']);
     }
 
@@ -66,8 +64,6 @@ class ArrayMatcherTest extends TestCase
             '/(?<unclosed>/' => fn($matches): string => 'error',
         ];
         $matcher = new ArrayMatcher($patterns);
-
-        // Suppress expected warnings for bad regex so exception test can pass
         @$matcher->replaceCallMap('foo baz');
     }
 }
