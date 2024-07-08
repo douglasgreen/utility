@@ -250,6 +250,13 @@ class MatcherTest extends TestCase
         @$matcher->replace('replacement', 'subject');
     }
 
+    public function testReplaceThrowsRegexExceptionForArray(): void
+    {
+        $this->expectException(RegexException::class);
+        $matcher = new Matcher(['/bad', '/regex']);
+        @$matcher->replace('replacement', 'subject');
+    }
+
     public function testSearchList(): void
     {
         $result = $this->matcher->searchList(['test1', 'no match', 'test2']);
@@ -300,6 +307,16 @@ class MatcherTest extends TestCase
         $matcher = new Matcher('/\s+/');
         $result = $matcher->split('test string test');
         $this->assertSame(['test', 'string', 'test'], $result);
+
+        $result = $matcher->split('test string test', 2);
+        $this->assertSame(['test', 'string test'], $result);
+
+        $result = $matcher->split(' test string test ', -1, Matcher::NO_EMPTY);
+        $this->assertSame(['test', 'string', 'test'], $result);
+
+        $matcher = new Matcher('/(\s+)/');
+        $result = $matcher->split('test string test', -1, Matcher::DELIM_CAPTURE);
+        $this->assertSame(['test', ' ', 'string', ' ', 'test'], $result);
     }
 
     public function testSplitAll(): void
