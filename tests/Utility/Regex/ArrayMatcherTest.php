@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class ArrayMatcherTest extends TestCase
 {
-    public function testInitialization(): void
+    public function testConstructor(): void
     {
         $patterns = [
             '/foo/' => fn($matches): string => 'bar',

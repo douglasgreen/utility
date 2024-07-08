@@ -104,6 +104,24 @@ class RegexTest extends TestCase
         $this->assertSame(['TEST1', 'no match', 'TEST2'], $result);
     }
 
+    public function testReplaceCallMap(): void
+    {
+        $patterns = [
+            '/foo/' => fn($matches): string => 'bar',
+        ];
+        $result = Regex::replaceCallMap($patterns, 'foo baz');
+        $this->assertSame('bar baz', $result);
+    }
+
+    public function testReplaceCallMapList(): void
+    {
+        $patterns = [
+            '/foo/' => fn($matches): string => 'bar',
+        ];
+        $result = Regex::replaceCallMapList($patterns, ['foo baz', 'foo qux']);
+        $this->assertSame(['bar baz', 'bar qux'], $result);
+    }
+
     public function testReplaceList(): void
     {
         $result = Regex::replaceList('/test/', 'replacement', ['test1', 'no match', 'test2']);
