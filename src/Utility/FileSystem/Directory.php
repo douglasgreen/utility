@@ -26,22 +26,17 @@ class Directory implements FlagHandler, Stringable
     /**
      * @var int
      */
-    public const RECURSIVE = 2;
+    public const SORT_ASCENDING = 2;
 
     /**
      * @var int
      */
-    public const SORT_ASCENDING = 4;
+    public const SORT_DESCENDING = 4;
 
     /**
      * @var int
      */
-    public const SORT_DESCENDING = 8;
-
-    /**
-     * @var int
-     */
-    public const SORT_NONE = 16;
+    public const SORT_NONE = 8;
 
     protected readonly string $path;
 
@@ -49,7 +44,6 @@ class Directory implements FlagHandler, Stringable
     {
         $flagNames = [
             'noDotDirs' => self::NO_DOT_DIRS,
-            'recursive' => self::RECURSIVE,
             'sortAscending' => self::SORT_ASCENDING,
             'sortDescending' => self::SORT_DESCENDING,
             'sortNone' => self::SORT_NONE,
@@ -72,6 +66,11 @@ class Directory implements FlagHandler, Stringable
     }
 
     public function __toString(): string
+    {
+        return $this->path;
+    }
+
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -110,7 +109,7 @@ class Directory implements FlagHandler, Stringable
      *
      * @throws DirectoryException
      */
-    public function make(int $permissions = 0o777, int $flags = 0): self
+    public function make(int $permissions = 0o777): self
     {
         if (is_dir($this->path)) {
             $path = new Path($this->path);
@@ -118,9 +117,7 @@ class Directory implements FlagHandler, Stringable
             return $this;
         }
 
-        $flagChecker = static::getFlagChecker($flags);
-        $recursive = $flagChecker->get('recursive');
-        if (mkdir($this->path, $permissions, $recursive, $this->context) === false) {
+        if (mkdir($this->path, $permissions, false, $this->context) === false) {
             throw new DirectoryException(sprintf('Unable to make directory: "%s"', $this->path));
         }
 
@@ -130,9 +127,19 @@ class Directory implements FlagHandler, Stringable
     /**
      * Substitute for mkdir that is recursive.
      */
-    public function makeRecursive(int $permissions = 0o777, int $flags = 0): self
+    public function makeRecursive(int $permissions = 0o777): self
     {
-        return $this->make($permissions, $flags | self::RECURSIVE);
+        if (is_dir($this->path)) {
+            $path = new Path($this->path);
+            $path->changeMode($permissions);
+            return $this;
+        }
+
+        if (mkdir($this->path, $permissions, true, $this->context) === false) {
+            throw new DirectoryException(sprintf('Unable to make directory: "%s"', $this->path));
+        }
+
+        return $this;
     }
 
     /**
@@ -142,7 +149,17 @@ class Directory implements FlagHandler, Stringable
      */
     public function makeTemp(string $prefix): string
     {
+        // Check if the directory does not exist or is not writable. Without this, tempnam() will
+        // just use the /tmp directory.
+        if (! is_dir($this->path) || ! is_writable($this->path)) {
+            throw new DirectoryException(
+                sprintf('Temp file directory "%s" does not exist or is not writable', $this->path),
+            );
+        }
+
         $result = tempnam($this->path, $prefix);
+
+        // This exception hardly ever happens so it can't be unit tested.
         if ($result === false) {
             throw new DirectoryException(
                 sprintf('Unable to create temp file in directory "%s"', $this->path),
@@ -172,18 +189,10 @@ class Directory implements FlagHandler, Stringable
      *
      * @throws DirectoryException
      */
-    public function remove(int $flags = 0): void
+    public function remove(): void
     {
         // OK if path doesn't exist.
         if (! is_dir($this->path)) {
-            return;
-        }
-
-        $flagChecker = static::getFlagChecker($flags);
-        $recursive = $flagChecker->get('recursive');
-
-        if ($recursive) {
-            $this->removeRecursive();
             return;
         }
 
@@ -234,8 +243,6 @@ class Directory implements FlagHandler, Stringable
 
     /**
      * Recursively remove the contents of a directory including the directory.
-     *
-     * Can also be called with $this->remove(Directory::RECURSIVE).
      */
     public function removeRecursive(): void
     {
@@ -269,10 +276,10 @@ class Directory implements FlagHandler, Stringable
         }
 
         if ($flagChecker->get('noDotDirs')) {
-            return array_diff($result, ['..', '.']);
+            $result = array_diff($result, ['..', '.']);
         }
 
-        return $result;
+        return array_values($result);
     }
 
     /**

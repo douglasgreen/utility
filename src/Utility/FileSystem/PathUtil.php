@@ -187,13 +187,10 @@ class PathUtil
         return $path->loadString($offset, $flags, $length);
     }
 
-    public static function makeDirectory(
-        string $path,
-        int $permissions = 0o777,
-        int $flags = 0,
-    ): Path {
+    public static function makeDirectory(string $path, int $permissions = 0o777): Path
+    {
         $path = new Path($path);
-        $path->makeDirectory($permissions, $flags);
+        $path->makeDirectory($permissions);
         return $path;
     }
 

@@ -35,20 +35,17 @@ class DirUtil
         return $directory->listFiles($flags);
     }
 
-    public static function make(string $path, int $permissions = 0o777, int $flags = 0): Directory
+    public static function make(string $path, int $permissions = 0o777): Directory
     {
         $directory = new Directory($path);
-        $directory->make($permissions, $flags);
+        $directory->make($permissions);
         return $directory;
     }
 
-    public static function makeRecursive(
-        string $path,
-        int $permissions = 0o777,
-        int $flags = 0,
-    ): Directory {
+    public static function makeRecursive(string $path, int $permissions = 0o777): Directory
+    {
         $directory = new Directory($path);
-        $directory->makeRecursive($permissions, $flags);
+        $directory->makeRecursive($permissions);
         return $directory;
     }
 
@@ -67,7 +64,7 @@ class DirUtil
     public static function remove(string $path, int $flags = 0): void
     {
         $directory = new Directory($path);
-        $directory->remove($flags);
+        $directory->remove();
     }
 
     public static function removeContents(string $path): void

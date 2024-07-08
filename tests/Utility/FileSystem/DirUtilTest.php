@@ -6,123 +6,76 @@ namespace DouglasGreen\Tests\Utility\FileSystem;
 
 use Directory as PhpDirectory;
 use DouglasGreen\Utility\FileSystem\Directory;
-use DouglasGreen\Utility\FileSystem\DirectoryException;
+use DouglasGreen\Utility\FileSystem\DirUtil;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 
-class DirectoryTest extends TestCase
+class DirUtilTest extends TestCase
 {
     protected string $testDir;
 
-    public function testConstructor(): void
-    {
-        $dir = new Directory($this->testDir);
-        $this->assertSame($this->testDir, (string) $dir);
-
-        // Test when making directory from current directory.
-        $dir = new Directory();
-        $this->assertSame($dir->getPath(), (string) getcwd());
-    }
-
     public function testListFiles(): void
     {
-        $dir = new Directory($this->testDir);
         file_put_contents($this->testDir . '/file1.txt', 'content');
         file_put_contents($this->testDir . '/file2.txt', 'content');
         mkdir($this->testDir . '/subdir');
         file_put_contents($this->testDir . '/subdir/file3.txt', 'content');
 
-        $files = $dir->listFiles();
+        $files = DirUtil::listFiles($this->testDir);
         $this->assertCount(3, $files);
         $this->assertContains($this->testDir . '/file1.txt', $files);
         $this->assertContains($this->testDir . '/file2.txt', $files);
         $this->assertContains($this->testDir . '/subdir/file3.txt', $files);
 
         // Test when argument is a filename instead of directory.
-        $dir = new Directory($this->testDir . '/file1.txt');
-        $files = $dir->listFiles();
+        $file = $this->testDir . '/file1.txt';
+        $files = DirUtil::listFiles($file);
         $this->assertContains($this->testDir . '/file1.txt', $files);
     }
 
     public function testMake(): void
     {
         $newDir = $this->testDir . '/new_dir';
-        $dir = new Directory($newDir);
-        $dir->make();
+        DirUtil::make($newDir);
         $this->assertDirectoryExists($newDir);
 
         // Test when dir already exists.
         $sameDir = $this->testDir . '/new_dir';
-        $dir = new Directory($sameDir);
-        $dir->make();
+        DirUtil::make($sameDir);
         $this->assertDirectoryExists($sameDir);
     }
 
     public function testMakeRecursive(): void
     {
         $newDir = $this->testDir . '/new_dir/sub_dir';
-        $dir = new Directory($newDir);
-        $dir->makeRecursive();
+        DirUtil::makeRecursive($newDir);
         $this->assertDirectoryExists($newDir);
 
         // Test when dir already exists.
         $sameDir = $this->testDir . '/new_dir/sub_dir';
-        $dir = new Directory($sameDir);
-        $dir->makeRecursive();
+        DirUtil::makeRecursive($sameDir);
         $this->assertDirectoryExists($sameDir);
-    }
-
-    public function testMakeRecursiveThrowsException(): void
-    {
-        $this->expectException(DirectoryException::class);
-        $dir = new Directory('/root/impossible_dir');
-        @$dir->makeRecursive();
     }
 
     public function testMakeTemp(): void
     {
-        $dir = new Directory($this->testDir);
-        $tempFile = $dir->makeTemp('test');
+        $tempFile = DirUtil::makeTemp($this->testDir, 'test');
         $this->assertFileExists($tempFile);
         $this->assertStringStartsWith($this->testDir, $tempFile);
     }
 
-    public function testMakeTempThrowsException(): void
-    {
-        $this->expectException(DirectoryException::class);
-        $dir = new Directory('/root/impossible_dir');
-        $tempFile = $dir->makeTemp('test');
-        var_dump($tempFile);
-    }
-
-    public function testMakeThrowsException(): void
-    {
-        $this->expectException(DirectoryException::class);
-        $dir = new Directory('/root/impossible_dir');
-        @$dir->make();
-    }
-
     public function testOpen(): void
     {
-        $dir = new Directory($this->testDir);
-        $phpDirectory = $dir->open();
+        $phpDirectory = DirUtil::open($this->testDir);
         $this->assertInstanceOf(PhpDirectory::class, $phpDirectory);
         $phpDirectory->close();
-    }
-
-    public function testOpenThrowsException(): void
-    {
-        $this->expectException(DirectoryException::class);
-        $dir = new Directory('/root/impossible_dir');
-        @$dir->open();
     }
 
     public function testRemove(): void
     {
         $newDir = $this->testDir . '/new_dir';
         mkdir($newDir);
-        $dir = new Directory($newDir);
-        $dir->remove();
+        DirUtil::remove($newDir);
         $this->assertDirectoryDoesNotExist($newDir);
     }
 
@@ -132,8 +85,7 @@ class DirectoryTest extends TestCase
         mkdir($subDir);
         file_put_contents($subDir . '/file.txt', 'content');
 
-        $dir = new Directory($this->testDir);
-        $dir->removeContents();
+        DirUtil::removeContents($this->testDir);
 
         $this->assertDirectoryExists($this->testDir);
         $this->assertDirectoryDoesNotExist($subDir);
@@ -143,8 +95,7 @@ class DirectoryTest extends TestCase
     #[DoesNotPerformAssertions]
     public function testRemoveNonExistentDirectory(): void
     {
-        $dir = new Directory('/root/non_existent_dir');
-        $dir->remove();
+        DirUtil::remove('/root/impossible_dir');
     }
 
     public function testRemoveRecursive(): void
@@ -153,20 +104,9 @@ class DirectoryTest extends TestCase
         mkdir($subDir);
         file_put_contents($subDir . '/file.txt', 'content');
 
-        $dir = new Directory($this->testDir);
-        $dir->removeRecursive();
+        DirUtil::removeRecursive($this->testDir);
 
         $this->assertDirectoryDoesNotExist($this->testDir);
-    }
-
-    public function testRemoveThrowsException(): void
-    {
-        $this->expectException(DirectoryException::class);
-        $newDir = $this->testDir . '/new_dir';
-        mkdir($newDir);
-        file_put_contents($newDir . '/file.txt', 'content');
-        $dir = new Directory($newDir);
-        @$dir->remove();
     }
 
     public function testScan(): void
@@ -175,8 +115,7 @@ class DirectoryTest extends TestCase
         file_put_contents($this->testDir . '/file2.txt', 'content');
         mkdir($this->testDir . '/subdir');
 
-        $dir = new Directory($this->testDir);
-        $contents = $dir->scan(Directory::NO_DOT_DIRS);
+        $contents = DirUtil::scan($this->testDir, Directory::NO_DOT_DIRS);
 
         $this->assertCount(3, $contents);
         $this->assertContains('file1.txt', $contents);
@@ -192,8 +131,10 @@ class DirectoryTest extends TestCase
         mkdir($this->testDir . '/dir_c');
         mkdir($this->testDir . '/dir_d');
 
-        $dir = new Directory($this->testDir);
-        $contents = $dir->scan(Directory::NO_DOT_DIRS | Directory::SORT_ASCENDING);
+        $contents = DirUtil::scan(
+            $this->testDir,
+            Directory::NO_DOT_DIRS | Directory::SORT_ASCENDING
+        );
 
         $this->assertCount(4, $contents);
         $this->assertSame(['dir_c', 'dir_d', 'file_a.txt', 'file_b.txt'], $contents);
@@ -207,34 +148,21 @@ class DirectoryTest extends TestCase
         mkdir($this->testDir . '/dir_w');
         mkdir($this->testDir . '/dir_z');
 
-        $dir = new Directory($this->testDir);
-        $contents = $dir->scan(Directory::NO_DOT_DIRS | Directory::SORT_DESCENDING);
+        $contents = DirUtil::scan(
+            $this->testDir,
+            Directory::NO_DOT_DIRS | Directory::SORT_DESCENDING
+        );
 
         $this->assertCount(4, $contents);
         $this->assertSame(['file_y.txt', 'file_x.txt', 'dir_z', 'dir_w'], $contents);
     }
 
-    public function testScanThrowsException(): void
-    {
-        $this->expectException(DirectoryException::class);
-        $dir = new Directory('/root/non_existent_dir');
-        @$dir->scan();
-    }
-
     public function testSetCurrent(): void
     {
         $originalDir = getcwd();
-        $dir = new Directory($this->testDir);
-        $dir->setCurrent();
+        DirUtil::setCurrent($this->testDir);
         $this->assertSame($this->testDir, getcwd());
         chdir($originalDir);
-    }
-
-    public function testSetCurrentThrowsException(): void
-    {
-        $this->expectException(DirectoryException::class);
-        $dir = new Directory('/root/non_existent_dir');
-        @$dir->setCurrent();
     }
 
     protected function removeDirectory(string $dir): void
@@ -255,8 +183,7 @@ class DirectoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $dir = new Directory();
-        $this->testDir = $dir->getPath() . '/var/test_directory';
+        $this->testDir = DirUtil::getCurrent() . '/var/test_directory';
         mkdir($this->testDir);
     }
 
