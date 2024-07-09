@@ -69,6 +69,7 @@ class Command implements FlagHandler, Stringable
      * empty after trimming, it will not be added.
      *
      * @param string $arg The argument to add to the command.
+     * @todo Add unquoted args and long arg strings.
      */
     public function addArg(string $arg): self
     {
