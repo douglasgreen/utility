@@ -66,7 +66,7 @@ class File implements FlagHandler
      */
     public function getExclusiveLock(): bool
     {
-        if (! flock($this->stream, LOCK_EX, $wouldBlock)) {
+        if (! flock($this->stream, LOCK_EX | LOCK_NB, $wouldBlock)) {
             throw new FileException(
                 sprintf('Unable to get exclusive lock of file "%s"', $this->path),
             );
@@ -152,7 +152,7 @@ class File implements FlagHandler
      */
     public function getSharedLock(): bool
     {
-        if (! flock($this->stream, LOCK_SH, $wouldBlock)) {
+        if (! flock($this->stream, LOCK_SH | LOCK_NB, $wouldBlock)) {
             throw new FileException(sprintf('Unable to get shared lock of file "%s"', $this->path));
         }
 
