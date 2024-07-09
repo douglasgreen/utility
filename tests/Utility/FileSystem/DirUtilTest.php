@@ -183,7 +183,7 @@ class DirUtilTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->testDir = DirUtil::getCurrent() . '/var/test_directory';
+        $this->testDir = DirUtil::getCurrent() . '/var/tests';
         mkdir($this->testDir);
     }
 
