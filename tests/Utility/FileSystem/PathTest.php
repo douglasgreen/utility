@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Tests\Utility\FileSystem;
 
+use DouglasGreen\Utility\FileSystem\FileException;
 use DouglasGreen\Utility\FileSystem\Path;
+use phpmock\MockBuilder;
 use PHPUnit\Framework\TestCase;
 
 class PathTest extends TestCase
@@ -218,6 +220,112 @@ class PathTest extends TestCase
         $path = new Path($this->testFile);
         $content = $path->loadString();
         $this->assertSame($this->testFileContent, $content);
+    }
+
+    public function testMakeDirectory(): void
+    {
+        $newDir = $this->testDir . DIRECTORY_SEPARATOR . 'new_dir';
+        $path = new Path($newDir);
+        $path->makeDirectory();
+        $this->assertDirectoryExists($newDir);
+        rmdir($newDir);
+    }
+
+    public function testMakeHardLink(): void
+    {
+        $linkPath = $this->testDir . DIRECTORY_SEPARATOR . 'hard_link.txt';
+        $path = new Path($this->testFile);
+        $path->makeHardLink($linkPath);
+        $this->assertFileExists($linkPath);
+        $this->assertSame($this->testFileContent, file_get_contents($linkPath));
+        unlink($linkPath);
+    }
+
+    public function testMakeSymlink(): void
+    {
+        $linkPath = $this->testDir . DIRECTORY_SEPARATOR . 'symlink.txt';
+        $path = new Path($this->testFile);
+        $path->makeSymlink($linkPath);
+        $this->assertTrue(is_link($linkPath));
+        $this->assertSame($this->testFileContent, file_get_contents($linkPath));
+        unlink($linkPath);
+    }
+
+    public function testMoveUpload(): void
+    {
+        $builder = new MockBuilder();
+        $builder->setNamespace('DouglasGreen\Utility\FileSystem')
+            ->setName('move_uploaded_file')
+            ->setFunction(
+                fn($source, $destination): bool =>
+                    // Simulate successful file move
+                    true
+            );
+
+        $mock = $builder->build();
+        $mock->enable();
+
+        $sourcePath = '/tmp/uploaded_file.txt';
+        $targetPath = $this->testDir . DIRECTORY_SEPARATOR . 'moved_file.txt';
+
+        $path = new Path($sourcePath);
+        $result = $path->moveUpload($targetPath);
+
+        // Assert that the method returns $this for method chaining
+        $this->assertInstanceOf(Path::class, $result);
+
+        // Assert that the path property has been updated to the new location
+        $this->assertSame($targetPath, (string) $path);
+
+        $mock->disable();
+
+        // Test the case where move_uploaded_file fails
+        $builder->setFunction(
+            fn($source, $destination): bool =>
+                // Simulate failed file move
+                false
+        );
+
+        $mock = $builder->build();
+        $mock->enable();
+
+        $path = new Path($sourcePath);
+
+        // Expect a FileException to be thrown
+        $this->expectException(FileException::class);
+        $path->moveUpload($targetPath);
+
+        $mock->disable();
+    }
+
+    public function testMustExist(): void
+    {
+        $path = new Path($this->testFile);
+        $this->assertInstanceOf(Path::class, $path->mustExist());
+
+        $this->expectException(FileException::class);
+        $nonExistentPath = new Path($this->testDir . DIRECTORY_SEPARATOR . 'non_existent.txt');
+        $nonExistentPath->mustExist();
+    }
+
+    public function testRemoveBase(): void
+    {
+        $path = new Path($this->testDir);
+        $this->assertSame('test_file.txt', $path->removeBase($this->testFile));
+
+        $otherPath = '/some/other/path/file.txt';
+        $this->assertSame($otherPath, $path->removeBase($otherPath));
+    }
+
+    public function testRename(): void
+    {
+        $newPath = $this->testDir . DIRECTORY_SEPARATOR . 'renamed_file.txt';
+        $path = new Path($this->testFile);
+        $path->rename($newPath);
+        $this->assertFileDoesNotExist($this->testFile);
+        $this->assertFileExists($newPath);
+        $this->assertSame($newPath, (string) $path);
+        rename($newPath, $this->testFile);
     }
 
     public function testSaveStringToFile(): void
