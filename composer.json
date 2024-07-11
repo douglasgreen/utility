@@ -105,8 +105,8 @@
             "ecs --fix",
             "rector"
         ],
-        "post-install-cmd": "config-setup",
-        "post-update-cmd": "config-setup",
+        "post-install-cmd": "config-setup --post-commit",
+        "post-update-cmd": "config-setup --post-commit",
         "test": "phpunit"
     }
 }
