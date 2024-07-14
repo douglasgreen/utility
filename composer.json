@@ -64,10 +64,7 @@
         }
     },
     "bin": [
-        "bin/check-metrics",
-        "bin/check-style",
-        "bin/generate-metrics",
-        "bin/php-linter"
+        "bin/check-style"
     ],
     "config": {
         "sort-packages": true
@@ -97,7 +94,6 @@
     "scripts": {
         "lint": [
             "ecs",
-            "php-linter",
             "phpstan analyse",
             "rector --dry-run"
         ],
