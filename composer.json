@@ -26,7 +26,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "DouglasGreen\\Utility\\": "src/Utility"
+            "DouglasGreen\\Utility\\": "src/"
         }
     },
     "config": {
