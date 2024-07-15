@@ -1,6 +1,6 @@
 {
     "name": "douglasgreen/utility",
-    "description": "PHP utility project that combines CLI option parser, config setup, php linting, and utility classes",
+    "description": "PHP utility project for exception classes and wrapper functions",
     "license": "MIT",
     "type": "library",
     "homepage": "https://github.com/douglasgreen/utility",
@@ -13,59 +13,22 @@
         }
     ],
     "keywords": [
-        "ast",
-        "automation",
-        "ci cd",
-        "cli",
-        "cli library",
-        "cli tool",
         "code quality",
-        "code standards",
-        "code validation",
         "coding standards",
-        "command",
-        "command line",
-        "command-line interface",
-        "command-line utility",
-        "composer",
-        "console",
-        "directory",
         "exceptions",
-        "file",
-        "fixing",
-        "linter",
-        "linting",
+        "function signatures",
         "php",
         "php automation",
-        "php cli",
-        "php command line",
-        "php console application",
-        "phpcs",
-        "php cs fixer",
-        "php fig",
-        "php parser",
-        "php scripting",
-        "phpunit",
-        "psr",
-        "regex",
-        "scripting",
         "static analysis",
-        "syntax check",
-        "terminal",
-        "testing",
+        "type checking",
         "utility",
         "wrapper"
     ],
     "autoload": {
         "psr-4": {
-            "DouglasGreen\\OptParser\\": "src/OptParser",
-            "DouglasGreen\\PhpLinter\\": "src/PhpLinter",
             "DouglasGreen\\Utility\\": "src/Utility"
         }
     },
-    "bin": [
-        "bin/check-style"
-    ],
     "config": {
         "sort-packages": true
     },
@@ -78,8 +41,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
-        "nette/neon": "^3.4"
+        "php": ">=8.1"
     },
     "require-dev": {
         "douglasgreen/config-setup": "dev-main",

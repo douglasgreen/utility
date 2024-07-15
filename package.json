@@ -1,6 +1,6 @@
 {
     "name": "douglasgreen/utility",
-    "description": "PHP utility project that combines CLI option parser, config setup, php linting, and utility classes",
+    "description": "PHP utility project for exception classes and wrapper functions",
     "license": "MIT",
     "engines": {
         "node": ">=18",
