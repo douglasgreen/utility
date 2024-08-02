@@ -495,12 +495,12 @@ class Path implements FlagHandler, Stringable
     }
 
     /**
-     * Substitute for mkdir that is not recursive.
+     * Substitute for mkdir that is recursive.
      */
     public function makeDirectory(int $permissions = 0o777): self
     {
         $directory = new Directory($this->path);
-        $directory->make($permissions);
+        $directory->makeRecursive($permissions);
 
         return $this;
     }
