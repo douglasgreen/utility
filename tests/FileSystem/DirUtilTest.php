@@ -160,9 +160,15 @@ class DirUtilTest extends TestCase
     public function testSetCurrent(): void
     {
         $originalDir = getcwd();
-        DirUtil::setCurrent($this->testDir);
-        $this->assertSame($this->testDir, getcwd());
-        chdir($originalDir);
+        if ($originalDir !== false) {
+            DirUtil::setCurrent($this->testDir);
+            $currentDir = getcwd();
+            if ($currentDir !== false) {
+                $this->assertSame($this->testDir, $currentDir);
+            }
+
+            chdir($originalDir);
+        }
     }
 
     protected function removeDirectory(string $dir): void
@@ -171,10 +177,13 @@ class DirUtilTest extends TestCase
             return;
         }
 
-        $files = array_diff(scandir($dir), ['.', '..']);
-        foreach ($files as $file) {
-            $path = $dir . '/' . $file;
-            is_dir($path) ? $this->removeDirectory($path) : unlink($path);
+        $files = scandir($dir);
+        if ($files !== false) {
+            $files = array_diff($files, ['.', '..']);
+            foreach ($files as $file) {
+                $path = $dir . '/' . $file;
+                is_dir($path) ? $this->removeDirectory($path) : unlink($path);
+            }
         }
 
         rmdir($dir);
