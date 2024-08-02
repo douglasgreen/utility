@@ -9,6 +9,7 @@ Add the project with Composer.
 ```
 composer require douglasgreen/utility
 ```
+
 ## Benefits
 
 PHP has an old core design dating back to its PHP 3 era. Examples include:

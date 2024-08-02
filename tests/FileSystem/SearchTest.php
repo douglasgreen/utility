@@ -35,7 +35,11 @@ class SearchTest extends TestCase
         $pattern = '*.txt';
         $expectedResult = ['file1.txt', 'file2.txt'];
 
-        $this->mockGlob(function ($p, $f) use ($pattern, $expectedPhpFlags, $expectedResult) {
+        $this->mockGlob(function ($p, $f) use (
+            $pattern,
+            $expectedPhpFlags,
+            $expectedResult
+        ): array {
             $this->assertSame($pattern, $p);
             $this->assertSame($expectedPhpFlags, $f);
             return $expectedResult;
