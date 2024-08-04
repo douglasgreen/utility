@@ -51,6 +51,7 @@ class SearchTest extends TestCase
 
         $result = Search::findAll($pattern, $flags);
         $this->assertSame($expectedResult, $result);
+        $this->globMock->disable();
     }
 
     public function testFindAllThrowsExceptionOnGlobFailure(): void
@@ -63,6 +64,7 @@ class SearchTest extends TestCase
         $this->expectExceptionMessage('Unable to search files for pattern "*.txt"');
 
         Search::findAll($pattern);
+        $this->globMock->disable();
     }
 
     public function testGetFlagChecker(): void
@@ -84,17 +86,5 @@ class SearchTest extends TestCase
             ->setFunction($callback);
         $this->globMock = $builder->build();
         $this->globMock->enable();
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->globMock->disable();
-
-        parent::tearDown();
     }
 }
