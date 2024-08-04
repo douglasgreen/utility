@@ -31,7 +31,7 @@ class UrlFetcherTest extends TestCase
     public function testCreatesUrlFetcherWithValidUrl(string $url, string $expectedUrl): void
     {
         $urlFetcher = new UrlFetcher($url);
-        $this->assertSame($expectedUrl, (string) $urlFetcher);
+        $this->assertSame($expectedUrl, $urlFetcher->getUrl());
     }
 
     #[DataProvider('invalidUrlProvider')]
@@ -46,7 +46,7 @@ class UrlFetcherTest extends TestCase
     {
         $encodedUrl = 'https://example.com/encoded%20path';
         $urlFetcher = new UrlFetcher($encodedUrl);
-        $this->assertSame('https://example.com/encoded path', (string) $urlFetcher);
+        $this->assertSame('https://example.com/encoded path', $urlFetcher->getUrl());
     }
 
     public function testFetchesPageContent(): void
@@ -54,26 +54,15 @@ class UrlFetcherTest extends TestCase
         $url = 'https://example.com';
         $content = 'Example content';
 
-        $pathMock = $this->createMock(Path::class);
-        $pathMock->method('loadString')
-            ->willReturn($content);
-
         $mock = $this->getMockBuilder(UrlFetcher::class)
             ->setConstructorArgs([$url])
-            ->onlyMethods(['getPath'])
             ->getMock();
-        $mock->method('getPath')
-            ->willReturn($pathMock);
+
+        $mock->expects($this->once())
+            ->method('fetchPage')
+            ->willReturn($content);
 
         $this->assertSame($content, $mock->fetchPage());
-    }
-
-    public function testGetPath(): void
-    {
-        $url = 'https://example.com';
-        $urlFetcher = new UrlFetcher($url);
-        $path = $urlFetcher->getPath();
-        $this->assertInstanceOf(Path::class, $path);
     }
 
     public function testReturnsNullWhenFetchFails(): void
@@ -86,10 +75,7 @@ class UrlFetcherTest extends TestCase
 
         $mock = $this->getMockBuilder(UrlFetcher::class)
             ->setConstructorArgs([$url])
-            ->onlyMethods(['getPath'])
             ->getMock();
-        $mock->method('getPath')
-            ->willReturn($pathMock);
 
         @$this->assertNull($mock->fetchPage());
     }

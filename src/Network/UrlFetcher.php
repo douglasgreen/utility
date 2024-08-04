@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace DouglasGreen\Utility\Network;
 
 use DouglasGreen\Utility\Data\ValueException;
-use DouglasGreen\Utility\FileSystem\FileException;
-use DouglasGreen\Utility\FileSystem\Path;
-use Stringable;
 
-class UrlFetcher implements Stringable
+class UrlFetcher
 {
-    protected readonly Path $path;
-
     protected readonly string $url;
 
     public function __construct(string $url)
@@ -22,35 +17,38 @@ class UrlFetcher implements Stringable
             throw new ValueException('Bad URL: ' . $url);
         }
 
-        $decodedUrl = Url::isEncoded($filteredUrl) ? urldecode($filteredUrl) : $filteredUrl;
-
-        $this->url = $decodedUrl;
-
-        // Path can't be injected with DI because $url must be cleaned up before new Path().
-        $this->path = new Path(Url::encode($this->url));
-    }
-
-    public function __toString(): string
-    {
-        return $this->url;
+        $this->url = Url::isEncoded($filteredUrl) ? urldecode($filteredUrl) : $filteredUrl;
     }
 
     /**
-     * Substitute for file_get_contents on a URL.
+     * Fetch a page's content from its URL.
      */
     public function fetchPage(): ?string
     {
-        // Call getPath() so Path can be mocked in unit tests.
-        $path = $this->getPath();
-        try {
-            return $path->loadString();
-        } catch (FileException) {
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $this->url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 60,
+            CURLOPT_CONNECTTIMEOUT => 30,
+        ]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        // PHPStan thinks this function call returns true on success even though the PHP
+        // documentation says it shouldn't because CURLOPT_RETURNTRANSFER was set.
+        if ($response === false || $response === true) {
             return null;
         }
+
+        return $response;
     }
 
-    public function getPath(): Path
+    public function getUrl(): string
     {
-        return $this->path;
+        return $this->url;
     }
 }
