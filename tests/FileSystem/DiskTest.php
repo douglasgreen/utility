@@ -16,6 +16,9 @@ class DiskTest extends TestCase
 
     protected MockBuilder $mockBuilder;
 
+    /**
+     * @var list<Mock>
+     */
     protected array $mocks = [];
 
     public function testConstructorAndToString(): void

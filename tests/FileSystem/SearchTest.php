@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace DouglasGreen\Tests\Utility\FileSystem;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use DouglasGreen\Utility\Data\FlagChecker;
 use DouglasGreen\Utility\FileSystem\FileException;
 use DouglasGreen\Utility\FileSystem\Search;
+use phpmock\Mock;
 use phpmock\MockBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class SearchTest extends TestCase
 {
+    /**
+     * @var Mock
+     */
     protected $globMock;
 
     public static function flagCombinationsProvider(): \Iterator
@@ -72,7 +76,7 @@ class SearchTest extends TestCase
         $this->assertFalse($flagChecker->get('stopOnError'));
     }
 
-    protected function mockGlob(callable $callback)
+    protected function mockGlob(callable $callback): void
     {
         $builder = new MockBuilder();
         $builder->setNamespace('DouglasGreen\Utility\FileSystem')
@@ -89,9 +93,7 @@ class SearchTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->globMock) {
-            $this->globMock->disable();
-        }
+        $this->globMock->disable();
 
         parent::tearDown();
     }

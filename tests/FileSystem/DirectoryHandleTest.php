@@ -98,8 +98,10 @@ class DirectoryHandleTest extends TestCase
     {
         parent::tearDown();
         $files = glob($this->testDir . '/*');
-        foreach ($files as $file) {
-            unlink($file);
+        if ($files !== false) {
+            foreach ($files as $file) {
+                unlink($file);
+            }
         }
 
         rmdir($this->testDir);

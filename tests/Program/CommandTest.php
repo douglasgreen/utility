@@ -125,6 +125,9 @@ class CommandTest extends TestCase
         $this->assertSame($expectedCommand, $command->buildCommand());
     }
 
+    /**
+     * @param list<string> $args
+     */
     #[DataProvider('addSubcommandProvider')]
     public function testAddSubcommand(
         string $operator,
@@ -196,6 +199,9 @@ class CommandTest extends TestCase
         $this->assertSame(0, $command->getReturnCode());
     }
 
+    /**
+     * @param list<string> $args
+     */
     #[DataProvider('errorCodeCommandProvider')]
     public function testRunAndPrintBinaryWithError(
         string $command,
@@ -218,6 +224,9 @@ class CommandTest extends TestCase
         $this->assertSame($expectedErrorCode, $commandObj->getReturnCode());
     }
 
+    /**
+     * @param list<string> $args
+     */
     #[DataProvider('errorCodeCommandProvider')]
     public function testRunAndPrintWithError(
         string $command,
@@ -240,6 +249,9 @@ class CommandTest extends TestCase
         $this->assertSame($expectedErrorCode, $commandObj->getReturnCode());
     }
 
+    /**
+     * @param list<string> $args
+     */
     #[DataProvider('errorCodeCommandProvider')]
     public function testRunWithError(string $command, array $args, int $expectedErrorCode): void
     {

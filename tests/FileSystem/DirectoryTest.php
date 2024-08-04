@@ -7,7 +7,7 @@ namespace DouglasGreen\Tests\Utility\FileSystem;
 use Directory as PhpDirectory;
 use DouglasGreen\Utility\FileSystem\Directory;
 use DouglasGreen\Utility\FileSystem\DirectoryException;
-use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class DirectoryTest extends TestCase
@@ -84,6 +84,7 @@ class DirectoryTest extends TestCase
         $dir = new Directory($this->testDir);
         $tempFile = $dir->makeTemp('test');
         $this->assertFileExists($tempFile);
+        $this->assertNotEmpty($this->testDir, 'Test dir should not be empty');
         $this->assertStringStartsWith($this->testDir, $tempFile);
     }
 
@@ -140,11 +141,15 @@ class DirectoryTest extends TestCase
         $this->assertFileDoesNotExist($subDir . '/file.txt');
     }
 
-    #[DoesNotPerformAssertions]
     public function testRemoveNonExistentDirectory(): void
     {
-        $dir = new Directory('/root/non_existent_dir');
-        $dir->remove();
+        try {
+            $dir = new Directory('/root/non_existent_dir');
+            $dir->remove();
+            $this->assertTrue(true);
+        } catch (Exception) {
+            $this->fail('An unexpected exception was thrown');
+        }
     }
 
     public function testRemoveRecursive(): void
@@ -224,9 +229,13 @@ class DirectoryTest extends TestCase
     public function testSetCurrent(): void
     {
         $originalDir = getcwd();
+        $this->assertNotFalse($originalDir);
         $dir = new Directory($this->testDir);
         $dir->setCurrent();
-        $this->assertSame($this->testDir, getcwd());
+
+        $workingDir = getcwd();
+        $this->assertNotFalse($workingDir);
+        $this->assertSame($this->testDir, $workingDir);
         chdir($originalDir);
     }
 
@@ -243,7 +252,9 @@ class DirectoryTest extends TestCase
             return;
         }
 
-        $files = array_diff(scandir($dir), ['.', '..']);
+        $result = scandir($dir);
+        $this->assertNotFalse($result);
+        $files = array_diff($result, ['.', '..']);
         foreach ($files as $file) {
             $path = $dir . '/' . $file;
             is_dir($path) ? $this->removeDirectory($path) : unlink($path);

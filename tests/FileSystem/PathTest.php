@@ -41,7 +41,9 @@ class PathTest extends TestCase
     public function testChangeGroup(): void
     {
         $path = new Path($this->testFile);
-        $this->assertInstanceOf(Path::class, $path->changeGroup(filegroup($this->testFile)));
+        $group = filegroup($this->testFile);
+        $this->assertNotFalse($group);
+        $this->assertInstanceOf(Path::class, $path->changeGroup($group));
     }
 
     public function testChangeMode(): void
@@ -53,7 +55,9 @@ class PathTest extends TestCase
     public function testChangeOwner(): void
     {
         $path = new Path($this->testFile);
-        $this->assertInstanceOf(Path::class, $path->changeOwner(fileowner($this->testFile)));
+        $owner = fileowner($this->testFile);
+        $this->assertNotFalse($owner);
+        $this->assertInstanceOf(Path::class, $path->changeOwner($owner));
     }
 
     public function testCopy(): void
