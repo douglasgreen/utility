@@ -28,7 +28,7 @@ class ArrayMatcherTest extends TestCase
         $result = $matcher->replaceCallMap('foo baz');
         $this->assertSame('bar baz', $result);
         $this->assertTrue($matcher->matched());
-        $this->assertSame($matcher->getCount(), 1);
+        $this->assertSame(1, $matcher->getCount());
     }
 
     public function testReplaceCallMapList(): void
@@ -40,7 +40,7 @@ class ArrayMatcherTest extends TestCase
         $result = $matcher->replaceCallMapList(['foo baz', 'foo qux']);
         $this->assertSame(['bar baz', 'bar qux'], $result);
         $this->assertTrue($matcher->matched());
-        $this->assertSame($matcher->getCount(), 2);
+        $this->assertSame(2, $matcher->getCount());
     }
 
     public function testReplaceCallMapListThrowsExceptionOnError(): void

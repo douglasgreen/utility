@@ -34,7 +34,7 @@ class SimpleProcessTest extends TestCase
         // Assert that we got an error message
         $this->assertNotNull($errorOutput);
         $this->assertStringContainsString('not found', $errorOutput);
-        $this->assertSame($returnCode, 127);
+        $this->assertSame(127, $returnCode);
     }
 
     public function testOpenAndClose(): void

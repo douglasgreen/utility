@@ -47,7 +47,7 @@ class UrlTest extends TestCase
     #[DataProvider('isEncodedProvider')]
     public function testIsEncoded(string $input, bool $expected): void
     {
-        $this->assertEquals($expected, Url::isEncoded($input));
+        $this->assertSame($expected, Url::isEncoded($input));
     }
 
     #[DataProvider('encodeProvider')]
