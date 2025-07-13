@@ -62,6 +62,7 @@ class DirUtilTest extends TestCase
         $tempFile = DirUtil::makeTemp($this->testDir, 'test');
         $this->assertFileExists($tempFile);
         $this->assertNotEmpty($this->testDir, 'Test dir should not be empty');
+        /** @phpstan-ignore argument.type */
         $this->assertStringStartsWith($this->testDir, $tempFile);
     }
 

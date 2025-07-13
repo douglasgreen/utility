@@ -14,10 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class SearchTest extends TestCase
 {
-    /**
-     * @var Mock
-     */
-    protected $globMock;
+    protected ?Mock $globMock = null;
 
     public static function flagCombinationsProvider(): \Iterator
     {
@@ -31,6 +28,19 @@ class SearchTest extends TestCase
             Search::ADD_SLASH | Search::NO_ESCAPE | Search::NO_SORT | Search::ONLY_DIRS | Search::STOP_ON_ERROR,
             GLOB_MARK | GLOB_NOESCAPE | GLOB_NOSORT | GLOB_ONLYDIR | GLOB_ERR,
         ];
+    }
+
+    /**
+     * The tearDown method is called after each test.
+     */
+    protected function tearDown(): void
+    {
+        // Disable the mock if it has been created.
+        if ($this->globMock instanceof Mock) {
+            $this->globMock->disable();
+        }
+
+        parent::tearDown();
     }
 
     #[DataProvider('flagCombinationsProvider')]
@@ -51,7 +61,6 @@ class SearchTest extends TestCase
 
         $result = Search::findAll($pattern, $flags);
         $this->assertSame($expectedResult, $result);
-        $this->globMock->disable();
     }
 
     public function testFindAllThrowsExceptionOnGlobFailure(): void
@@ -64,7 +73,6 @@ class SearchTest extends TestCase
         $this->expectExceptionMessage('Unable to search files for pattern "*.txt"');
 
         Search::findAll($pattern);
-        $this->globMock->disable();
     }
 
     public function testGetFlagChecker(): void

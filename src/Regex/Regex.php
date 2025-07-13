@@ -20,7 +20,7 @@ class Regex
         array|string $replacement,
         string $subject,
         int $limit = -1,
-    ): string {
+    ): ?string {
         $matcher = new Matcher($pattern);
         return $matcher->filteredReplace($replacement, $subject, $limit);
     }
@@ -29,7 +29,7 @@ class Regex
      * @param list<string>|string $pattern
      * @param list<string>|string $replacement
      * @param list<string> $subject
-     * @return list<string>
+     * @return array<string>
      */
     public static function filteredReplaceList(
         array|string $pattern,
@@ -155,7 +155,7 @@ class Regex
     /**
      * @param array<string, callable> $pattern
      * @param list<string> $subject
-     * @return list<string>
+     * @return array<string>
      */
     public static function replaceCallMapList(
         array $pattern,
@@ -170,7 +170,7 @@ class Regex
      * @param list<string>|string $pattern
      * @param list<string>|string $replacement
      * @param list<string> $subject
-     * @return list<string>
+     * @return array<string>
      */
     public static function replaceList(
         array|string $pattern,
@@ -184,7 +184,7 @@ class Regex
 
     /**
      * @param list<string> $array
-     * @return list<string>
+     * @return array<string>
      */
     public static function searchList(string $pattern, array $array): array
     {
@@ -194,7 +194,7 @@ class Regex
 
     /**
      * @param list<string> $array
-     * @return list<string>
+     * @return array<string>
      */
     public static function searchListInverted(string $pattern, array $array): array
     {

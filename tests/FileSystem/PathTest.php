@@ -86,6 +86,7 @@ class PathTest extends TestCase
     public function testGetAccessTime(): void
     {
         $path = new Path($this->testFile);
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($path->getAccessTime());
     }
 
@@ -110,6 +111,7 @@ class PathTest extends TestCase
         $link = $this->testDir . DIRECTORY_SEPARATOR . 'link';
         symlink($this->testFile, $link);
         $path = new Path($link);
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($path->getLinkStats());
         unlink($link);
     }
@@ -126,6 +128,7 @@ class PathTest extends TestCase
     public function testGetMetaChangeTime(): void
     {
         $path = new Path($this->testFile);
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($path->getMetaChangeTime());
     }
 
@@ -138,18 +141,21 @@ class PathTest extends TestCase
     public function testGetPermissions(): void
     {
         $path = new Path($this->testFile);
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($path->getPermissions());
     }
 
     public function testGetStats(): void
     {
         $path = new Path($this->testFile);
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($path->getStats());
     }
 
     public function testGetWriteTime(): void
     {
         $path = new Path($this->testFile);
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($path->getWriteTime());
     }
 
@@ -354,6 +360,7 @@ class PathTest extends TestCase
         $path = new Path($this->testFile);
         $path->touch();
 
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertTrue(true); // If no exception is thrown, the test is successful
     }
 

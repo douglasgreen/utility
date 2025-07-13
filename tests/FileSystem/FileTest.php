@@ -99,6 +99,7 @@ class FileTest extends TestCase
         file_put_contents($this->testFile, '0123456789');
         $file = new File($this->testFile, 'r');
         $stats = $file->getStats();
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($stats);
         $this->assertSame(10, $stats['size']);
     }

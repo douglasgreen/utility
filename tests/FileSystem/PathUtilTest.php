@@ -71,6 +71,7 @@ class PathUtilTest extends TestCase
 
     public function testGetAccessTime(): void
     {
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt(PathUtil::getAccessTime($this->testFile));
     }
 
@@ -83,6 +84,7 @@ class PathUtilTest extends TestCase
     {
         $link = $this->testDir . DIRECTORY_SEPARATOR . 'link';
         symlink($this->testFile, $link);
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray(PathUtil::getLinkStats($link));
         unlink($link);
     }
@@ -97,21 +99,25 @@ class PathUtilTest extends TestCase
 
     public function testGetMetaChangeTime(): void
     {
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt(PathUtil::getMetaChangeTime($this->testFile));
     }
 
     public function testGetPermissions(): void
     {
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt(PathUtil::getPermissions($this->testFile));
     }
 
     public function testGetStats(): void
     {
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray(PathUtil::getStats($this->testFile));
     }
 
     public function testGetWriteTime(): void
     {
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt(PathUtil::getWriteTime($this->testFile));
     }
 
@@ -246,6 +252,7 @@ class PathUtilTest extends TestCase
     {
         PathUtil::touch($this->testFile);
 
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertTrue(true); // If no exception is thrown, the test is successful
     }
 

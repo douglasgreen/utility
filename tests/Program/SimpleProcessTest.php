@@ -81,6 +81,7 @@ class SimpleProcessTest extends TestCase
     public function testSigchildEnabled(): void
     {
         $result = SimpleProcess::sigchildEnabled();
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsBool($result);
     }
 

@@ -39,10 +39,12 @@ class Matcher extends AbstractMatcher implements FlagHandler
         array|string $replacement,
         string $subject,
         int $limit = -1,
-    ): string {
+    ): ?string {
         $result = preg_filter($this->pattern, $replacement, $subject, $limit, $this->count);
 
-        if ($result === null) {
+        // preg_filter return values don't distinguish between no matches and error, so check the
+        // last error with a function call.
+        if (preg_last_error() !== PREG_NO_ERROR) {
             throw new RegexException($this->getErrorMessage());
         }
 
@@ -59,7 +61,7 @@ class Matcher extends AbstractMatcher implements FlagHandler
      *
      * @param list<string>|string $replacement
      * @param list<string> $subject
-     * @return list<string>
+     * @return array<string>
      * @throws RegexException
      */
     public function filteredReplaceList(
@@ -67,13 +69,15 @@ class Matcher extends AbstractMatcher implements FlagHandler
         array $subject,
         int $limit = -1,
     ): array {
-        // preg_filter doesn't distinguish between no matches and error when using
-        // array as subject, so I use a second preg_filter call to look for errors.
-        if (preg_filter($this->pattern, $replacement, $subject[0]) === null) {
+        $result = preg_filter($this->pattern, $replacement, $subject, $limit, $this->count);
+
+        // preg_filter return values don't distinguish between no matches and error, so check the
+        // last error with a function call.
+        if (preg_last_error() !== PREG_NO_ERROR) {
             throw new RegexException($this->getErrorMessage());
         }
 
-        return preg_filter($this->pattern, $replacement, $subject, $limit, $this->count);
+        return $result;
     }
 
     public static function getFlagChecker(int $flags): FlagChecker
@@ -192,7 +196,13 @@ class Matcher extends AbstractMatcher implements FlagHandler
             throw new TypeException('String pattern expected');
         }
 
-        $result = preg_match_all($this->pattern, $subject, $matches, PREG_OFFSET_CAPTURE, $offset);
+        $result = preg_match_all(
+            $this->pattern,
+            $subject,
+            $matches,
+            PREG_OFFSET_CAPTURE,
+            $offset
+        );
 
         if ($result === false) {
             throw new RegexException($this->getErrorMessage());
@@ -274,6 +284,7 @@ class Matcher extends AbstractMatcher implements FlagHandler
      */
     public function replaceCallList(callable $callback, array $subject, int $limit = -1): array
     {
+        /** @var list<string>|null $result */
         $result = preg_replace_callback($this->pattern, $callback, $subject, $limit, $this->count);
 
         if ($result === null || preg_last_error() !== PREG_NO_ERROR) {
@@ -290,11 +301,12 @@ class Matcher extends AbstractMatcher implements FlagHandler
      *
      * @param list<string>|string $replacement
      * @param list<string> $subject
-     * @return list<string>
+     * @return array<string>
      * @throws RegexException
      */
     public function replaceList(array|string $replacement, array $subject, int $limit = -1): array
     {
+        /** @var list<string>|null $result */
         $result = preg_replace($this->pattern, $replacement, $subject, $limit, $this->count);
 
         if ($result === null || preg_last_error() !== PREG_NO_ERROR) {
@@ -308,7 +320,7 @@ class Matcher extends AbstractMatcher implements FlagHandler
      * Substitute for preg_grep.
      *
      * @param list<string> $array
-     * @return list<string>
+     * @return array<string>
      * @throws RegexException
      * @throws TypeException
      */
@@ -332,7 +344,7 @@ class Matcher extends AbstractMatcher implements FlagHandler
      * Substitute for preg_grep that inverts the match.
      *
      * @param list<string> $array
-     * @return list<string>
+     * @return array<string>
      * @throws RegexException
      * @throws TypeException
      */
@@ -396,7 +408,7 @@ class Matcher extends AbstractMatcher implements FlagHandler
             throw new TypeException('String pattern expected');
         }
 
-        $result = preg_split($this->pattern, $subject, -1, self::NO_EMPTY);
+        $result = preg_split($this->pattern, $subject, -1, PREG_SPLIT_NO_EMPTY);
         if ($result === false) {
             throw new RegexException($this->getErrorMessage());
         }

@@ -79,7 +79,7 @@ class File implements FlagHandler
      * Substitute for fgetcsv.
      *
      * @param ?int<0, max> $length
-     * @return ?list<string>
+     * @return ?list<?string>
      * @throws FileException
      */
     public function getFields(
@@ -179,7 +179,7 @@ class File implements FlagHandler
      * Substitute for fgetcsv that throws errors if fields not read.
      *
      * @param ?int<0, max> $length
-     * @return list<string>
+     * @return list<?string>
      * @throws FileException
      */
     public function mustGetFields(

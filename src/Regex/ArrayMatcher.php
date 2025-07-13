@@ -40,7 +40,7 @@ class ArrayMatcher extends AbstractMatcher
      * Takes a list<string> as $subject so it returns a list<string>.
      *
      * @param list<string> $subject
-     * @return list<string>
+     * @return array<string>
      * @throws RegexException
      */
     public function replaceCallMapList(array $subject, int $limit = -1): array
@@ -48,7 +48,7 @@ class ArrayMatcher extends AbstractMatcher
         $result = preg_replace_callback_array($this->patterns, $subject, $limit, $this->count);
 
         // On error, empty array is returned, so I check preg_last_error() instead.
-        if ($result === null || preg_last_error() !== PREG_NO_ERROR) {
+        if (preg_last_error() !== PREG_NO_ERROR) {
             throw new RegexException($this->getErrorMessage());
         }
 

@@ -85,6 +85,7 @@ class DirectoryTest extends TestCase
         $tempFile = $dir->makeTemp('test');
         $this->assertFileExists($tempFile);
         $this->assertNotEmpty($this->testDir, 'Test dir should not be empty');
+        /** @phpstan-ignore argument.type */
         $this->assertStringStartsWith($this->testDir, $tempFile);
     }
 
@@ -146,6 +147,7 @@ class DirectoryTest extends TestCase
         try {
             $dir = new Directory('/root/non_existent_dir');
             $dir->remove();
+            /** @phpstan-ignore method.alreadyNarrowedType */
             $this->assertTrue(true);
         } catch (Exception) {
             $this->fail('An unexpected exception was thrown');
